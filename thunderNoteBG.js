@@ -106,7 +106,7 @@ function errorHandle (error) {
 // -------------------------------------------------------------------------------------------------------
 
 browser.alarms.onAlarm.addListener(handleAlarms)
-browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), documentUrlPatterns: ['*://*/*'], contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
+browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
 
 browser.storage.local.get('feeds').then(function (data) {
   browser.alarms.clearAll()
