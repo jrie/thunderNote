@@ -1,0 +1,42 @@
+{
+  "applications": {
+    "gecko": {
+      "strict_min_version": "54.0a1"
+    }
+  },
+  "developer": {
+    "name": "JanRie",
+    "url": "https://github.com/jrie"
+  },
+  "default_locale": "en",
+  "sidebar_action": {
+    "default_title": "thunderNote",
+    "default_panel": "thunderNote.html",
+    "default_icon": "icons/thunderNote.svg"
+  },
+  "description": "A rss feed news client",
+  "icons": {
+    "48": "icons/thunderNote.svg",
+    "64": "icons/thunderNote.svg",
+    "96": "icons/thunderNote.svg",
+    "128": "icons/thunderNote.svg"
+  },
+  "homepage_url": "https://github.com/jrie/thunderNote",
+  "manifest_version": 2,
+  "name": "thunderNote",
+  "version": "0.0.1",
+  "permissions": ["<all_urls>", "activeTab", "storage", "unlimitedStorage", "alarms", "notifications", "contextMenus"],
+  "background": {
+    "scripts": [
+      "libs/x2js/xml2json.min.js",
+      "thunderNoteBG.js"
+    ]
+  },
+  "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+B"
+      }
+    }
+  }
+}

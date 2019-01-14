@@ -1,0 +1,205 @@
+body {
+  width: 100%;
+  margin: 0px;
+  padding: 2% 2%;
+  color: #cce;
+  font-size: 1rem;
+  font-family: sans;
+  font-weight: normal;
+  text-shadow: 1px 1px 0px rgba(255,255,255, 0.225);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  font-weight: bold;
+  background: rgb(30,87,153);
+  background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(41,137,216,1) 13%, rgba(32,124,202,1) 95%, rgba(125,185,232,1) 100%);
+  background: -webkit-linear-gradient(top, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
+  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
+  background-size: 100%;
+  background-attachment: fixed;
+}
+
+.headerControl,
+.page {
+  position: absolute;
+  width: 96%;
+  transition-property: all;
+  transition-duration: 670ms;
+  transition-delay: 55ms;
+  transform: translate(0px, 0px);
+}
+
+.headerControl.inactive {
+  transform: translate(-105%, 0px);
+}
+
+.page {
+  background-color: inherit;
+  transform: translate(105%, 0px);
+  z-index: 100;
+  height: 98%;
+  width: 96%;
+  border-radius: 12px;
+}
+
+.page.active {
+  transform: translate(0%, 0px);
+  z-index: 101;
+}
+
+input,
+select,
+button {
+  margin: 0px;
+  padding: 6px 9px;
+  max-width: 100%;
+  min-width: 100%;
+  border-width: 1px;
+  background-color: #abb;
+  color: #dda;
+  border-color: #666;
+  border-radius: 8px;
+  margin-bottom: 9px;
+  font-weight: inherit;
+  box-shadow: 1px 2px 2px rgba(34, 34, 51, 0.285);
+  text-align: center;
+  word-wrap: break-word;
+  background: rgb(30,87,153);
+  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.clearfix {
+  clear: both;
+}
+
+ul {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  list-style: none;
+}
+
+.controlButton.removeFeed {
+  background-image: url("icons/search_icon.png");
+  background-position: 5px center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding-left: 35px;
+  text-align: left;
+}
+
+.controlButton.removeKeyword {
+  background-image: url("icons/dumpster_22.png");
+  background-position: 5px center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding-left: 35px;
+  text-align: left;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  text-decoration: underline;
+}
+
+.backButton {
+  margin: 0px;
+  padding: 0.35rem 0.75rem;
+  line-height: 2.15rem;
+  font-size: 2.15rem;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 6%;
+  max-width: 100%;
+  margin-right: 1.26rem;
+  float: left;
+  margin: 10px 0px 10px 0px;
+}
+
+button.backButton:hover {
+  text-decoration: none;
+}
+
+.headerControl .headline {
+  padding: 10px 0px 10px 42px;
+  background: url('icons/thunderNote.svg') left center;
+  background-size: 32px;
+  background-repeat: no-repeat;
+}
+
+.headline {
+  margin: 0px;
+  margin-top: 0.75rem;
+  margin-bottom: 12px;
+  padding: 10px 0px 10px 42px;
+}
+
+.newsEntry {
+  clear: both;
+  margin-bottom: 30px;
+}
+
+.subTitle,
+.subCount {
+  font-size: 1.85rem;
+  font-weight: bold;
+  text-shadow: 1px 2px 4px rgba(0,0,0, 0.32);
+  margin: 0px;
+  word-wrap: break-word;
+  border-radius: 0px 6px 6px 0px;
+  padding-left: 1rem;
+}
+
+.subTitle {
+  padding: 0.75rem;
+  background-color: rgba(0,0,0, 0.164);
+}
+
+.subCount {
+  float: right;
+  margin-top: 0.35rem;
+  font-size: 1.5rem;
+}
+
+.subList {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 6px 12px;
+  font-size: 1.5rem;
+  background-color: rgba(0,0,0, 0.08);
+}
+
+.entryDate {
+  margin-top: 0.95em;
+  margin-bottom: 3px;
+  font-size: 0.75em;
+  -moz-user-select: text;
+}
+
+.entryTitle {
+  margin: 0px;
+  margin-top: 0.25em;
+  padding: 0px;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  -moz-user-select: text;
+}
+
+.entryTitle:hover {
+  text-decoration: underline;
+}
+
+.entryContent {
+  font-size: 0.75em;
+  font-weight: normal;
+  margin-bottom: 2.45rem;
+  -moz-user-select: text;
+}
