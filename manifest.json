@@ -8,12 +8,13 @@
     "name": "JanRie",
     "url": "https://github.com/jrie"
   },
+  "default_locale": "en",
   "sidebar_action": {
     "default_title": "thunderNote",
     "default_panel": "thunderNote.html",
     "default_icon": "icons/thunderNote.svg"
   },
-  "description": "A slick rss feed and news client.",
+  "description": "__MSG_AddonDescription__",
   "icons": {
     "48": "icons/thunderNote.svg",
     "64": "icons/thunderNote.svg",
@@ -23,7 +24,7 @@
   "homepage_url": "https://github.com/jrie/thunderNote",
   "manifest_version": 2,
   "name": "thunderNote",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "permissions": ["<all_urls>", "activeTab", "storage", "unlimitedStorage", "alarms", "notifications", "contextMenus"],
   "background": {
     "scripts": [
@@ -35,7 +36,8 @@
     "_execute_sidebar_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+B"
-      }
+      },
+      "description": "__MSG_Shortcut__"
     }
   }
 }
