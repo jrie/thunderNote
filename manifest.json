@@ -1,14 +1,13 @@
 {
   "applications": {
     "gecko": {
-      "strict_min_version": "54.0a1"
+      "strict_min_version": "56"
     }
   },
   "developer": {
     "name": "JanRie",
     "url": "https://github.com/jrie"
   },
-  "default_locale": "en",
   "sidebar_action": {
     "default_title": "thunderNote",
     "default_panel": "thunderNote.html",
