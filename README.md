@@ -20,7 +20,7 @@ For testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary
 
 ## Usage
 1. Open the main sidebar by pressing ***Ctrl + Shift + B*** or using the main menu *View* -> *Sidebar* -> ***thunderNote***
-1. **Add keywords** of interesting topics to look out for either by entering or by 
+1. **Add keywords** of interesting topics to look out for either by entering or using the context menu on a webpage selection
 2. **Add a feed url**, for example: *http://www.tagesschau.de/xml/rss2* for the German *Tagesschau.de* RSS feed with a check of 5 minutes
 3. Select **view topics** - enjoy news.
 4. Select a headline to jump to the article.
