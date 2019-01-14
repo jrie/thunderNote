@@ -34,7 +34,7 @@ function exportSettings () {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 function triggerImport () {
-  browser.runtime.getBackgroundPage().then(function (bgPage)  {
+  browser.runtime.getBackgroundPage().then(function (bgPage) {
     bgPage.document.adoptNode(document.querySelector('#importFile')).addEventListener('change', bgPage.importSettings)
   }, errorHandle)
 }
@@ -269,7 +269,8 @@ function fillTopics () {
 
           let entryContent = document.createElement('p')
           entryContent.className = 'entryContent'
-          entryContent.appendChild(document.createTextNode(item[3]))
+          entryContent.innerHTML = item[3] // NOTE: Is it dangerous to use innerHTML here?
+          //entryContent.appendChild(document.createTextNode(item[3]))
 
           subList.appendChild(entryDate)
           subList.appendChild(entryTitle)

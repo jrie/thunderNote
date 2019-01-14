@@ -34,18 +34,24 @@ function handleRSS (URI) {
 }
 
 // -------------------------------------------------------------------------------------------------------
-
 function processXMLData (xmlDoc) {
   let x2js = new X2JS()
   let json = x2js.xml2json(xmlDoc)
 
-  if (json['rss'] === undefined || json['rss']['channel'] === undefined) return false
+  let jsonData
+  if (json['channel'] !== undefined) {
+    jsonData = json['channel']
+  } else if (json['rss'] !== undefined || json['rss']['channel'] !== undefined) {
+    jsonData = json['rss']['channel']
+  }
+
+  if (jsonData === undefined) return false
 
   browser.storage.local.get('keywords').then(function (keywordData) {
     if (keywordData === undefined) return true
 
     for (let keyword of Object.keys(keywordData['keywords']['cnt'])) {
-      for (let item of json['rss']['channel']['item']) {
+      for (let item of jsonData['item']) {
         let link = item['link']
         let title = item['title']
         let description = item['description']
@@ -53,8 +59,10 @@ function processXMLData (xmlDoc) {
 
         let itemData = [link, title, description]
 
-        let mediaMatch = item['encoded'].toString().match(/img src='((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
-        if (mediaMatch !== null && mediaMatch[1] !== undefined) itemData.push(mediaMatch[1])
+        if (item['encoded'] !== undefined) {
+          let mediaMatch = item['encoded'].toString().match(/img src='((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
+          if (mediaMatch !== null && mediaMatch[1] !== undefined) itemData.push(mediaMatch[1])
+        }
 
         let keyRegEx = new RegExp(keyword, 'g')
 
