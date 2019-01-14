@@ -111,10 +111,14 @@ function handleButtons (evt) {
   let activePage = document.querySelector('.page.active')
   let tabIndex = 1
   if (activePage !== null) {
+    browser.sidebarAction.setTitle({ 'title': document.querySelector('.headerControl h2').textContent + ': ' + activePage.querySelector('h2').textContent })
     for (let child of activePage.children) {
       if ((child.nodeName === 'BUTTON' && child.className !== 'backButton') || child.nodeName === 'INPUT' || child.nodeName === 'SELECT') child.setAttribute('tabindex', tabIndex++)
     }
-  } else for (let child of document.querySelector('.headerControl').children) child.setAttribute('tabindex', tabIndex++)
+  } else {
+    for (let child of document.querySelector('.headerControl').children) child.setAttribute('tabindex', tabIndex++)
+    browser.sidebarAction.setTitle({ 'title': document.querySelector('.headerControl h2').textContent })
+  }
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -246,7 +250,7 @@ function fillTopics () {
         entryTitle.className = 'entryTitle'
         entryTitle.appendChild(document.createTextNode('---'))
         subList.appendChild(entryTitle)
-      } else  {
+      } else {
         let subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
