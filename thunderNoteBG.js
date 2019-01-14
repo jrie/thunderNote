@@ -1,7 +1,12 @@
-/*
-  http://www.tagesschau.de/xml/rss2
-  http://www.spiegel.de/schlagzeilen/tops/index.rss']
-*/
+// Localization
+function getFirefoxMessage (messageName, params) {
+  if (params !== undefined) return browser.i18n.getMessage(messageName, params)
+  return browser.i18n.getMessage(messageName)
+}
+
+let getMsg = getFirefoxMessage
+
+// -------------------------------------------------------------------------------------------------------
 
 function handleAlarms (evt) {
   handleRSS(evt.name)
@@ -14,12 +19,12 @@ function handleRSS (URI) {
     if (evt.target.readyState === 4) {
       if (evt.target.status === 200) {
         if (processXMLData(evt.target.responseXML)) {
-          browser.notifications.create(null, { 'type': 'basic', 'title': 'RSS Update', 'message': URI + ' was updated.' })
+          browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
           return
         }
       }
 
-      browser.notifications.create(null, { 'type': 'basic', 'title': 'Fetching data error', 'message': URI + ' could not been fetched.' })
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
     }
   })
 
@@ -27,6 +32,8 @@ function handleRSS (URI) {
   request.open('GET', URI)
   request.send()
 }
+
+// -------------------------------------------------------------------------------------------------------
 
 function processXMLData (xmlDoc) {
   let x2js = new X2JS()
@@ -89,13 +96,17 @@ function addKeyword (keywordData, info) {
   browser.runtime.sendMessage({ 'addKeyword': keywordText })
 }
 
+// -------------------------------------------------------------------------------------------------------
+
 function errorHandle (error) {
   console.warn('An error occured:')
   console.warn(error)
 }
 
+// -------------------------------------------------------------------------------------------------------
+
 browser.alarms.onAlarm.addListener(handleAlarms)
-browser.contextMenus.create({ title: 'Add news keyword', documentUrlPatterns: ['*://*/*'], contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
+browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), documentUrlPatterns: ['*://*/*'], contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
 
 browser.storage.local.get('feeds').then(function (data) {
   browser.alarms.clearAll()

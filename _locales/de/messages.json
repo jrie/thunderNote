@@ -1,0 +1,129 @@
+{
+  "AddonDescription": {
+    "message": "Ein scharfer RSS feed und Nachrichten Client für Firefox."
+  },
+  "Shortcut": {
+    "message": "Öffnen Sie die Seitenleiste mit dem Shortcut Strg + Shift + B",
+    "description": "Text for keyboard shortcut to active or deactivate the sidebar"
+  },
+
+  "RSSupdateTitle": {
+    "message": "RSS aktualisiert",
+    "description": "Notification title for updated RSS feed"
+  },
+  "RSSupdateInformation": {
+    "message": "'$feedURI$' wurde aktualisiert",
+    "description": "Notifcation message that URI was updated.",
+    "placeholders": {
+      "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
+    }
+  },
+  "RSSupdateFailTitle": {
+    "message": "Aktualisierung fehlgeschlagen",
+    "description": "Notification title for failing RSS feed update"
+  },
+  "RSSupdateInformationFail": {
+    "message": "'$feedURI$' konnte nicht aktualisiert werden.",
+    "description": "Notifcation message that URI update failed.",
+    "placeholders": {
+      "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
+    }
+  },
+
+  "contextMenuAddKeyword": {
+    "message": "Auswahl als Schlüsselwort",
+    "description": "Context menu entry to add a keyword"
+  },
+
+  "buttonAddURI": {
+    "message": "URI hinzufügen",
+    "description": "Interface button, add URI to watchlist"
+  },
+  "buttonUpdateURI": {
+    "message": "URI Einstellungen aktualisieren",
+    "description": "Interface button to update existing URI"
+  },
+
+  "errorOccured": {
+    "message": "Ein Fehler trat auf:",
+    "description": "Console warning, an error occured"
+  },
+
+  "noTopics": {
+    "message": "Keine Themen gefunden.",
+    "description": "Information shown if no topics are found"
+  },
+
+  "addKeywordTitle": {
+    "message": "Schlüsselwort eingetragen",
+    "description": "Notification title for adding keyword"
+  },
+  "addKeywordBody": {
+    "message": "Schlüsselwort '$keyword$' zu Suchliste hinzugefügt",
+    "description": "Notifcation message which keyword was added",
+    "placeholders": {
+      "keyword": { "content": "$1", "example": "Economy"}
+    }
+  },
+
+  "buttonRemoveURI": {
+    "message": "URL aus Suchliste entfernen",
+    "description": "Interface button, delete URI from watchlist"
+  },
+  "buttonManageURIs": {
+    "message": "Suchseiten verwalten",
+    "description": "Interface button, manage URI watchlist"
+  },
+  "buttonManageKeywords": {
+    "message": "Schlüsselwörter verwalten",
+    "description": "Interface button, manage keywords"
+  },
+  "buttonViewTopics": {
+    "message": "Nachrichten anzeigen",
+    "description": "Interface button, view topics"
+  },
+
+
+  "titleAddRSS": {
+    "message": "RSS Feed hinzufügen",
+    "description": "Add RSS page title"
+  },
+  "titleFeeds": {
+    "message": "Feeds bearbeiten",
+    "description": "Manage feeds page title"
+  },
+
+  "titleKeywords": {
+    "message": "Schlüsselwörter bearbeiten",
+    "description": "Manage keywords page title"
+  },
+
+  "titleTopics": {
+    "message": "Nachrichten",
+    "description": "View topics page title"
+  },
+
+
+  "addURIinfo": {
+    "message": "URL hinzufügen",
+    "description": "Interface prompt uri placeholder"
+  },
+  "addURItypeRSS": {
+    "message": "RSS Feed",
+    "description": "RSS feed selection feed type label"
+  },
+  "addURItypeHTML": {
+    "message": "HTML Seite",
+    "description": "HTML selection feed type label"
+  },
+  "addURIinterval": {
+    "message": "Aktualisierungszeitraum 1 bis 360 Minuten",
+    "description": "Information about fetch interval placeholder range"
+  },
+
+
+  "addKeyword": {
+    "message": "Schlüsselwort eintragen...",
+    "description": "Interface prompt add keyword placeholder"
+  }
+}

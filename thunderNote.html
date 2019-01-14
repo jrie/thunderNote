@@ -8,43 +8,43 @@
   <body>
     <div class="headerControl">
       <h2 class="headline">thunderNote</h2>
-      <button tabindex="-1" class="controlButton" data-cmd="addItem">Add URI to watchlist</button>
-      <button tabindex="-1" class="controlButton" data-cmd="manageURIs">Manage active watchlist</button>
-      <button tabindex="-1" class="controlButton" data-cmd="manageKeywords">Manage active keywords</button>
-      <button tabindex="-1" class="controlButton" data-cmd="viewTopics">View topics</button>
+      <button tabindex="-1" class="controlButton" data-cmd="addItem">__MSG_buttonAddUri__</button>
+      <button tabindex="-1" class="controlButton" data-cmd="manageURIs">__MSG_buttonManageURIs__</button>
+      <button tabindex="-1" class="controlButton" data-cmd="manageKeywords">__MSG_buttonManageKeywords__</button>
+      <button tabindex="-1" class="controlButton" data-cmd="viewTopics">__MSG_buttonViewTopics__</button>
     </div>
 
     <div class="page" data-src='addItem'>
       <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
-      <h2 class="headline">Add RSS feed</h2>
+      <h2 class="headline">__MSG_titleAddRSS__</h2>
       <div class="clearfix">
-        <input tabindex="-1" id="feedUri" type="text" placeholder="Add url to fetch..." value="" autocomplete="false" />
+        <input tabindex="-1" id="feedUri" type="text" placeholder="__MSG_addURIinfo__" value="" autocomplete="false" />
         <select tabindex="-1" id="feedType" autocomplete="false">
-          <option selected="selected" value="rss">RSS feed</option>
-          <option value="page">HTML Page</option>
+          <option selected="selected" value="rss">__MSG_addURItypeRSS__</option>
+          <option value="page">__MSG_addURItypeHTML__</option>
         </select>
-        <input tabindex="-1" id="feedInterval" type="number" min="1" max="360" step="5" placeholder="Fetch interval 1 to 360 minutes" autocomplete="false"/>
-        <button tabindex="-1" class="controlButton" data-cmd="add">Add URI to watchlist</button>
-        <button tabindex="-1" class="controlButton hidden" data-cmd="removeFeed">Delete URI from watchlist</button>
+        <input tabindex="-1" id="feedInterval" type="number" min="1" max="360" step="5" placeholder="__MSG_addURIinterval__" autocomplete="false"/>
+        <button tabindex="-1" class="controlButton" data-cmd="add">__MSG_buttonAddURI__</button>
+        <button tabindex="-1" class="controlButton hidden" data-cmd="removeFeed">__MSG_buttonRemoveURI__</button>
       </div>
     </div>
 
     <div class="page" data-src='manageURIs'>
       <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
-      <h2 class="headline">Manage feeds</h2>
+      <h2 class="headline">__MSG_titleFeeds__</h2>
       <ul id="manageURIs" class="itemList clearfix"></ul>
     </div>
 
     <div class="page" data-src='manageKeywords'>
         <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
-        <h2 class="headline">Manage keywords</h2>
-        <input tabindex="-1" type="text" placeholder="Add keyword..." id="addKeywordInput" value="" />
+        <h2 class="headline">__MSG_titleKeywords__</h2>
+        <input tabindex="-1" type="text" placeholder="__MSG_addKeyword__" id="addKeywordInput" value="" />
         <ul id="manageKeywords" class="itemList clearfix"></ul>
     </div>
 
     <div class="page" data-src='viewTopics'>
         <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
-        <h2 class="headline">View topics</h2>
+        <h2 class="headline">__MSG_titleTopics__</h2>
         <ul id="viewTopics" class="itemList clearfix"></ul>
     </div>
 

@@ -1,4 +1,3 @@
-// let feedURLs = ['http://www.tagesschau.de/xml/rss2', 'http://www.spiegel.de/schlagzeilen/tops/index.rss']
 // Localization
 let getMsg = getFirefoxMessage
 
@@ -7,10 +6,11 @@ function getFirefoxMessage (messageName, params) {
   return browser.i18n.getMessage(messageName)
 }
 
+// -------------------------------------------------------------------------------------------------------
 function generateZip (rawData) {
   let data = JSON.stringify(rawData)
   let zip = new JSZip()
-  zip.file('flagCookieSettings.json', data)
+  zip.file('thunderNote.json', data)
 
   zip.generateAsync({ 'type': 'blob' }).then(function (blob) {
     let dlLink = document.createElement('a')
@@ -26,14 +26,15 @@ function generateZip (rawData) {
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-async function exportSettings () {
-  generateZip(await browser.storage.local.get())
+function exportSettings () {
+  browser.storage.local.get().then(function (data) { generateZip(data) }, errorHandle)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-async function triggerImport () {
-  let bgPage = await browser.runtime.getBackgroundPage()
-  bgPage.document.adoptNode(document.querySelector('#importFile')).addEventListener('change', bgPage.importSettings)
+function triggerImport () {
+  browser.runtime.getBackgroundPage().then(function (bgPage)  {
+    bgPage.document.adoptNode(document.querySelector('#importFile')).addEventListener('change', bgPage.importSettings)
+  }, errorHandle)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -57,11 +58,11 @@ function handleButtons (evt) {
         document.querySelector('#feedType').value = 'rss'
         document.querySelector('#feedInterval').value = ''
         removalButton.classList.add('hidden')
-        addButton.textContent = 'Add URI to watchlist'
+        addButton.textContent = getMsg('buttonAddURI')
       } else {
         removalButton.dataset['url'] = evt.target.dataset['url']
         removalButton.classList.remove('hidden')
-        addButton.textContent = 'Update URI settings'
+        addButton.textContent = getMsg('buttonUpdateURI')
       }
 
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
@@ -109,7 +110,7 @@ function handleButtons (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function errorHandle (error) {
-  console.warn('An error occured:')
+  console.warn(getMsg('errorOccured'))
   console.warn(error)
 }
 
@@ -171,6 +172,7 @@ function fillURIs () {
 
 function fillKeywords () {
   browser.storage.local.get('keywords').then(function (data) {
+    if (data['keywords'] === undefined) return
     let ul = document.querySelector('#manageKeywords')
     ul.innerHTML = ''
 
@@ -193,6 +195,7 @@ function fillKeywords () {
 // --------------------------------------------------------------------------------------------------------------------------------
 function fillTopics () {
   browser.storage.local.get('keywords').then(function (data) {
+    if (data['keywords'] === undefined) return
     let rootUl = document.querySelector('#viewTopics')
     rootUl.innerHTML = ''
 
@@ -204,7 +207,7 @@ function fillTopics () {
 
       let subLine = document.createElement('h2')
       subLine.className = 'subTitle'
-      subLine.appendChild(document.createTextNode('No topics found.'))
+      subLine.appendChild(document.createTextNode(getMsg('noTopics')))
       li.appendChild(subLine)
       rootUl.appendChild(li)
       return
@@ -250,7 +253,7 @@ function fillTopics () {
           entryTitle.appendChild(document.createTextNode(item[0]))
 
           let entryContent = document.createElement('p')
-          entryContent.className = "entryContent"
+          entryContent.className = 'entryContent'
           entryContent.appendChild(document.createTextNode(item[3]))
 
           subList.appendChild(entryDate)
@@ -268,7 +271,7 @@ function fillTopics () {
 function handleMessage (message) {
   if (message['addKeyword'] !== undefined) {
     fillKeywords()
-    browser.notifications.create(null, { 'type': 'basic', 'title': 'Added keyword', 'message': 'Keyword "' + message['addKeyword'] + '" added to watchlist.' })
+    browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
   }
 }
 
@@ -289,7 +292,7 @@ function addInputKeyword (evt) {
     browser.storage.local.set(keywordData)
 
     fillKeywords()
-    browser.notifications.create(null, { 'type': 'basic', 'title': 'Added keyword', 'message': 'Keyword "' + keywordText + '" added to watchlist.' })
+    browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
     evt.target.value = ''
   }, errorHandle)
 }
