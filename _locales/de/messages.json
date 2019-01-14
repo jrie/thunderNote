@@ -1,9 +1,9 @@
 {
   "AddonDescription": {
-    "message": "Ein scharfer RSS feed und Nachrichten Client für Firefox."
+    "message": "Der schlaue RSS Feed und Nachrichten Client."
   },
   "Shortcut": {
-    "message": "Öffnen Sie die Seitenleiste mit dem Shortcut Strg + Shift + B",
+    "message": "Öffnen der Seitenleiste mit 'Strg + Shift + B'",
     "description": "Text for keyboard shortcut to active or deactivate the sidebar"
   },
 
