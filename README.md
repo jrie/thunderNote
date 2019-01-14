@@ -1,4 +1,4 @@
-![thunderNote Logo](https://www.picflash.org/img/2019/01/14/pivn23v6nldd6n4.png "thunderNote Logo")
+![thunderNote Logo](https://www.picflash.org/img/2019/01/14/m9gr45u7t1hi6rk.png "thunderNote Logo")
  
 # thunderNote
 Staying on top of news with *thunderNote* RSS feed client browser add-on.
