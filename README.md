@@ -11,8 +11,8 @@ Staying on top of news with *thunderNote* RSS feed client browser add-on.
 * Add keywords by selection page content and "Add new keyword" simply.
 * Show notifications and status.
 
-## Installation
-**Firefox**: Open **"about:debugging"**, select **"Load temporary addon"** and then select ***manifest.json*** from ***thunderNote***.
+## Installation and testing
+Testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary addon"** and then select ***manifest.json*** from ***thunderNote***.
 
 ## Usage
 1. **Add keywords** of interesting topics to look out for
