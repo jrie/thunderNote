@@ -1,12 +1,14 @@
+// --------------------------------------------------------------------------------------------------------------------------------
 // Localization
-let getMsg = getFirefoxMessage
-
 function getFirefoxMessage (messageName, params) {
   if (params !== undefined) return browser.i18n.getMessage(messageName, params)
   return browser.i18n.getMessage(messageName)
 }
 
+let getMsg = getFirefoxMessage
+
 // -------------------------------------------------------------------------------------------------------
+
 function generateZip (rawData) {
   let data = JSON.stringify(rawData)
   let zip = new JSZip()
@@ -37,16 +39,13 @@ function triggerImport () {
   }, errorHandle)
 }
 
-// --------------------------------------------------------------------------------------------------------------------------------
-// Startup code
 // document.querySelector('#importFile').addEventListener('click', triggerImport)
 
 // --------------------------------------------------------------------------------------------------------------------------------
 function handleButtons (evt) {
   document.querySelector('.headerControl').classList.remove('inactive')
-  for (let page of document.querySelectorAll('.page')) {
-    page.classList.remove('active')
-  }
+
+  for (let page of document.querySelectorAll('.page')) page.classList.remove('active')
 
   let addButton = document.querySelector('.controlButton[data-cmd="add"]')
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
@@ -105,6 +104,17 @@ function handleButtons (evt) {
     default:
       break
   }
+
+  let domNodes = document.querySelectorAll('*')
+  for (let item of domNodes) item.setAttribute('tabindex', -1)
+
+  let activePage = document.querySelector('.page.active')
+  let tabIndex = 1
+  if (activePage !== null) {
+    for (let child of activePage.children) {
+      if ((child.nodeName === 'BUTTON' && child.className !== 'backButton') || child.nodeName === 'INPUT' || child.nodeName === 'SELECT') child.setAttribute('tabindex', tabIndex++)
+    }
+  } else for (let child of document.querySelector('.headerControl').children) child.setAttribute('tabindex', tabIndex++)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -193,6 +203,7 @@ function fillKeywords () {
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
+
 function fillTopics () {
   browser.storage.local.get('keywords').then(function (data) {
     if (data['keywords'] === undefined) return
@@ -310,7 +321,14 @@ for (let backButton of document.querySelectorAll('.backButton')) {
 document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
 
+// --------------------------------------------------------------------------------------------------------------------------------
+
 fillKeywords()
 fillTopics()
+
+let domNodes = document.querySelectorAll('*')
+for (let item of domNodes) item.setAttribute('tabindex', -1)
+
+// --------------------------------------------------------------------------------------------------------------------------------
 
 browser.runtime.onMessage.addListener(handleMessage)

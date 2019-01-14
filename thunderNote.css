@@ -8,12 +8,11 @@ body {
   font-weight: normal;
   text-shadow: 1px 1px 0px rgba(255,255,255, 0.225);
   overflow-x: hidden;
-  overflow-y: scroll;
   font-weight: bold;
   background: rgb(30,87,153);
-  background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(41,137,216,1) 13%, rgba(32,124,202,1) 95%, rgba(125,185,232,1) 100%);
-  background: -webkit-linear-gradient(top, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
-  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
+  background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(41,137,216,1) 13%, rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
+  background: -webkit-linear-gradient(top, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
+  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95% rgb(69, 123, 165) 100%);
   background-size: 100%;
   background-attachment: fixed;
 }
@@ -33,12 +32,17 @@ body {
 }
 
 .page {
+  position: absolute;
+  top: 0px;
+  left: 0px;
   background-color: inherit;
   transform: translate(105%, 0px);
   z-index: 100;
-  height: 98%;
-  width: 96%;
+  height: 100%;
+  width: 100%;
+  padding: 2% 2%;
   border-radius: 12px;
+  overflow-y: auto;
 }
 
 .page.active {
@@ -64,7 +68,10 @@ button {
   text-align: center;
   word-wrap: break-word;
   background: rgb(30,87,153);
-  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
+  background: rgb(30,87,153);
+  background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(41,137,216,1) 8%, rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
+  background: -webkit-linear-gradient(top, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 8%,rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
+  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 8%,rgba(32,124,202,1) 95% rgb(69, 123, 165) 100%);
   outline:none;
 }
 
