@@ -13,7 +13,7 @@
     "default_panel": "thunderNote.html",
     "default_icon": "icons/thunderNote.svg"
   },
-  "description": "A rss feed news client",
+  "description": "A slick rss feed and news client.",
   "icons": {
     "48": "icons/thunderNote.svg",
     "64": "icons/thunderNote.svg",

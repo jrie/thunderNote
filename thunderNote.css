@@ -65,6 +65,19 @@ button {
   word-wrap: break-word;
   background: rgb(30,87,153);
   background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95%,rgba(125,185,232,1) 100%);
+  outline:none;
+}
+
+input:focus,
+select:focus,
+button:focus {
+  outline:none;
+}
+
+input::-moz-focus-inner,
+select::-moz-focus-inner,
+button::-moz-focus-inner {
+  border: none;
 }
 
 .hidden {

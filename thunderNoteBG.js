@@ -47,9 +47,7 @@ function processXMLData (xmlDoc) {
         let itemData = [link, title, description]
 
         let mediaMatch = item['encoded'].toString().match(/img src='((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
-        if (mediaMatch !== null && mediaMatch[1] !== undefined) {
-          itemData.push(mediaMatch[1])
-        }
+        if (mediaMatch !== null && mediaMatch[1] !== undefined) itemData.push(mediaMatch[1])
 
         let keyRegEx = new RegExp(keyword, 'g')
 

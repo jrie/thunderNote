@@ -8,42 +8,42 @@
   <body>
     <div class="headerControl">
       <h2 class="headline">thunderNote</h2>
-      <button class="controlButton" data-cmd="addItem">Add URI to watchlist</button>
-      <button class="controlButton" data-cmd="manageURIs">Manage active watchlist</button>
-      <button class="controlButton" data-cmd="manageKeywords">Manage active keywords</button>
-      <button class="controlButton" data-cmd="viewTopics">View topics</button>
+      <button tabindex="-1" class="controlButton" data-cmd="addItem">Add URI to watchlist</button>
+      <button tabindex="-1" class="controlButton" data-cmd="manageURIs">Manage active watchlist</button>
+      <button tabindex="-1" class="controlButton" data-cmd="manageKeywords">Manage active keywords</button>
+      <button tabindex="-1" class="controlButton" data-cmd="viewTopics">View topics</button>
     </div>
 
     <div class="page" data-src='addItem'>
-      <button class="backButton" data-src="back">&laquo;</button>
+      <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
       <h2 class="headline">Add RSS feed</h2>
       <div class="clearfix">
-        <input id="feedUri" type="text" placeholder="Add url to fetch..." value="" autocomplete="false" />
-        <select id="feedType" autocomplete="false">
+        <input tabindex="-1" id="feedUri" type="text" placeholder="Add url to fetch..." value="" autocomplete="false" />
+        <select tabindex="-1" id="feedType" autocomplete="false">
           <option selected="selected" value="rss">RSS feed</option>
           <option value="page">HTML Page</option>
         </select>
-        <input id="feedInterval" type="number" min="1" max="360" step="5" placeholder="Fetch interval 1 to 360 minutes" autocomplete="false"/>
-        <button class="controlButton" data-cmd="add">Add URI to watchlist</button>
-        <button class="controlButton hidden" data-cmd="removeFeed">Delete URI from watchlist</button>
+        <input tabindex="-1" id="feedInterval" type="number" min="1" max="360" step="5" placeholder="Fetch interval 1 to 360 minutes" autocomplete="false"/>
+        <button tabindex="-1" class="controlButton" data-cmd="add">Add URI to watchlist</button>
+        <button tabindex="-1" class="controlButton hidden" data-cmd="removeFeed">Delete URI from watchlist</button>
       </div>
     </div>
 
     <div class="page" data-src='manageURIs'>
-      <button class="backButton" data-src="back">&laquo;</button>
+      <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
       <h2 class="headline">Manage feeds</h2>
       <ul id="manageURIs" class="itemList clearfix"></ul>
     </div>
 
     <div class="page" data-src='manageKeywords'>
-        <button class="backButton" data-src="back">&laquo;</button>
+        <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
         <h2 class="headline">Manage keywords</h2>
-        <input type="text" placeholder="Add keyword..." id="addKeywordInput" value="" />
+        <input tabindex="-1" type="text" placeholder="Add keyword..." id="addKeywordInput" value="" />
         <ul id="manageKeywords" class="itemList clearfix"></ul>
     </div>
 
     <div class="page" data-src='viewTopics'>
-        <button class="backButton" data-src="back">&laquo;</button>
+        <button tabindex="-1" class="backButton" data-src="back">&laquo;</button>
         <h2 class="headline">View topics</h2>
         <ul id="viewTopics" class="itemList clearfix"></ul>
     </div>
