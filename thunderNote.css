@@ -75,15 +75,14 @@ button {
   outline:none;
 }
 
-input:focus,
-select:focus,
-button:focus {
+*:focus {
   outline:none;
 }
 
 input::-moz-focus-inner,
 select::-moz-focus-inner,
-button::-moz-focus-inner {
+button::-moz-focus-inner,
+a::-moz-focus-inner {
   border: none;
 }
 
