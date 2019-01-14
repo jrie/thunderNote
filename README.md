@@ -12,7 +12,9 @@ Staying on top of news with *thunderNote* RSS feed client browser add-on.
 * Show notifications and status.
 
 ## Installation and testing
-Testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary addon"** and then select ***manifest.json*** from ***thunderNote***.
+**Firefox addon** page: https://addons.mozilla.org/en-US/firefox/addon/thundernote
+
+For testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary addon"** and then select ***manifest.json*** from ***thunderNote***.
 
 ## Usage
 1. **Add keywords** of interesting topics to look out for
