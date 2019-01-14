@@ -11,7 +11,7 @@ Staying on top of news with *thunderNote* RSS feed client browser add-on.
 * Add keywords by selection page content and "Add new keyword" simply.
 * Show notifications and status.
 * Shortcut **Ctrl + Shift + B** opens/close the sidebar
-* Select any text or a link to, in the context menum, to create and add ***Add news keyword*** of the selection.
+* Select/highlight any text or a link in a webpage to create and add ***Add news keyword*** of the selection from within the context menu.
 
 ## Installation and testing
 **Firefox addon** page: https://addons.mozilla.org/en-US/firefox/addon/thundernote
