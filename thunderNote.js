@@ -48,6 +48,12 @@ function isEnabled () {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
+function setFocus(element) {
+  setTimeout(function() { document.querySelector(element).focus() }, 700)
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
 function handleButtons (evt) {
   document.querySelector('.headerControl').classList.remove('inactive')
 
@@ -57,6 +63,13 @@ function handleButtons (evt) {
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
   let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
+  for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
+
+  document.removeEventListener('keyup', handleKeyUp)
+  activeNews = -1
+
+  let focusNode = null
+
   switch (evt.target.dataset['cmd']) {
     case 'addItem':
       if (evt.target.dataset['url'] === undefined) {
@@ -64,6 +77,7 @@ function handleButtons (evt) {
         document.querySelector('#feedType').value = 'rss'
         document.querySelector('#feedInterval').value = ''
         document.querySelector('#feedMaxAge').value = ''
+
         removalButton.classList.add('hidden')
         forceUpdateButton.classList.add('hidden')
 
@@ -76,10 +90,12 @@ function handleButtons (evt) {
         forceUpdateButton.classList.remove('hidden')
 
         addButton.textContent = getMsg('buttonUpdateURI')
+        for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
       }
 
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       document.querySelector('.headerControl').classList.add('inactive')
+      focusNode = '#feedURI'
       break
     case 'add':
       let url = document.querySelector('#feedURI').value
@@ -108,16 +124,21 @@ function handleButtons (evt) {
       fillURIs()
       document.querySelector('.headerControl').classList.add('inactive')
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
       break
     case 'manageKeywords':
       fillKeywords()
       document.querySelector('.headerControl').classList.add('inactive')
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      focusNode = '#addKeywordInput'
       break
     case 'viewTopics':
       fillTopics()
       document.querySelector('.headerControl').classList.add('inactive')
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
+      document.addEventListener('keyup', handleKeyUp)
+      for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
       break
     default:
       break
@@ -127,6 +148,7 @@ function handleButtons (evt) {
   for (let item of domNodes) item.setAttribute('tabindex', -1)
 
   let activePage = document.querySelector('.page.active')
+
   let tabIndex = 1
   if (activePage !== null) {
     browser.sidebarAction.setTitle({ 'title': document.querySelector('.headerControl h2').textContent + ': ' + activePage.querySelector('h2').textContent })
@@ -137,6 +159,8 @@ function handleButtons (evt) {
     for (let child of document.querySelector('.headerControl').children) child.setAttribute('tabindex', tabIndex++)
     browser.sidebarAction.setTitle({ 'title': document.querySelector('.headerControl h2').textContent })
   }
+
+  if (focusNode !== null) setFocus(focusNode)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -168,6 +192,12 @@ function forceUpdate (evt) {
       browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
     }
   }, errorHandle)
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+function removeChildren (element) {
+  for (let x = 0; x < element.children.length; ++x) element.removeChild(element.children[x--])
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -217,7 +247,7 @@ function fillKeywords () {
   browser.storage.local.get('keywords').then(function (data) {
     if (data['keywords'] === undefined) return
     let ul = document.querySelector('#manageKeywords')
-    ul.innerHTML = ''
+    removeChildren(ul)
 
     for (let wordTrigger of Object.keys(data['keywords']['cnt'])) {
       let li = document.createElement('li')
@@ -240,11 +270,10 @@ function fillKeywords () {
 function fillTopics () {
   browser.storage.local.get().then(function (data) {
     if (data['keywords'] === undefined) return
-    let rootUl = document.querySelector('#viewTopics')
-    rootUl.innerHTML = ''
+    let ul = document.querySelector('#viewTopics')
+    removeChildren(ul)
 
     let sortedTopics = Object.keys(data['keywords']['cnt']).sort()
-
     if (Object.keys(data['keywords']['urls']).length === 0) {
       let li = document.createElement('li')
       li.className = 'newsEntry'
@@ -253,12 +282,12 @@ function fillTopics () {
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('noTopics')))
       li.appendChild(subLine)
-      rootUl.appendChild(li)
+      ul.appendChild(li)
       return
     }
 
     let now = Date.now()
-    let dayLength = 24 * 3600 * 1000.0
+    let newsIndex = 0
 
     for (let keyword of sortedTopics) {
       let li = document.createElement('li')
@@ -316,6 +345,7 @@ function fillTopics () {
           entryTitle.href = key
           entryTitle.className = 'entryTitle'
           entryTitle.appendChild(document.createTextNode(item[0]))
+          entryTitle.dataset['index'] = newsIndex++
 
           let entryContent = document.createElement('p')
           entryContent.className = 'entryContent'
@@ -327,17 +357,15 @@ function fillTopics () {
         }
       }
 
-      rootUl.appendChild(li)
+      ul.appendChild(li)
     }
   }, errorHandle)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-
 function removeNodes (child) {
-  for (let childNode of child.children) {
-    removeNodes(childNode)
-  }
+  for (let childNode of child.children) removeNodes(childNode)
+
   if (child.nodeName !== 'A' && child.nodeName !== 'P') {
     child.parentNode.appendChild(document.createTextNode(child.textContent))
     child.parentNode.removeChild(child)
@@ -378,23 +406,11 @@ function addInputKeyword (evt) {
     fillKeywords()
     browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
     evt.target.value = ''
+    evt.target.focus()
   }, errorHandle)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-// Initial controls
-for (let controlButton of document.querySelectorAll('.controlButton')) {
-  controlButton.addEventListener('click', handleButtons)
-}
-
-for (let backButton of document.querySelectorAll('.backButton')) {
-  backButton.addEventListener('click', handleButtons)
-}
-
-document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
-document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
-document.querySelector('#setThunderNoteState').addEventListener('change', toggleThunderNodeState)
-document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
 
 function toggleThunderNodeState (evt) {
   if (evt.target.value === 'disabled') {
@@ -413,6 +429,44 @@ function toggleThunderNodeState (evt) {
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
+let activeNews = -1
+function handleKeyUp (evt) {
+  if (evt.target.nodeName === 'INPUT' || evt.target.nodeName === 'BUTTON' || evt.target.nodeName === 'TEXTAREA') return
+  if (evt.altKey) {
+    // Alt key pressed
+    let currentPage = document.querySelector('.page.active')
+    let titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
+
+    if (evt.keyCode === 38) {
+      evt.preventDefault()
+      // arrow up
+      if (activeNews === 0) activeNews = titleElements.length
+      titleElements[--activeNews].focus()
+      currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+    } else if (evt.keyCode === 40) {
+      evt.preventDefault()
+      // arrow down
+      if (activeNews >= titleElements.length - 1) activeNews = -1
+      titleElements[++activeNews].focus()
+    }
+    currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+  }
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+for (let controlButton of document.querySelectorAll('.controlButton')) controlButton.addEventListener('click', handleButtons)
+for (let backButton of document.querySelectorAll('.backButton')) backButton.addEventListener('click', handleButtons)
+
+document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
+document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
+document.querySelector('#setThunderNoteState').addEventListener('change', toggleThunderNodeState)
+document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
+browser.runtime.onMessage.addListener(handleMessage)
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+const dayLength = 24 * 3600 * 1000.0
 
 fillKeywords()
 fillTopics()
@@ -421,5 +475,3 @@ let domNodes = document.querySelectorAll('*')
 for (let item of domNodes) item.setAttribute('tabindex', -1)
 
 // --------------------------------------------------------------------------------------------------------------------------------
-
-browser.runtime.onMessage.addListener(handleMessage)
