@@ -75,15 +75,16 @@ button {
   outline: none;
 }
 
-*:focus {
-  outline: none;
-}
-
 input::-moz-focus-inner,
 select::-moz-focus-inner,
 button::-moz-focus-inner,
 a::-moz-focus-inner {
   border: none;
+}
+
+div, ul, h1, h2, h3, h4 {
+  outline: none;
+  user-select: none;
 }
 
 hr {
@@ -208,6 +209,7 @@ button.backButton:hover {
   padding: 6px 12px;
   font-size: 1.5rem;
   background-color: rgba(0,0,0, 0.08);
+  border-radius: 0px 6px 6px 0px;
 }
 
 .entryDate {
@@ -244,7 +246,6 @@ button.backButton:hover {
   text-decoration: none;
 
 }
-
 
 .entryContent {
   font-size: 0.75em;
