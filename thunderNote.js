@@ -93,7 +93,7 @@ function handleButtons (evt) {
         data['feeds'][url] = [type, crawlTime, maxAge]
 
         browser.storage.local.set(data)
-        browser.alarms.create(url, { 'when': Date.now() + 2500, 'periodInMinutes': crawlTime })
+        browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
       }, errorHandle)
       break
     case 'manageURIs':
@@ -249,6 +249,9 @@ function fillTopics () {
       return
     }
 
+    let now = Date.now()
+    let dayLength = 24 * 3600 * 1000.0
+
     for (let keyword of sortedTopics) {
       let li = document.createElement('li')
       li.className = 'newsEntry'
@@ -263,8 +266,6 @@ function fillTopics () {
       subLine.appendChild(subLineCount)
       li.appendChild(subLine)
 
-      let now = Date.now()
-      let dayLength = 24 * 3600 * 1000.0
       let hasDataChange = false
 
       for (let key of Object.keys(data['keywords']['urls'][keyword])) {

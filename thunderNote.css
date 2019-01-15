@@ -15,7 +15,6 @@ body {
   background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 13%,rgba(32,124,202,1) 95% rgb(69, 123, 165) 100%);
   background-size: 100%;
   background-attachment: fixed;
-  line-height: 190%;
 }
 
 .headerControl,
@@ -196,28 +195,32 @@ button.backButton:hover {
 
 .subList {
   margin-top: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   padding: 6px 12px;
   font-size: 1.5rem;
   background-color: rgba(0,0,0, 0.08);
 }
 
 .entryDate {
-  margin-top: 0.95em;
+  margin-top: 0.75em;
   margin-bottom: 3px;
   font-size: 0.75em;
+  width: 100%;
   -moz-user-select: text;
 }
 
 .entryTitle {
   margin: 0px;
-  margin-top: 0.25em;
+  margin-top: 0.3em;
   padding: 0px;
   color: inherit;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
   -moz-user-select: text;
+  width: 100%;
+  max-width: 100%;
+  line-height: 130%;
 }
 
 .entryTitle:hover {
@@ -227,6 +230,14 @@ button.backButton:hover {
 .entryContent {
   font-size: 0.75em;
   font-weight: normal;
-  margin-bottom: 2.45rem;
+  margin-bottom: 2.05rem;
   -moz-user-select: text;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgb(105, 105, 225);
+  line-height: 162%;
+}
+
+.entryContent:last-of-type {
+  border: none;
+  padding-bottom: 0px;
 }

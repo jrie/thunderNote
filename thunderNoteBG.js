@@ -70,9 +70,10 @@ function processXMLData (xmlDoc, URI) {
         if (item['encoded'] !== undefined) {
           let mediaMatch = item['encoded'].toString().match(/img src='((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
           if (mediaMatch !== null && mediaMatch[1] !== undefined) itemData.push(mediaMatch[1])
+          itemData.push(item['encoded'].toString())
         }
 
-        let keyRegEx = new RegExp(keyword, 'g')
+        let keyRegEx = new RegExp(keyword, 'gm')
 
         for (let element of itemData) {
           let matches = element.match(keyRegEx)
