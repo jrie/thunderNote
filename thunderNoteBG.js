@@ -9,8 +9,16 @@ let getMsg = getFirefoxMessage
 // -------------------------------------------------------------------------------------------------------
 
 function handleAlarms (evt) {
-  handleRSS(evt.name)
+  browser.storage.local.get('feeds').then( function (data) {
+    if (data['feeds'] === undefined) return
+
+    if (data['feeds'][evt.name][0] === 'rss') handleRSS(evt.name)
+    // TODO: else => handleWebpage
+  }, errorHandle)
+
 }
+
+// -------------------------------------------------------------------------------------------------------
 
 function handleRSS (URI) {
   let request = new XMLHttpRequest()
@@ -18,7 +26,7 @@ function handleRSS (URI) {
   request.addEventListener('readystatechange', function (evt) {
     if (evt.target.readyState === 4) {
       if (evt.target.status === 200) {
-        if (processXMLData(evt.target.responseXML)) {
+        if (processXMLData(evt.target.responseXML, URI)) {
           browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
           return
         }
@@ -34,7 +42,7 @@ function handleRSS (URI) {
 }
 
 // -------------------------------------------------------------------------------------------------------
-function processXMLData (xmlDoc) {
+function processXMLData (xmlDoc, URI) {
   let x2js = new X2JS()
   let json = x2js.xml2json(xmlDoc)
 
@@ -71,11 +79,12 @@ function processXMLData (xmlDoc) {
 
           if (matches !== null) {
             if (keywordData['keywords']['urls'][keyword] === undefined) keywordData['keywords']['urls'][keyword] = {}
-            if (keywordData['keywords']['urls'][keyword][link] === undefined) keywordData['keywords']['urls'][keyword][link] = [title, matches.length, time, description]
+            if (keywordData['keywords']['urls'][keyword][link] === undefined) keywordData['keywords']['urls'][keyword][link] = [title, matches.length, time, description, URI]
             else {
               keywordData['keywords']['urls'][keyword][link][0] = title
               keywordData['keywords']['urls'][keyword][link][2] = time
               keywordData['keywords']['urls'][keyword][link][3] = description
+              keywordData['keywords']['urls'][keyword][link][4] = URI
             }
           }
         }
@@ -88,6 +97,8 @@ function processXMLData (xmlDoc) {
 
   return true
 }
+
+// -------------------------------------------------------------------------------------------------------
 
 function addKeyword (keywordData, info) {
   if (keywordData['keywords'] === undefined) keywordData['keywords'] = { 'cnt': {}, 'urls': {} }
@@ -119,6 +130,6 @@ browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: 
 browser.storage.local.get('feeds').then(function (data) {
   browser.alarms.clearAll()
   for (let url of Object.keys(data['feeds'])) {
-    browser.alarms.create(url, { 'when': Date.now() + 5000, 'periodInMinutes': data['feeds'][url][1] })
+    browser.alarms.create(url, { 'when': Date.now() + 2500, 'periodInMinutes': data['feeds'][url][1] })
   }
 }, errorHandle)

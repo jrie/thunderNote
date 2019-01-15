@@ -18,14 +18,16 @@
       <button class="backButton" data-src="back">&laquo;</button>
       <h2 class="headline">__MSG_titleAddRSS__</h2>
       <span class="clearfix"></span>
-      <input id="feedUri" type="text" placeholder="__MSG_addURIinfo__" value="" autocomplete="false" />
+      <input id="feedURI" type="text" title="__MSG_addURIinfo__" placeholder="__MSG_addURIinfo__" value="" autocomplete="false" />
       <select id="feedType" autocomplete="false">
         <option selected="selected" value="rss">__MSG_addURItypeRSS__</option>
         <!--<option value="page">__MSG_addURItypeHTML__</option>-->
       </select>
-      <input id="feedInterval" type="number" min="1" max="360" step="5" placeholder="__MSG_addURIinterval__" autocomplete="false"/>
+      <input id="feedInterval" type="number" min="1" max="360" step="5" title="__MSG_addURIinterval__" placeholder="__MSG_addURIinterval__" autocomplete="false"/>
+      <input id="feedMaxAge" type="number" min="0" max="120" step="7" title="__MSG_maxAgeURI__" placeholder="__MSG_maxAgeURI__" autocomplete="false"/>
       <button class="controlButton" data-cmd="add">__MSG_buttonAddURI__</button>
       <button class="controlButton hidden" data-cmd="removeFeed">__MSG_buttonRemoveURI__</button>
+      <button class="controlButton hidden" data-cmd="forceUpdate">__MSG_buttonForceURIUpdate__</button>
     </div>
 
     <div class="page" data-src='manageURIs'>

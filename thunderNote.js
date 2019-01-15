@@ -49,18 +49,25 @@ function handleButtons (evt) {
 
   let addButton = document.querySelector('.controlButton[data-cmd="add"]')
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
+  let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
   switch (evt.target.dataset['cmd']) {
     case 'addItem':
       if (evt.target.dataset['url'] === undefined) {
-        document.querySelector('#feedUri').value = ''
+        document.querySelector('#feedURI').value = ''
         document.querySelector('#feedType').value = 'rss'
         document.querySelector('#feedInterval').value = ''
         removalButton.classList.add('hidden')
+        forceUpdateButton.classList.add('hidden')
+
         addButton.textContent = getMsg('buttonAddURI')
       } else {
         removalButton.dataset['url'] = evt.target.dataset['url']
+        forceUpdateButton.dataset['url'] = evt.target.dataset['url']
+
         removalButton.classList.remove('hidden')
+        forceUpdateButton.classList.remove('hidden')
+
         addButton.textContent = getMsg('buttonUpdateURI')
       }
 
@@ -68,9 +75,12 @@ function handleButtons (evt) {
       document.querySelector('.headerControl').classList.add('inactive')
       break
     case 'add':
-      let url = document.querySelector('#feedUri').value
+      let url = document.querySelector('#feedURI').value
       let type = document.querySelector('#feedType').value
       let crawlTime = parseInt(document.querySelector('#feedInterval').value)
+      let maxAge = parseInt(document.querySelector('#feedMaxAge').value)
+
+      if (isNaN(maxAge)) maxAge = 0
 
       if (url === '' || isNaN(crawlTime)) {
         document.querySelector('.headerControl').classList.add('inactive')
@@ -80,10 +90,10 @@ function handleButtons (evt) {
 
       browser.storage.local.get('feeds').then(function (data) {
         if (data['feeds'] === undefined) data['feeds'] = {}
-        data['feeds'][url] = [type, crawlTime]
+        data['feeds'][url] = [type, crawlTime, maxAge]
 
         browser.storage.local.set(data)
-        browser.alarms.create(url, { 'when': Date.now() + 3000, 'periodInMinutes': crawlTime })
+        browser.alarms.create(url, { 'when': Date.now() + 2500, 'periodInMinutes': crawlTime })
       }, errorHandle)
       break
     case 'manageURIs':
@@ -131,13 +141,23 @@ function errorHandle (error) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function removeFeed (evt) {
-  let feedUri = evt.target.dataset['url']
+  let feedURI = evt.target.dataset['url']
   browser.storage.local.get('feeds').then(function (data) {
-    if (data['feeds'] !== undefined && data['feeds'][feedUri] !== undefined) {
-      browser.alarms.clear(feedUri)
+    if (data['feeds'] !== undefined && data['feeds'][feedURI] !== undefined) {
+      browser.alarms.clear(feedURI)
 
-      delete data['feeds'][feedUri]
+      delete data['feeds'][feedURI]
       browser.storage.local.set(data).then(fillURIs)
+    }
+  }, errorHandle)
+}
+
+function forceUpdate (evt) {
+  let feedURI = evt.target.dataset['url']
+  browser.storage.local.get('feeds').then(function (data) {
+    if (data['feeds'] !== undefined && data['feeds'][feedURI] !== undefined) {
+      browser.alarms.clear(feedURI)
+      browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
     }
   }, errorHandle)
 }
@@ -170,9 +190,10 @@ function fillURIs () {
       button.dataset['cmd'] = 'addItem'
       button.dataset['url'] = url
 
-      document.querySelector('#feedUri').value = url
+      document.querySelector('#feedURI').value = url
       document.querySelector('#feedType').value = data['feeds'][url][0]
       document.querySelector('#feedInterval').value = data['feeds'][url][1]
+      document.querySelector('#feedMaxAge').value = data['feeds'][url][2] === undefined ? 0 : data['feeds'][url][2]
 
       button.appendChild(document.createTextNode(url))
       button.addEventListener('click', handleButtons)
@@ -209,7 +230,7 @@ function fillKeywords () {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function fillTopics () {
-  browser.storage.local.get('keywords').then(function (data) {
+  browser.storage.local.get().then(function (data) {
     if (data['keywords'] === undefined) return
     let rootUl = document.querySelector('#viewTopics')
     rootUl.innerHTML = ''
@@ -242,6 +263,25 @@ function fillTopics () {
       subLine.appendChild(subLineCount)
       li.appendChild(subLine)
 
+      let now = Date.now()
+      let dayLength = 24 * 3600 * 1000.0
+      let hasDataChange = false
+
+      for (let key of Object.keys(data['keywords']['urls'][keyword])) {
+        let feedURI = data['keywords']['urls'][keyword][key][4]
+        let feedMaxAge = data['feeds'][feedURI][2]
+        if (feedMaxAge === 0) continue
+
+        let age = Math.floor((now - data['keywords']['urls'][keyword][key][2]) / dayLength)
+        if (age >= feedMaxAge) {
+          delete data['keywords']['urls'][keyword][key]
+          --data['keywords']['cnt'][keyword]
+          hasDataChange = true
+        }
+      }
+
+      if (hasDataChange) browser.storage.local.set(data)
+
       if (Object.keys(data['keywords']['urls'][keyword]).length === 0) {
         let subList = document.createElement('ul')
         subList.className = 'subList'
@@ -254,6 +294,7 @@ function fillTopics () {
         let subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
+
         for (let key of Object.keys(data['keywords']['urls'][keyword])) {
           let item = data['keywords']['urls'][keyword][key]
           let dateObj = new Date(item[2])
@@ -269,8 +310,7 @@ function fillTopics () {
 
           let entryContent = document.createElement('p')
           entryContent.className = 'entryContent'
-          entryContent.innerHTML = item[3] // NOTE: Is it dangerous to use innerHTML here?
-          //entryContent.appendChild(document.createTextNode(item[3]))
+          entryContent.innerHTML = filterHTML(item[3])
 
           subList.appendChild(entryDate)
           subList.appendChild(entryTitle)
@@ -281,6 +321,25 @@ function fillTopics () {
       rootUl.appendChild(li)
     }
   }, errorHandle)
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+function removeNodes (child) {
+  for (let childNode of child.children) {
+    removeNodes(childNode)
+  }
+  if (child.nodeName !== 'A' && child.nodeName !== 'P') {
+    child.parentNode.appendChild(document.createTextNode(child.textContent))
+    child.parentNode.removeChild(child)
+  }
+}
+
+function filterHTML (item) {
+  let p = document.createElement('p')
+  p.innerHTML = item
+  removeNodes(p)
+  return p.innerHTML
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -324,6 +383,8 @@ for (let backButton of document.querySelectorAll('.backButton')) {
 }
 
 document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
+document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
+
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
 
 // --------------------------------------------------------------------------------------------------------------------------------
