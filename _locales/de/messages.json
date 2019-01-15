@@ -36,12 +36,20 @@
   },
 
   "buttonAddURI": {
-    "message": "URI hinzufügen",
+    "message": "Zur Liste hinzufügen",
     "description": "Interface button, add URI to watchlist"
   },
   "buttonUpdateURI": {
-    "message": "URI Einstellungen aktualisieren",
+    "message": "Einstellungen aktualisieren",
     "description": "Interface button to update existing URI"
+  },
+  "buttonForceURIUpdate": {
+    "message": "Jetzt aktualisieren",
+    "description": "Interface button to force URI update"
+  },
+  "maxAgeURI": {
+    "message": "Maximales Alter von Nachrichten (0 - 120 Tage, 0 = Unbegrenzt)",
+    "description": "Placeholder for maximum number of days to keep news items"
   },
 
   "errorOccured": {

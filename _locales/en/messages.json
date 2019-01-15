@@ -36,12 +36,20 @@
   },
 
   "buttonAddURI": {
-    "message": "Add URI to watchlist",
+    "message": "Add to watchlist",
     "description": "Interface button, add URI to watchlist"
   },
   "buttonUpdateURI": {
-    "message": "Update URI settings",
+    "message": "Update settings",
     "description": "Interface button to update existing URI"
+  },
+  "buttonForceURIUpdate": {
+    "message": "Update now",
+    "description": "Interface button to force URI update"
+  },
+  "maxAgeURI": {
+    "message": "Maximum age of news items (0 - 120 days, 0 = infinite)",
+    "description": "Placeholder for number of days to keep news items"
   },
 
   "errorOccured": {
@@ -67,7 +75,7 @@
   },
 
   "buttonRemoveURI": {
-    "message": "Delete URI from watchlist",
+    "message": "Delete from watchlist",
     "description": "Interface button, delete URI from watchlist"
   },
   "buttonManageURIs": {
