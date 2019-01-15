@@ -15,7 +15,6 @@ function handleAlarms (evt) {
     if (data['feeds'][evt.name][0] === 'rss') handleRSS(evt.name)
     // TODO: else => handleWebpage
   }, errorHandle)
-
 }
 
 // -------------------------------------------------------------------------------------------------------
