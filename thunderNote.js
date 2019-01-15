@@ -267,6 +267,12 @@ function fillKeywords () {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
+function sortByTime (a, b) {
+  return b[2] - a[2]
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
 function fillTopics () {
   browser.storage.local.get().then(function (data) {
     if (data['keywords'] === undefined) return
@@ -304,7 +310,6 @@ function fillTopics () {
       li.appendChild(subLine)
 
       let hasDataChange = false
-
       for (let key of Object.keys(data['keywords']['urls'][keyword])) {
         let feedURI = data['keywords']['urls'][keyword][key][4]
         let feedMaxAge = data['feeds'][feedURI][2]
@@ -333,27 +338,33 @@ function fillTopics () {
         subList.className = 'subList'
         li.appendChild(subList)
 
-        for (let key of Object.keys(data['keywords']['urls'][keyword])) {
-          let item = data['keywords']['urls'][keyword][key]
-          let dateObj = new Date(item[2])
+        let sortedNews = Object.values(data['keywords']['urls'][keyword]).sort(sortByTime)
+        let keys = Object.keys(data['keywords']['urls'][keyword])
+        for (let item of sortedNews) {
+          for (let key of keys) {
+            if (item[2] === data['keywords']['urls'][keyword][key][2] && item[4] === data['keywords']['urls'][keyword][key][4]) {
+              let dateObj = new Date(item[2])
 
-          let entryDate = document.createElement('span')
-          entryDate.className = 'entryDate'
-          entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
+              let entryDate = document.createElement('span')
+              entryDate.className = 'entryDate'
+              entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
 
-          let entryTitle = document.createElement('a')
-          entryTitle.href = key
-          entryTitle.className = 'entryTitle'
-          entryTitle.appendChild(document.createTextNode(item[0]))
-          entryTitle.dataset['index'] = newsIndex++
+              let entryTitle = document.createElement('a')
+              entryTitle.href = key
+              entryTitle.className = 'entryTitle'
+              entryTitle.appendChild(document.createTextNode(item[0]))
+              entryTitle.dataset['index'] = newsIndex++
 
-          let entryContent = document.createElement('p')
-          entryContent.className = 'entryContent'
-          entryContent.innerHTML = filterHTML(item[3])
+              let entryContent = document.createElement('p')
+              entryContent.className = 'entryContent'
+              entryContent.innerHTML = filterHTML(item[3])
 
-          subList.appendChild(entryDate)
-          subList.appendChild(entryTitle)
-          subList.appendChild(entryContent)
+              subList.appendChild(entryDate)
+              subList.appendChild(entryTitle)
+              subList.appendChild(entryContent)
+              break
+            }
+          }
         }
       }
 
