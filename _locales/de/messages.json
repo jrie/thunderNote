@@ -40,15 +40,15 @@
     "description": "Interface button, add URI to watchlist"
   },
   "buttonUpdateURI": {
-    "message": "Einstellungen aktualisieren",
+    "message": "Einstellungen des Feeds speichern",
     "description": "Interface button to update existing URI"
   },
   "buttonForceURIUpdate": {
-    "message": "Jetzt aktualisieren",
+    "message": "Feed Inhalte jetzt aktualisieren",
     "description": "Interface button to force URI update"
   },
   "maxAgeURI": {
-    "message": "Maximales Alter von Nachrichten (0 - 120 Tage, 0 = Unbegrenzt)",
+    "message": "Maximales Nachrichtenalter in Tagen (0-120 Tage, 0 = Unbegrenzt)",
     "description": "Placeholder for maximum number of days to keep news items"
   },
 
@@ -102,7 +102,7 @@
   },
 
   "titleKeywords": {
-    "message": "Schlüsselwörter bearbeiten",
+    "message": "Schlüsselwörter",
     "description": "Manage keywords page title"
   },
 

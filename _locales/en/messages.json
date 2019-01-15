@@ -40,15 +40,15 @@
     "description": "Interface button, add URI to watchlist"
   },
   "buttonUpdateURI": {
-    "message": "Update settings",
+    "message": "Save feed settings",
     "description": "Interface button to update existing URI"
   },
   "buttonForceURIUpdate": {
-    "message": "Update now",
+    "message": "Force feed content update",
     "description": "Interface button to force URI update"
   },
   "maxAgeURI": {
-    "message": "Maximum age of news items (0 - 120 days, 0 = infinite)",
+    "message": "Maximum age of news  in days (0-120 days, 0 = infinite)",
     "description": "Placeholder for number of days to keep news items"
   },
 
