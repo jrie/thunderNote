@@ -73,8 +73,8 @@
     "description": "Placeholder for number of days to keep news items"
   },
   "maxAgeURIPlaceholder": {
-    "message": "Von 0 bis 120 Tage, 0 = Unbegrenzt",
-    "description": "Placeholder for number of days to keep news items title"
+    "message": "Maximales Alter von Nachrichen: Von 0 bis 120 Tage (0 = Unbegrenzt)",
+    "description": "Placeholder for number of days to keep news items"
   },
 
   "errorOccured": {
@@ -154,7 +154,7 @@
     "description": "Information about fetch interval placeholder range"
   },
   "addURIintervalPlaceholder": {
-    "message": "Aktualisierung zwischen 1 bis 360 Minuten",
+    "message": "Aktualisierung-Interval: Zwischen 1 bis 360 Minuten",
     "description": "Information about fetch interval title range"
   },
 

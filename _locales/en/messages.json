@@ -75,7 +75,7 @@
     "description": "Placeholder for number of days to keep news items"
   },
   "maxAgeURIPlaceholder": {
-    "message": "From 0 up to 120 days, 0 = infinite)",
+    "message": "Days to keep news: Ranging from 0 up to 120 days (0 = infinite)",
     "description": "Placeholder for number of days to keep news items title"
   },
 
@@ -156,7 +156,7 @@
     "description": "Information about fetch interval placeholder range"
   },
   "addURIintervalPlaceholder": {
-    "message": "Ranging from 1 to 360 minutes",
+    "message": "Fetch interval: Ranging from 1 up to 360 minutes",
     "description": "Information about fetch interval title range"
   },
 
