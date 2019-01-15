@@ -179,6 +179,7 @@ button.backButton:hover {
 .newsEntry {
   clear: both;
   margin-bottom: 30px;
+  box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
 }
 
 .subTitle,
@@ -193,7 +194,7 @@ button.backButton:hover {
 }
 
 .subTitle {
-  padding: 0.75rem;
+  padding: 0.85rem 10px 0.85rem;
   background-color: rgba(0,0,0, 0.164);
 }
 
