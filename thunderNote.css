@@ -54,7 +54,7 @@ input,
 select,
 button {
   margin: 0px;
-  padding: 6px 9px;
+  padding: 10px 9px;
   max-width: 100%;
   min-width: 100%;
   border-width: 1px;
@@ -84,6 +84,15 @@ select::-moz-focus-inner,
 button::-moz-focus-inner,
 a::-moz-focus-inner {
   border: none;
+}
+
+hr {
+  border: 1px solid rgb(42, 119, 207);
+  margin: 0px;
+  padding: 0px;
+  margin-top: 6px;
+  margin-bottom: 9px;
+  border-bottom: none;
 }
 
 .hidden {
@@ -226,6 +235,16 @@ button.backButton:hover {
 .entryTitle:hover {
   text-decoration: underline;
 }
+
+.entryTitle.inactive {
+  cursor: default;
+}
+
+.entryTitle.inactive:hover {
+  text-decoration: none;
+
+}
+
 
 .entryContent {
   font-size: 0.75em;

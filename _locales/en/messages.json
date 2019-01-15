@@ -7,6 +7,29 @@
     "description": "Text for keyboard shortcut to active or deactivate the sidebar"
   },
 
+  "thunderNoteEnable": {
+    "message": "thunderNote active",
+    "description": "Select title that thunderNote news fetching is active"
+  },
+  "thunderNoteDisable": {
+    "message": "thunderNote inactive",
+    "description": "Select title that thunderNote news fetching is inactive"
+  },
+  "thunderNoteStatusTitle": {
+    "message": "thunderNote",
+    "description": "Select title to stop news fetching thunderNote"
+  },
+  "thunderNoteEnabled": {
+    "message": "thunderNote is started.",
+    "description": "Notification message that thunderNote is started."
+  },
+  "thunderNoteDisabled": {
+    "message": "thunderNote is stopped.",
+    "description": "Notification message that thunderNote is stopped."
+  },
+
+
+
   "RSSupdateTitle": {
     "message": "RSS updated",
     "description": "Notification title for updated RSS feed"
@@ -48,8 +71,12 @@
     "description": "Interface button to force URI update"
   },
   "maxAgeURI": {
-    "message": "Maximum age of news  in days (0-120 days, 0 = infinite)",
+    "message": "Number of days to keep news",
     "description": "Placeholder for number of days to keep news items"
+  },
+  "maxAgeURIPlaceholder": {
+    "message": "From 0 up to 120 days, 0 = infinite)",
+    "description": "Placeholder for number of days to keep news items title"
   },
 
   "errorOccured": {
@@ -125,8 +152,12 @@
     "description": "HTML selection feed type label"
   },
   "addURIinterval": {
-    "message": "Fetch interval 1 to 360 minutes",
+    "message": "Fetch interval",
     "description": "Information about fetch interval placeholder range"
+  },
+  "addURIintervalPlaceholder": {
+    "message": "Ranging from 1 to 360 minutes",
+    "description": "Information about fetch interval title range"
   },
 
 

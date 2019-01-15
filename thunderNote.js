@@ -42,6 +42,12 @@ function triggerImport () {
 // document.querySelector('#importFile').addEventListener('click', triggerImport)
 
 // --------------------------------------------------------------------------------------------------------------------------------
+function isEnabled () {
+  return document.querySelector('#setThunderNoteState').value === 'enabled'
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
 function handleButtons (evt) {
   document.querySelector('.headerControl').classList.remove('inactive')
 
@@ -57,6 +63,7 @@ function handleButtons (evt) {
         document.querySelector('#feedURI').value = ''
         document.querySelector('#feedType').value = 'rss'
         document.querySelector('#feedInterval').value = ''
+        document.querySelector('#feedMaxAge').value = ''
         removalButton.classList.add('hidden')
         forceUpdateButton.classList.add('hidden')
 
@@ -93,9 +100,10 @@ function handleButtons (evt) {
         data['feeds'][url] = [type, crawlTime, maxAge]
 
         browser.storage.local.set(data)
-        browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
+        if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
       }, errorHandle)
       break
+
     case 'manageURIs':
       fillURIs()
       document.querySelector('.headerControl').classList.add('inactive')
@@ -288,7 +296,7 @@ function fillTopics () {
         subList.className = 'subList'
         li.appendChild(subList)
         let entryTitle = document.createElement('span')
-        entryTitle.className = 'entryTitle'
+        entryTitle.className = 'entryTitle inactive'
         entryTitle.appendChild(document.createTextNode('---'))
         subList.appendChild(entryTitle)
       } else {
@@ -385,8 +393,24 @@ for (let backButton of document.querySelectorAll('.backButton')) {
 
 document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
 document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
-
+document.querySelector('#setThunderNoteState').addEventListener('change', toggleThunderNodeState)
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
+
+function toggleThunderNodeState (evt) {
+  if (evt.target.value === 'disabled') {
+    browser.alarms.clearAll()
+    browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
+  } else {
+    browser.storage.local.get('feeds').then(function (data) {
+      if (data['feeds'] !== undefined) {
+        for (let url of Object.keys(data['feeds'])) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][url][1] })
+      }
+
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteEnabled') })
+    }, errorHandle)
+
+  }
+}
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
