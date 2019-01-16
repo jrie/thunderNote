@@ -127,9 +127,11 @@ function errorHandle (error) {
 browser.alarms.onAlarm.addListener(handleAlarms)
 browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
 
-browser.storage.local.get('feeds').then(function (data) {
+browser.storage.local.get().then(function (data) {
   browser.alarms.clearAll()
-  for (let url of Object.keys(data['feeds'])) {
-    browser.alarms.create(url, { 'when': Date.now() + 2500, 'periodInMinutes': data['feeds'][url][1] })
+  if ((data['addon'] === undefined || data['addon']['status'] === undefined) || data['addon']['status'] === 'enabled') {
+    for (let url of Object.keys(data['feeds'])) {
+      browser.alarms.create(url, { 'when': Date.now() + 2000, 'periodInMinutes': data['feeds'][url][1] })
+    }
   }
 }, errorHandle)
