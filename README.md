@@ -4,14 +4,14 @@
 Staying on top of news with *thunderNote* RSS feed client browser add-on.
 
 ## Key features
-* Add RSS feeds with custom periodically check ups for new or changed content.
-* Input keywords or buzzwords to match for in the RSS feeds.
-* Get a quick overview of feed content, filtered by keywords.
-* Works completely in the sidebar.
-* Add keywords by selection page content and "Add new keyword" simply.
-* Show notifications and status.
+* Works completely in the sidebar, which is fancy.
+* Add RSS feeds with custom periodically checks for new content
+* Input keywords or buzzwords to match to display news for.
+* Display images via default or disable pictures alltogether
+* Add keywords using ***Add new keyword*** from the context menu once text or a link is selected.
+* Shows notifications, which can be disabled
 * Shortcut **Ctrl + Shift + B** opens/close the sidebar
-* Select/highlight any text or a link in a webpage to create and add ***Add news keyword*** of the selection from within the context menu.
+* Shortcut **Alt + Arrow up/down** to navigate up/down in the topics view.
 
 ## Installation and testing
 **Firefox addon** page: https://addons.mozilla.org/en-US/firefox/addon/thundernote
@@ -20,7 +20,7 @@ For testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary
 
 ## Usage
 1. Open the main sidebar by pressing ***Ctrl + Shift + B*** or using the main menu *View* -> *Sidebar* -> ***thunderNote***
-1. **Add keywords** of interesting topics to look out for either by entering or using the context menu on a webpage selection
-2. **Add a feed url**, for example: *http://www.tagesschau.de/xml/rss2* for the German *Tagesschau.de* RSS feed with a check of 5 minutes
-3. Select **view topics** - enjoy news.
-4. Select a headline to jump to the article.
+1. **Add keywords** of interesting topics to look out for, for example *EU* *Sport* or *Europa* either by entering or using the context menu on a text selection
+2. **Add a feed url**, for example: **http://www.tagesschau.de/xml/rss2** for the German **Tagesschau.de RSS feed** with a check of 1 to 15 minutes.
+3. Select **view topics**  after the feed got downloaded
+4. Enjoy news.
