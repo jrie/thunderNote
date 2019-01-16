@@ -21,17 +21,20 @@ function handleAlarms (evt) {
 
 function handleRSS (URI) {
   let request = new XMLHttpRequest()
-
   request.addEventListener('readystatechange', function (evt) {
     if (evt.target.readyState === 4) {
       if (evt.target.status === 200) {
         if (processXMLData(evt.target.responseXML, URI)) {
-          browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+          browser.storage.local.get('addon').then(function (data) {
+            if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+          })
           return
         }
       }
 
-      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+      browser.storage.local.get('addon').then(function (data) {
+        if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+      })
     }
   })
 
