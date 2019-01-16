@@ -470,20 +470,41 @@ function handleKeyUp (evt) {
     // Alt key pressed
     let currentPage = document.querySelector('.page.active')
     let titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
-
     if (evt.keyCode === 38) {
-      evt.preventDefault()
       // arrow up
-      if (activeNews === 0) activeNews = titleElements.length
-      titleElements[--activeNews].focus()
-      currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
-    } else if (evt.keyCode === 40) {
       evt.preventDefault()
+      --activeNews
+
+      if (activeNews < 0) activeNews = titleElements.length - 1
+      if (titleElements[activeNews].parentNode.parentNode.classList.contains('folded')) {
+        titleElements[activeNews].parentNode.parentNode.classList.remove('folded')
+        titleElements[activeNews].parentNode.parentNode.children[2].style['margin-bottom'] = '30px'
+        setTimeout(function () {
+          titleElements[activeNews].focus()
+          currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+        }, 450)
+      } else {
+        titleElements[activeNews].focus()
+        currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+      }
+    } else if (evt.keyCode === 40) {
       // arrow down
-      if (activeNews >= titleElements.length - 1) activeNews = -1
-      titleElements[++activeNews].focus()
+      evt.preventDefault()
+      ++activeNews
+
+      if (activeNews > titleElements.length - 1) activeNews = 0
+      if (titleElements[activeNews].parentNode.parentNode.classList.contains('folded')) {
+        titleElements[activeNews].parentNode.parentNode.classList.remove('folded')
+        titleElements[activeNews].parentNode.parentNode.children[2].style['margin-bottom'] = '30px'
+        setTimeout(function () {
+          titleElements[activeNews].focus()
+          currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+        }, 450)
+      } else {
+        titleElements[activeNews].focus()
+        currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+      }
     }
-    currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
   }
 }
 
@@ -510,7 +531,15 @@ for (let item of domNodes) item.setAttribute('tabindex', -1)
 
 // --------------------------------------------------------------------------------------------------------------------------------
 browser.storage.local.get().then(function (data) {
-  if (data['addon'] !== undefined && data['addon']['status'] !== undefined && data['addon']['status'] === 'enabled') {
+  if (data['addon'] === undefined) data['addon'] = {}
+  if (data['addon']['status'] === undefined) {
+    data['addon']['status'] = 'enabled'
     document.querySelector('#setThunderNoteState').value = 'enabled'
-  } else document.querySelector('#setThunderNoteState').value = 'disabled'
+    browser.storage.local.set(data)
+  } else if (data['addon']['status'] === 'enabled') {
+    document.querySelector('#setThunderNoteState').value = 'enabled'
+    return
+  }
+
+  document.querySelector('#setThunderNoteState').value = 'disabled'
 })
