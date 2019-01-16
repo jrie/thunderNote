@@ -83,7 +83,7 @@
   },
 
   "noTopics": {
-    "message": "Keine Themen gefunden.",
+    "message": "Keine Themen mit Schlüsselwort gefunden.",
     "description": "Information shown if no topics are found"
   },
 

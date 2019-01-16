@@ -86,7 +86,7 @@
   },
 
   "noTopics": {
-    "message": "No topics found.",
+    "message": "No topics matching keyword.",
     "description": "Information shown if no topics are found"
   },
 
