@@ -48,8 +48,8 @@ function isEnabled () {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
-function setFocus(element) {
-  setTimeout(function() { document.querySelector(element).focus() }, 700)
+function setFocus (element) {
+  setTimeout(function () { document.querySelector(element).focus() }, 700)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -297,7 +297,28 @@ function fillTopics () {
 
     for (let keyword of sortedTopics) {
       let li = document.createElement('li')
-      li.className = 'newsEntry'
+
+      li.className = 'newsEntry '
+      if (ul.children.length > 0) li.classList.add('folded')
+
+      let fold = document.createElement('button')
+      fold.className = 'folding'
+      fold.innerHTML = '&laquo;'
+      if (ul.children.length === 0) fold.innerHTML = '&raquo;'
+
+      fold.addEventListener('click', function (evt) {
+        if (evt.target.parentNode.classList.contains('folded')) {
+          evt.target.parentNode.children[2].style['margin-bottom'] = '30px'
+          evt.target.parentNode.classList.remove('folded')
+          evt.target.innerHTML = '&raquo;'
+        } else {
+          evt.target.parentNode.classList.add('folded')
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.innerHTML = '&laquo;'
+        }
+      })
+
+      li.appendChild(fold)
 
       let subLine = document.createElement('h2')
       subLine.className = 'subTitle'
@@ -367,8 +388,8 @@ function fillTopics () {
           }
         }
       }
-
       ul.appendChild(li)
+      if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
     }
   }, errorHandle)
 }
@@ -424,19 +445,21 @@ function addInputKeyword (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function toggleThunderNodeState (evt) {
-  if (evt.target.value === 'disabled') {
-    browser.alarms.clearAll()
-    browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
-  } else {
-    browser.storage.local.get('feeds').then(function (data) {
+  browser.storage.local.get().then(function (data) {
+    data['addon'] = { 'status': evt.target.value }
+    browser.storage.local.set(data)
+
+    if (!isEnabled()) {
+      browser.alarms.clearAll()
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
+    } else {
       if (data['feeds'] !== undefined) {
         for (let url of Object.keys(data['feeds'])) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][url][1] })
       }
 
       browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteEnabled') })
-    }, errorHandle)
-
-  }
+    }
+  }, errorHandle)
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -486,3 +509,8 @@ let domNodes = document.querySelectorAll('*')
 for (let item of domNodes) item.setAttribute('tabindex', -1)
 
 // --------------------------------------------------------------------------------------------------------------------------------
+browser.storage.local.get().then(function (data) {
+  if (data['addon'] !== undefined && data['addon']['status'] !== undefined && data['addon']['status'] === 'enabled') {
+    document.querySelector('#setThunderNoteState').value = 'enabled'
+  } else document.querySelector('#setThunderNoteState').value = 'disabled'
+})
