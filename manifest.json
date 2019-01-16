@@ -24,7 +24,7 @@
   "homepage_url": "https://github.com/jrie/thunderNote",
   "manifest_version": 2,
   "name": "thunderNote",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "permissions": ["<all_urls>", "activeTab", "storage", "unlimitedStorage", "alarms", "notifications", "contextMenus"],
   "background": {
     "scripts": [
@@ -37,7 +37,7 @@
       "suggested_key": {
         "default": "Ctrl+Shift+B"
       },
-      "description": "__MSG_Shortcut__"
+      "description": "__MSG_ShortcutSidebar__"
     }
   }
 }

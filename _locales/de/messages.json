@@ -2,7 +2,7 @@
   "AddonDescription": {
     "message": "Der schlaue RSS Feed und Nachrichten Client."
   },
-  "Shortcut": {
+  "ShortcutSidebar": {
     "message": "Öffnen der Seitenleiste mit 'Strg + Shift + B'",
     "description": "Text for keyboard shortcut to active or deactivate the sidebar"
   },
