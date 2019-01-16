@@ -162,5 +162,50 @@
   "addKeyword": {
     "message": "Schlüsselwort eintragen...",
     "description": "Interface prompt add keyword placeholder"
+  },
+
+  "buttonOptions": {
+    "message": "Einstellungen",
+    "description": "Button options title"
+  },
+  "titleOptions": {
+    "message": "Einstellungen",
+    "description": "Options view title"
+  },
+  "optionsNotificationTitle": {
+    "message": "Einstellungen verändert",
+    "description": "Options changed notification title"
+  },
+  "imagesEnable": {
+    "message": "Bilder anzeigen",
+    "description": "Enabled images option"
+  },
+  "imagesDisable": {
+    "message": "Bilder ausschalten",
+    "description": "Disabled images option"
+  },
+  "optionsBodyImagesEnabled": {
+    "message": "thunderNote zeigt nun Bilder an",
+    "description": "Notifications body image display in news enabled"
+  },
+  "optionsBodyImagesDisabled": {
+    "message": "thunderNote zeigt nun keine Bilder mehr an",
+    "description": "Notifications body image display in news disabled"
+  },
+  "notificationsEnable": {
+    "message": "Benachrichtigungen aktivieren",
+    "description": "Enabled notifications option"
+  },
+  "notificationsDisable": {
+    "message": "Benachrichtigungen deaktivieren",
+    "description": "Disabled notifications option"
+  },
+  "optionsBodyNotificationsEnabled": {
+    "message": "thunderNote Benachrichtigungen sind nun aktiviert",
+    "description": "Notifications body notifications enabled"
+  },
+  "optionsBodyNotificationsDisabled": {
+    "message": "thunderNote Benachrichtigungen sind deaktiviert",
+    "description": "Notifications body notifications disabled"
   }
 }

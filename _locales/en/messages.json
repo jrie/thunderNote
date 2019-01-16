@@ -7,6 +7,7 @@
     "description": "Text for keyboard shortcut to active or deactivate the sidebar"
   },
 
+
   "thunderNoteEnable": {
     "message": "thunderNote active",
     "description": "Select title that thunderNote news fetching is active"
@@ -164,5 +165,51 @@
   "addKeyword": {
     "message": "Add keyword...",
     "description": "Interface prompt add keyword placeholder"
+  },
+
+
+  "buttonOptions": {
+    "message": "Options",
+    "description": "Button options title"
+  },
+  "titleOptions": {
+    "message": "Options",
+    "description": "Options view title"
+  },
+  "optionsNotificationTitle": {
+    "message": "Option changed",
+    "description": "Options changed notification title"
+  },
+  "imagesEnable": {
+    "message": "Images enabled",
+    "description": "Enabled images option"
+  },
+  "imagesDisable": {
+    "message": "Images disabled",
+    "description": "Disabled images option"
+  },
+  "optionsBodyImagesEnabled": {
+    "message": "thunderNote image display is now enabled",
+    "description": "Notifications body image display in news enabled"
+  },
+  "optionsBodyImagesDisabled": {
+    "message": "thunderNote image display is now disabled",
+    "description": "Notifications body image display in news disabled"
+  },
+  "notificationsEnable": {
+    "message": "Notifications enabled",
+    "description": "Enabled notifications option"
+  },
+  "notificationsDisable": {
+    "message": "Notifications disabled",
+    "description": "Disabled notifications option"
+  },
+  "optionsBodyNotificationsEnabled": {
+    "message": "thunderNote notifications enabled",
+    "description": "Notifications body notifications enabled"
+  },
+  "optionsBodyNotificationsDisabled": {
+    "message": "thunderNote notifications disabled",
+    "description": "Notifications body notifications disabled"
   }
 }
