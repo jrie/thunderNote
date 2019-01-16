@@ -9,7 +9,7 @@ let getMsg = getFirefoxMessage
 // -------------------------------------------------------------------------------------------------------
 
 function handleAlarms (evt) {
-  browser.storage.local.get('feeds').then( function (data) {
+  browser.storage.local.get('feeds').then(function (data) {
     if (data['feeds'] === undefined) return
 
     if (data['feeds'][evt.name][0] === 'rss') handleRSS(evt.name)
@@ -66,11 +66,10 @@ function processXMLData (xmlDoc, URI) {
         let time = Date.parse(item['pubDate'])
 
         let itemData = [link, title, description]
-
+        let mediaMatch = null
         if (item['encoded'] !== undefined) {
-          let mediaMatch = item['encoded'].toString().match(/img src='((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
-          if (mediaMatch !== null && mediaMatch[1] !== undefined) itemData.push(mediaMatch[1])
           itemData.push(item['encoded'].toString())
+          mediaMatch = item['encoded'].toString().match(/img src=["']((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
         }
 
         let keyRegEx = new RegExp(keyword, 'gm')
@@ -80,12 +79,15 @@ function processXMLData (xmlDoc, URI) {
 
           if (matches !== null) {
             if (keywordData['keywords']['urls'][keyword] === undefined) keywordData['keywords']['urls'][keyword] = {}
-            if (keywordData['keywords']['urls'][keyword][link] === undefined) keywordData['keywords']['urls'][keyword][link] = [title, matches.length, time, description, URI]
-            else {
+            if (keywordData['keywords']['urls'][keyword][link] === undefined) {
+              if (mediaMatch === null || mediaMatch[1] === undefined) keywordData['keywords']['urls'][keyword][link] = [title, matches.length, time, description, URI]
+              else keywordData['keywords']['urls'][keyword][link] = [title, matches.length, time, description, URI, mediaMatch[1]]
+            } else {
               keywordData['keywords']['urls'][keyword][link][0] = title
               keywordData['keywords']['urls'][keyword][link][2] = time
               keywordData['keywords']['urls'][keyword][link][3] = description
               keywordData['keywords']['urls'][keyword][link][4] = URI
+              if (mediaMatch !== null && mediaMatch[1] !== undefined) keywordData['keywords']['urls'][keyword][link][5] = mediaMatch[1]
             }
           }
         }

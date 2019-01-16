@@ -196,6 +196,7 @@ button.folding {
   margin-bottom: 24px;
   box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
   overflow: hidden;
+  position: relative;
 }
 
 .newsEntry,
@@ -278,14 +279,38 @@ button.folding {
   text-decoration: none;
 }
 
+.entryContent p {
+  position: relative;
+  display: inline-block;
+  width: 74%;
+  left: 28%;
+}
+
+.entryContent.noImg p {
+  width: 100%;
+  left: 0%;
+}
+
 .entryContent {
-  font-size: 0.75em;
   font-weight: normal;
+  font-size: 0.75em;
   margin-bottom: 2.05rem;
-  -moz-user-select: text;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgb(105, 105, 225);
   line-height: 162%;
+  -moz-user-select: text;
+  border-bottom: 1px solid rgb(105, 105, 225);
+  position: relative;
+}
+
+.entryContent img {
+  position: absolute;
+  top: 1.25em;
+  left: 0px;
+  width: 25%;
+  height: auto;
+  max-width: 100%;
+  border: 1px solid #444;
+  box-shadow: -3px 3px 4px rgba(0,0,0, 0.164);
 }
 
 .entryContent:last-of-type {

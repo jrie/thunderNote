@@ -140,6 +140,10 @@ function handleButtons (evt) {
       document.addEventListener('keyup', handleKeyUp)
       for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
       break
+    case 'displayOptions':
+      document.querySelector('.headerControl').classList.add('inactive')
+      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      break
     default:
       break
   }
@@ -295,6 +299,8 @@ function fillTopics () {
     let now = Date.now()
     let newsIndex = 0
 
+    let imagesAllowed = data['addon']['images'] === 'enabled'
+
     for (let keyword of sortedTopics) {
       let li = document.createElement('li')
 
@@ -376,9 +382,21 @@ function fillTopics () {
               entryTitle.appendChild(document.createTextNode(item[0]))
               entryTitle.dataset['index'] = newsIndex++
 
-              let entryContent = document.createElement('p')
+              let entryContent = document.createElement('div')
               entryContent.className = 'entryContent'
-              entryContent.innerHTML = filterHTML(item[3])
+              entryContent.classList.add('noImg')
+              if (imagesAllowed) {
+                if (item[5] !== undefined) {
+                  let entryImg = document.createElement('img')
+                  entryImg.src = item[5]
+                  entryContent.appendChild(entryImg)
+                  entryContent.classList.remove('noImg')
+                }
+              }
+
+              let pContent = document.createElement('p')
+              pContent.innerHTML += filterHTML(item[3])
+              entryContent.appendChild(pContent)
 
               subList.appendChild(entryDate)
               subList.appendChild(entryTitle)
@@ -510,12 +528,45 @@ function handleKeyUp (evt) {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
+function toggleImages (evt) {
+  browser.storage.local.get('addon').then(function (data) {
+    if (evt.target.value === 'enabled') {
+      data['addon']['images'] = 'enabled'
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesEnabled') })
+    } else {
+      data['addon']['images'] = 'disabled'
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesDisabled') })
+    }
+
+    browser.storage.local.set(data)
+  }, errorHandle)
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+function toggleNotifications (evt) {
+  browser.storage.local.get('addon').then(function (data) {
+    if (evt.target.value === 'enabled') {
+      data['addon']['notifications'] = 'enabled'
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsEnabled') })
+    } else {
+      data['addon']['notifications'] = 'disabled'
+      browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsDisabled') })
+    }
+
+    browser.storage.local.set(data)
+  }, errorHandle)
+}
+// --------------------------------------------------------------------------------------------------------------------------------
+
 for (let controlButton of document.querySelectorAll('.controlButton')) controlButton.addEventListener('click', handleButtons)
 for (let backButton of document.querySelectorAll('.backButton')) backButton.addEventListener('click', handleButtons)
 
 document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
 document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
 document.querySelector('#setThunderNoteState').addEventListener('change', toggleThunderNodeState)
+document.querySelector('#switchImages').addEventListener('change', toggleImages)
+document.querySelector('#switchNotifications').addEventListener('change', toggleNotifications)
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
 browser.runtime.onMessage.addListener(handleMessage)
 
@@ -532,14 +583,13 @@ for (let item of domNodes) item.setAttribute('tabindex', -1)
 // --------------------------------------------------------------------------------------------------------------------------------
 browser.storage.local.get().then(function (data) {
   if (data['addon'] === undefined) data['addon'] = {}
-  if (data['addon']['status'] === undefined) {
-    data['addon']['status'] = 'enabled'
-    document.querySelector('#setThunderNoteState').value = 'enabled'
-    browser.storage.local.set(data)
-  } else if (data['addon']['status'] === 'enabled') {
-    document.querySelector('#setThunderNoteState').value = 'enabled'
-    return
-  }
+  if (data['addon']['images'] === undefined) data['addon']['images'] = 'enabled'
+  if (data['addon']['notifications'] === undefined) data['addon']['notifications'] = 'enabled'
+  if (data['addon']['status'] === undefined) data['addon']['status'] = 'enabled'
 
-  document.querySelector('#setThunderNoteState').value = 'disabled'
+  if (data['addon']['images'] === 'enabled') document.querySelector('#switchImages').value = 'enabled'
+  if (data['addon']['notifications'] === 'enabled') document.querySelector('#switchNotifications').value = 'enabled'
+  if (data['addon']['status'] === 'enabled') document.querySelector('#setThunderNoteState').value = 'enabled'
+
+  browser.storage.local.set(data)
 })
