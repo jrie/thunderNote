@@ -288,7 +288,7 @@ function fillTopics () {
       let li = document.createElement('li')
       li.className = 'newsEntry'
 
-      let subLine = document.createElement('h2')
+      let subLine = document.createElement('p')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('noTopics')))
       li.appendChild(subLine)
@@ -302,25 +302,58 @@ function fillTopics () {
     let imagesAllowed = data['addon']['images'] === 'enabled'
 
     for (let keyword of sortedTopics) {
+      let fold = document.createElement('button')
       let li = document.createElement('li')
-
       li.className = 'newsEntry '
+
       if (ul.children.length > 0) li.classList.add('folded')
 
-      let fold = document.createElement('button')
       fold.className = 'folding'
       fold.innerHTML = '&laquo;'
       if (ul.children.length === 0) fold.innerHTML = '&raquo;'
 
       fold.addEventListener('click', function (evt) {
         if (evt.target.parentNode.classList.contains('folded')) {
-          evt.target.parentNode.children[2].style['margin-bottom'] = '30px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
           evt.target.parentNode.classList.remove('folded')
           evt.target.innerHTML = '&raquo;'
+          evt.target.parentNode.lastElementChild.innerHTML = '&raquo;'
+          evt.target.parentNode.lastElementChild.style['opacity'] = 1
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
           evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
           evt.target.innerHTML = '&laquo;'
+          evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
+          evt.target.parentNode.lastElementChild.style['opacity'] = 0
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-30px'
+        }
+      })
+
+      let foldBottom = document.createElement('button')
+      foldBottom.className = 'folding bottom'
+      foldBottom.innerHTML = fold.innerHTML
+
+      if (ul.children.length > 0) {
+        foldBottom.style['opacity'] = 0
+        foldBottom.style['margin-bottom'] = '-30px'
+      }
+
+      foldBottom.addEventListener('click', function (evt) {
+        if (evt.target.parentNode.classList.contains('folded')) {
+          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
+          evt.target.parentNode.classList.remove('folded')
+          evt.target.innerHTML = '&raquo;'
+          evt.target.parentNode.firstElementChild.innerHTML = '&raquo;'
+          evt.target.style['opacity'] = 1
+          evt.target.style['margin-bottom'] = '12px'
+        } else {
+          evt.target.parentNode.classList.add('folded')
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.innerHTML = '&laquo;'
+          evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
+          evt.target.style['opacity'] = 0
+          evt.target.style['margin-bottom'] = '-30px'
         }
       })
 
@@ -356,9 +389,10 @@ function fillTopics () {
         let subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
-        let entryTitle = document.createElement('span')
-        entryTitle.className = 'entryTitle inactive'
-        entryTitle.appendChild(document.createTextNode('---'))
+
+        let entryTitle = document.createElement('li')
+        entryTitle.className = 'entryContent inactive'
+        entryTitle.appendChild(document.createTextNode(getMsg('noTopics')))
         subList.appendChild(entryTitle)
       } else {
         let subList = document.createElement('ul')
@@ -368,6 +402,8 @@ function fillTopics () {
         let sortedNews = Object.values(data['keywords']['urls'][keyword]).sort(sortByTime)
         let keys = Object.keys(data['keywords']['urls'][keyword])
         for (let item of sortedNews) {
+          let liSub = document.createElement('li')
+
           for (let key of keys) {
             if (item[2] === data['keywords']['urls'][keyword][key][2] && item[4] === data['keywords']['urls'][keyword][key][4]) {
               let dateObj = new Date(item[2])
@@ -398,14 +434,19 @@ function fillTopics () {
               pContent.innerHTML += filterHTML(item[3])
               entryContent.appendChild(pContent)
 
-              subList.appendChild(entryDate)
-              subList.appendChild(entryTitle)
-              subList.appendChild(entryContent)
+              liSub.appendChild(entryDate)
+              liSub.appendChild(entryTitle)
+              liSub.appendChild(entryContent)
               break
             }
           }
+
+          subList.appendChild(liSub)
         }
+
+        li.appendChild(subList)
       }
+      li.appendChild(foldBottom)
       ul.appendChild(li)
       if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
     }
@@ -433,7 +474,7 @@ function filterHTML (item) {
 function handleMessage (message) {
   if (message['addKeyword'] !== undefined) {
     fillKeywords()
-    browser.storage.local.get('addon').then(function(data) {
+    browser.storage.local.get('addon').then(function (data) {
       if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
     })
   }
@@ -447,13 +488,13 @@ function addInputKeyword (evt) {
   let keywordText = evt.target.value.trim()
   if (keywordText.length === 0) return
 
-  browser.storage.local.get().then(function (keywordData) {
-    if (keywordData['keywords'] === undefined) keywordData['keywords'] = { 'cnt': {}, 'urls': {} }
-    if (keywordData['keywords']['cnt'][keywordText] !== undefined) return
+  browser.storage.local.get().then(function (data) {
+    if (data['keywords'] === undefined) data['keywords'] = { 'cnt': {}, 'urls': {} }
+    if (data['keywords']['cnt'][data] !== undefined) return
 
-    keywordData['keywords']['cnt'][keywordText] = 0
-    keywordData['keywords']['urls'][keywordText] = {}
-    browser.storage.local.set(keywordData)
+    data['keywords']['cnt'][keywordText] = 0
+    data['keywords']['urls'][keywordText] = {}
+    browser.storage.local.set(data)
 
     fillKeywords()
     if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
@@ -490,39 +531,46 @@ function handleKeyUp (evt) {
     // Alt key pressed
     let currentPage = document.querySelector('.page.active')
     let titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
+
+
     if (evt.keyCode === 38) {
       // arrow up
       evt.preventDefault()
+      if (activeNews >= 0) titleElements[activeNews].parentNode.classList.remove('highlight')
       --activeNews
 
       if (activeNews < 0) activeNews = titleElements.length - 1
-      if (titleElements[activeNews].parentNode.parentNode.classList.contains('folded')) {
-        titleElements[activeNews].parentNode.parentNode.classList.remove('folded')
-        titleElements[activeNews].parentNode.parentNode.children[2].style['margin-bottom'] = '30px'
+      if (titleElements[activeNews].parentNode.parentNode.parentNode.classList.contains('folded')) {
+        titleElements[activeNews].parentNode.parentNode.parentNode.firstElementChild.click()
         setTimeout(function () {
-          titleElements[activeNews].focus()
+          titleElements[activeNews].parentNode.classList.add('highlight')
+          titleElements[activeNews].parentNode.focus()
           currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
         }, 450)
       } else {
-        titleElements[activeNews].focus()
+        titleElements[activeNews].parentNode.focus()
+        titleElements[activeNews].parentNode.classList.add('highlight')
         currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
       }
     } else if (evt.keyCode === 40) {
       // arrow down
       evt.preventDefault()
+      if (activeNews >= 0) titleElements[activeNews].parentNode.classList.remove('highlight')
+
       ++activeNews
 
       if (activeNews > titleElements.length - 1) activeNews = 0
-      if (titleElements[activeNews].parentNode.parentNode.classList.contains('folded')) {
-        titleElements[activeNews].parentNode.parentNode.classList.remove('folded')
-        titleElements[activeNews].parentNode.parentNode.children[2].style['margin-bottom'] = '30px'
+      if (titleElements[activeNews].parentNode.parentNode.parentNode.classList.contains('folded')) {
+        titleElements[activeNews].parentNode.parentNode.parentNode.firstElementChild.click()
         setTimeout(function () {
-          titleElements[activeNews].focus()
-          currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+          titleElements[activeNews].parentNode.focus()
+          titleElements[activeNews].parentNode.classList.add('highlight')
+          currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.225))
         }, 450)
       } else {
-        titleElements[activeNews].focus()
-        currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+        titleElements[activeNews].parentNode.classList.add('highlight')
+        titleElements[activeNews].parentNode.focus()
+        currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.225))
       }
     }
   }

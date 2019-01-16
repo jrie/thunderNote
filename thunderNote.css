@@ -88,7 +88,6 @@ a::-moz-focus-inner {
 
 div, ul, h1, h2, h3, h4 {
   outline: none;
-  user-select: none;
 }
 
 hr {
@@ -108,7 +107,7 @@ hr {
   clear: both;
 }
 
-ul {
+ul, li {
   margin: 0px;
   padding: 0px;
   width: 100%;
@@ -163,7 +162,8 @@ button.backButton {
   border: none;
 }
 
-button.folding {
+button.folding,
+button.folding.bottom {
   max-width: 100%;
   min-width: 1.15em;
   height: 1.75em;
@@ -175,6 +175,21 @@ button.folding {
   margin-left: 12px;
   text-decoration: none;
   border: none;
+  transition-property: all;
+  position: relative;
+  z-index: 101;
+  transition-duration: 460ms;
+  transition-delay: 35ms;
+  transition-timing-function: ease-in-out;
+}
+
+button.folding.bottom {
+  margin-right: 3px;
+  border: 1px solid rgba(50,107,153, 0.7);
+  margin-top: 0px;
+  margin-bottom: 30px;
+  background: transparent;
+  clear: both;
 }
 
 .headerControl .headline {
@@ -191,14 +206,46 @@ button.folding {
   padding: 10px 0px 10px 42px;
 }
 
-.newsEntry {
-  clear: both;
-  margin-bottom: 24px;
+.subList {
   box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
-  overflow: hidden;
-  position: relative;
 }
 
+.subList hr {
+  margin: 0px;
+  padding: 0px;
+}
+
+.newsEntry {
+  margin: 0px;
+  padding: 0px;
+  clear: both;
+  box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
+  overflow: hidden;
+
+}
+
+.newsEntry li {
+  margin: 0px;
+  padding-top: 12px;
+  padding-left: 2%;
+  padding-right: 2%;
+  border-bottom: 1px solid rgb(105, 105, 225);
+  transition-property: color, background;
+  transition-duration: 460ms;
+  transition-delay: 0ms;
+  transition-timing-function: ease-in-out;
+}
+
+.newsEntry li:last-of-type {
+  margin-bottom: 0px;
+  border-bottom: 0px;
+}
+
+.newsEntry .highlight,
+.newsEntry li:hover {
+  color: #dde;
+  background-color: rgba(30, 94, 158, 0.724);
+}
 .newsEntry,
 .newsEntry ul {
   transition-property: all;
@@ -209,9 +256,9 @@ button.folding {
 }
 
 .newsEntry.folded ul {
-  user-select: none !important;
-  cursor: pointer !important;
+  cursor: pointer;
   opacity: 0;
+  z-index: 0;
 }
 
 .subTitle,
@@ -221,8 +268,11 @@ button.folding {
   text-shadow: 1px 2px 4px rgba(0,0,0, 0.32);
   margin: 0px;
   word-wrap: break-word;
-  border-radius: 0px 6px 6px 0px;
+  border-radius: 0px 6px 0px 6px;
   padding-left: 1rem;
+}
+.subTitle {
+  border-radius: 0px;
 }
 
 .subTitle {
@@ -237,12 +287,15 @@ button.folding {
 }
 
 .subList {
-  margin-top: 1rem;
-  margin-bottom: 1.25rem;
-  padding: 6px 12px;
+  padding-top: 1rem;
+  padding-bottom: 1.25rem;
   font-size: 1.5rem;
   background-color: rgba(0,0,0, 0.08);
-  border-radius: 0px 6px 6px 0px;
+  border-radius: 0px;
+}
+
+.subList li {
+  padding: 6px 12px;
 }
 
 .entryDate {
@@ -282,7 +335,7 @@ button.folding {
 .entryContent p {
   position: relative;
   display: inline-block;
-  width: 74%;
+  width: 71%;
   left: 28%;
 }
 
@@ -294,8 +347,6 @@ button.folding {
 .entryContent {
   font-weight: normal;
   font-size: 0.75em;
-  margin-bottom: 2.05rem;
-  padding-bottom: 16px;
   line-height: 162%;
   -moz-user-select: text;
   border-bottom: 1px solid rgb(105, 105, 225);
@@ -316,4 +367,5 @@ button.folding {
 .entryContent:last-of-type {
   border: none;
   padding-bottom: 0px;
+  margin: 0px;
 }
