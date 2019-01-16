@@ -9,8 +9,8 @@
     <div class="headerControl">
       <h2 class="headline">thunderNote</h2>
       <select id="setThunderNoteState">
-        <option value="enabled" selected="selected">__MSG_thunderNoteEnable__</option>
-        <option value="disabled">__MSG_thunderNoteDisable__</option>
+        <option value="enabled" >__MSG_thunderNoteEnable__</option>
+        <option value="disabled" selected="selected">__MSG_thunderNoteDisable__</option>
       </select>
       <hr/>
       <button class="controlButton" data-cmd="viewTopics">__MSG_buttonViewTopics__</button>
@@ -18,6 +18,8 @@
       <button class="controlButton" data-cmd="addItem">__MSG_buttonAddUri__</button>
       <button class="controlButton" data-cmd="manageURIs">__MSG_buttonManageURIs__</button>
       <button class="controlButton" data-cmd="manageKeywords">__MSG_buttonManageKeywords__</button>
+      <hr/>
+      <button class="controlButton" data-cmd="displayOptions">__MSG_buttonOptions__</button>
     </div>
 
     <div class="page" data-src='addItem'>
@@ -55,6 +57,22 @@
         <button class="backButton" data-src="back">&laquo;</button>
         <h2 class="headline">__MSG_titleTopics__</h2>
         <ul id="viewTopics" class="itemList clearfix"></ul>
+    </div>
+
+    <div class="page" data-src='displayOptions'>
+      <button class="backButton" data-src="back">&laquo;</button>
+      <h2 class="headline">__MSG_titleOptions__</h2>
+
+      <select id="switchImages">
+          <option value="enabled">__MSG_imagesEnable__</option>
+          <option value="disabled" selected="selected">__MSG_imagesDisable__</option>
+      </select>
+
+      <select id="switchNotifications">
+        <option value="enabled">__MSG_notificationsEnable__</option>
+        <option value="disabled" selected="selected">__MSG_notificationsDisable__</option>
+      </select>
+
     </div>
 
     <script type="text/javascript" src="libs/l10n/l10n.js"></script>
