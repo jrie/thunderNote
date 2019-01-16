@@ -56,6 +56,7 @@ function processXMLData (xmlDoc, URI) {
 
   browser.storage.local.get('keywords').then(function (keywordData) {
     if (keywordData === undefined) return true
+    if (keywordData['keywords'] === undefined) return true
 
     for (let keyword of Object.keys(keywordData['keywords']['cnt'])) {
       for (let item of jsonData['item']) {
@@ -130,6 +131,7 @@ browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: 
 browser.storage.local.get().then(function (data) {
   browser.alarms.clearAll()
   if ((data['addon'] === undefined || data['addon']['status'] === undefined) || data['addon']['status'] === 'enabled') {
+    if (data['feeds'] === undefined) return
     for (let url of Object.keys(data['feeds'])) {
       browser.alarms.create(url, { 'when': Date.now() + 2000, 'periodInMinutes': data['feeds'][url][1] })
     }
