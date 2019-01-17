@@ -60,7 +60,7 @@
   },
 
   "buttonAddURI": {
-    "message": "Add to watchlist",
+    "message": "Add feed to watchlist",
     "description": "Interface button, add URI to watchlist"
   },
   "buttonUpdateURI": {
@@ -68,7 +68,7 @@
     "description": "Interface button to update existing URI"
   },
   "buttonForceURIUpdate": {
-    "message": "Force feed content update",
+    "message": "Force feed refresh",
     "description": "Interface button to force URI update"
   },
   "maxAgeURI": {
@@ -88,6 +88,10 @@
   "noTopics": {
     "message": "No topics matching keyword.",
     "description": "Information shown if no topics are found"
+  },
+  "noFeeds": {
+    "message": "No feeds set.",
+    "description": "Information shown that no feeds are set"
   },
 
   "addKeywordTitle": {
@@ -117,6 +121,23 @@
   "buttonViewTopics": {
     "message": "View topics",
     "description": "Interface button, view topics"
+  },
+
+  "labelStatus": {
+    "message": "Status",
+    "description": "Label for thunderNote being active/inactive"
+  },
+  "labelNews": {
+    "message": "News",
+    "description": "Label for news views"
+  },
+  "labelManage": {
+    "message": "Manage feeds and keywords",
+    "description": "Label for manage feeds and keywords"
+  },
+  "labelSettings": {
+    "message": "Settings",
+    "description": "Main label for options"
   },
 
 

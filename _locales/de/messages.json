@@ -86,6 +86,11 @@
     "message": "Keine Themen mit Schlüsselwort gefunden.",
     "description": "Information shown if no topics are found"
   },
+  "noFeeds": {
+    "message": "Keine Feeds hinterlegt.",
+    "description": "Information shown that no feeds are set"
+  },
+
 
   "addKeywordTitle": {
     "message": "Schlüsselwort eingetragen",
@@ -114,6 +119,23 @@
   "buttonViewTopics": {
     "message": "Nachrichten anzeigen",
     "description": "Interface button, view topics"
+  },
+
+  "labelStatus": {
+    "message": "Status",
+    "description": "Label for thunderNote being active/inactive"
+  },
+  "labelNews": {
+    "message": "Nachrichten",
+    "description": "Label for news views"
+  },
+  "labelManage": {
+    "message": "RSS, Themen und Schlüsselwörter",
+    "description": "Label for manage feeds and keywords"
+  },
+  "labelSettings": {
+    "message": "Einstellungen",
+    "description": "Main label for options"
   },
 
 
