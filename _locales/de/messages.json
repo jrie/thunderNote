@@ -57,7 +57,7 @@
   },
 
   "buttonAddURI": {
-    "message": "Zur Liste hinzufügen",
+    "message": "Feed hinzufügen",
     "description": "Interface button, add URI to watchlist"
   },
   "buttonUpdateURI": {

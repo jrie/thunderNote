@@ -225,7 +225,7 @@ function fillURIs () {
     let ul = document.querySelector('#manageURIs')
     removeChildren(ul)
 
-    if (Object.keys(data['feeds']).length === 0) {
+    if (data['feeds'] === undefined || Object.keys(data['feeds']).length === 0) {
       let li = document.createElement('li')
       li.className = 'newsEntry'
 
@@ -298,12 +298,10 @@ function sortByTime (a, b) {
 
 function fillTopics () {
   browser.storage.local.get().then(function (data) {
-    if (data['keywords'] === undefined) return
     let ul = document.querySelector('#viewTopics')
     removeChildren(ul)
 
-    let sortedTopics = Object.keys(data['keywords']['cnt']).sort()
-    if (Object.keys(data['keywords']['urls']).length === 0) {
+    if (data['keywords'] === undefined || data['keywords']['urls'] === undefined || Object.keys(data['keywords']['urls']).length === 0) {
       let li = document.createElement('li')
       li.className = 'newsEntry'
 
@@ -321,6 +319,7 @@ function fillTopics () {
       return
     }
 
+    let sortedTopics = Object.keys(data['keywords']['cnt']).sort()
     let now = Date.now()
     let newsIndex = 0
 
