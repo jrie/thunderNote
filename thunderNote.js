@@ -63,7 +63,7 @@ function handleButtons (evt) {
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
   let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
-  if (evt.target.dataset['cmd'] !== 'removeFeed') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
+  if (evt.target.dataset['cmd'] !== 'removeFeed' || evt.target.dataset['cmd'] !== 'addItem') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
 
   document.removeEventListener('keyup', handleKeyUp)
   activeNews = -1
@@ -234,12 +234,6 @@ function fillURIs () {
       subLine.appendChild(document.createTextNode(getMsg('noFeeds')))
       li.appendChild(subLine)
       ul.appendChild(li)
-
-      let clone = document.querySelector('.controlButton[data-cmd="addItem"]').cloneNode(true)
-      clone.classList.add('marginTop')
-      clone.addEventListener('click', handleButtons)
-
-      ul.appendChild(clone)
       return
     }
 

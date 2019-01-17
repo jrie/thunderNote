@@ -109,11 +109,11 @@
     "description": "Interface button, delete URI from watchlist"
   },
   "buttonManageURIs": {
-    "message": "Suchseiten verwalten",
+    "message": "Feeds verwalten",
     "description": "Interface button, manage URI watchlist"
   },
   "buttonManageKeywords": {
-    "message": "Schlüsselwörter verwalten",
+    "message": "Schlüsselwörter bearbeiten",
     "description": "Interface button, manage keywords"
   },
   "buttonViewTopics": {
@@ -130,7 +130,7 @@
     "description": "Label for news views"
   },
   "labelManage": {
-    "message": "RSS, Themen und Schlüsselwörter",
+    "message": "Feeds und Schlüsselwörter",
     "description": "Label for manage feeds and keywords"
   },
   "labelSettings": {
