@@ -288,7 +288,7 @@ function fillTopics () {
       let li = document.createElement('li')
       li.className = 'newsEntry'
 
-      let subLine = document.createElement('p')
+      let subLine = document.createElement('span')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('noTopics')))
       li.appendChild(subLine)
@@ -526,7 +526,7 @@ function toggleThunderNodeState (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 let activeNews = -1
 function handleKeyUp (evt) {
-  if (evt.target.nodeName === 'INPUT' || evt.target.nodeName === 'BUTTON' || evt.target.nodeName === 'TEXTAREA') return
+  if (evt.target.nodeName === 'INPUT' || evt.target.nodeName === 'TEXTAREA') return
   if (evt.altKey) {
     // Alt key pressed
     let currentPage = document.querySelector('.page.active')
