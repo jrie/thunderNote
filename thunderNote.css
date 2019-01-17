@@ -23,8 +23,9 @@ body {
   width: 96%;
   transition-property: all;
   transition-duration: 670ms;
-  transition-delay: 55ms;
+  transition-delay: 0ms;
   transform: translate(0px, 0px);
+  opacity: 1;
 }
 
 .page[data-src="viewTopics"] {
@@ -32,7 +33,8 @@ body {
 }
 
 .headerControl.inactive {
-  transform: translate(-105%, 0px);
+  transform: translate(-107%, 0px);
+  opacity: 0;
 }
 
 .page {
@@ -47,36 +49,65 @@ body {
   padding: 2% 2%;
   border-radius: 12px;
   overflow-y: auto;
+  opacity: 0;
 }
 
 .page.active {
+  opacity: 1;
   transform: translate(0%, 0px);
   z-index: 101;
 }
+
+label {
+  padding: 0.85em 1em 0.85em 1em;
+  font-size: 1.25em;
+  margin-bottom: 0.85em;
+  margin-top: 1.75em;
+  clear: both;
+  display: block;
+  color: #aef;
+  text-align: center;
+  background: rgb(30,87,153);
+  background: -moz-linear-gradient(top, rgba(50,107,173,1) 0%, rgba(41,137,216,1) 8%, rgba(32,124,202,1) 95%, rgba(37, 65, 87, 0.35) 100%);
+  background: -webkit-linear-gradient(top, rgba(50,107,173,1) 0%,rgba(41,137,216,1) 8%,rgba(32,124,202,1) 95%, rgba(37, 65, 87, 0.35) 100%);
+  background: linear-gradient(to bottom, rgba(50,107,173,1) 0%,rgba(41,137,216,1) 8%,rgba(32,124,202,1) 95%, rgba(37, 65, 87, 0.35) 100%);
+  border-left: 1px solid rgb(61, 122, 172);
+  border-bottom: 1px solid rgb(38, 82, 117);
+  border-right: 1px solid rgb(38, 82, 117);
+  text-shadow: 1px 1px rgba(68, 68, 102, 0.26);
+}
+
+label:first-of-type {
+  margin-top: 0px;
+}
+
 
 input,
 select,
 button {
   margin: 0px;
-  padding: 10px 9px;
+  padding: 8px 9px;
   max-width: 100%;
   min-width: 100%;
   border-width: 1px;
-  background-color: #abb;
-  color: #dda;
-  border-color: #666;
+  color: #bdf;
+  border-color: #446;
   border-radius: 8px;
   margin-bottom: 9px;
   font-weight: inherit;
-  box-shadow: -1px 1px 2px rgba(34, 34, 51, 0.285);
+  box-shadow: -1px 1px 2px rgba(34, 34, 51, 0.145);
   text-align: center;
   word-wrap: break-word;
-  background: rgb(30,87,153);
-  background: -moz-linear-gradient(top, rgba(50,107,173,1) 0%, rgba(41,137,216,1) 8%, rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
-  background: -webkit-linear-gradient(top, rgba(50,107,173,1) 0%,rgba(41,137,216,1) 8%,rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
-  background: linear-gradient(to bottom, rgba(50,107,173,1) 0%,rgba(41,137,216,1) 8%,rgba(32,124,202,1) 95% rgb(69, 123, 165) 100%);
-  border-top: 1px solid rgba(30,87,133, 1);
+  background: rgba(47, 103, 167);
+  background: -moz-linear-gradient(top, rgba(50,107,173,1) 0%, rgba(59, 156, 235, 0.7) 8%, rgba(32,124,202,1) 95%, rgba(37, 65, 87, 0.35) 100%);
+  background: -webkit-linear-gradient(top, rgba(50,107,173,1) 0%,rgba(59, 156, 235, 0.7) 8%,rgba(32,124,202,1) 95%, rgba(37, 65, 87, 0.35) 100%);
+  background: linear-gradient(to bottom, rgba(50,107,173,1) 0%,rgba(59, 156, 235, 0.7) 8%,rgba(32,124,202,1) 95%, rgba(37, 65, 87, 0.35) 100%);
+  border-top: 1px solid rgb(61, 122, 172);
+  border-left: 1px solid rgb(61, 122, 172);
+  border-bottom: 1px solid rgb(38, 82, 117);
+  border-right: 1px solid rgb(38, 82, 117);
   outline: none;
+  text-shadow: 1px 1px rgba(68, 68, 102, 0.26);
 }
 
 input::-moz-focus-inner,
@@ -86,7 +117,7 @@ a::-moz-focus-inner {
   border: none;
 }
 
-div, ul, h1, h2, h3, h4 {
+div, ul, h1, h2, h3, h4, label {
   outline: none;
 }
 
@@ -138,6 +169,10 @@ a {
   background-size: 20px 20px;
   padding-left: 35px;
   text-align: left;
+}
+
+.controlButton.marginTop {
+  margin-top: 2em;
 }
 
 button {

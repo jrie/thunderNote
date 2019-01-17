@@ -63,7 +63,7 @@ function handleButtons (evt) {
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
   let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
-  for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
+  if (evt.target.dataset['cmd'] !== 'removeFeed') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
 
   document.removeEventListener('keyup', handleKeyUp)
   activeNews = -1
@@ -183,7 +183,7 @@ function removeFeed (evt) {
       browser.alarms.clear(feedURI)
 
       delete data['feeds'][feedURI]
-      browser.storage.local.set(data).then(fillURIs)
+      browser.storage.local.set(data).then(fillURIs, errorHandle)
     }
   }, errorHandle)
 }
@@ -212,7 +212,8 @@ function removeKeyword (evt) {
     if (data['keywords'] !== undefined && data['keywords']['cnt'][feedKeyword] !== undefined) {
       delete data['keywords']['cnt'][feedKeyword]
       delete data['keywords']['urls'][feedKeyword]
-      browser.storage.local.set(data).then(fillKeywords)
+      browser.storage.local.set(data).then(fillKeywords, errorHandle)
+      document.querySelector('#addKeywordInput').focus()
     }
   }, errorHandle)
 }
@@ -222,7 +223,25 @@ function removeKeyword (evt) {
 function fillURIs () {
   browser.storage.local.get('feeds').then(function (data) {
     let ul = document.querySelector('#manageURIs')
-    ul.innerHTML = ''
+    removeChildren(ul)
+
+    if (Object.keys(data['feeds']).length === 0) {
+      let li = document.createElement('li')
+      li.className = 'newsEntry'
+
+      let subLine = document.createElement('p')
+      subLine.className = 'subTitle'
+      subLine.appendChild(document.createTextNode(getMsg('noFeeds')))
+      li.appendChild(subLine)
+      ul.appendChild(li)
+
+      let clone = document.querySelector('.controlButton[data-cmd="addItem"]').cloneNode(true)
+      clone.classList.add('marginTop')
+      clone.addEventListener('click', handleButtons)
+
+      ul.appendChild(clone)
+      return
+    }
 
     for (let url of Object.keys(data['feeds'])) {
       let li = document.createElement('li')
@@ -288,11 +307,17 @@ function fillTopics () {
       let li = document.createElement('li')
       li.className = 'newsEntry'
 
-      let subLine = document.createElement('span')
+      let subLine = document.createElement('p')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('noTopics')))
       li.appendChild(subLine)
       ul.appendChild(li)
+
+      let clone = document.querySelector('.controlButton[data-cmd="manageKeywords"]').cloneNode(true)
+      clone.classList.add('marginTop')
+      clone.addEventListener('click', handleButtons)
+
+      ul.appendChild(clone)
       return
     }
 
@@ -414,6 +439,7 @@ function fillTopics () {
 
               let entryTitle = document.createElement('a')
               entryTitle.href = key
+              entryTitle.title = key
               entryTitle.className = 'entryTitle'
               entryTitle.appendChild(document.createTextNode(item[0]))
               entryTitle.dataset['index'] = newsIndex++
