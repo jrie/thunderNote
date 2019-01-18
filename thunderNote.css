@@ -342,7 +342,6 @@ button.bottom {
 
 .entryDate {
   margin-top: 1.25em;
-  margin-bottom: 3px;
   font-size: 0.75em;
   width: 100%;
   -moz-user-select: text;
@@ -378,7 +377,7 @@ button.bottom {
   position: relative;
   display: inline-block;
   width: 71%;
-  left: 28%;
+  left: 27%;
 }
 
 .entryContent.noImg p {
@@ -387,12 +386,17 @@ button.bottom {
 }
 
 .entryContent {
+  clear: both;
+  position: relative;
   font-weight: normal;
   font-size: 0.75em;
   line-height: 162%;
   -moz-user-select: text;
   border-bottom: 1px solid rgb(105, 105, 225);
   position: relative;
+  margin-bottom: 24px;
+  vertical-align: text-top;
+  min-height: 90px;
 }
 
 .entryContent img {
