@@ -55,7 +55,40 @@ function processXMLData (xmlDoc, URI) {
     jsonData = json['rss']['channel']
   }
 
-  if (jsonData === undefined) return false
+  if (jsonData['item'] === undefined) {
+    // TODO: Return feed items could not be read, please report url
+    return false
+  }
+
+  browser.storage.local.get().then(function (data) {
+    if (data['feedData'] === undefined) data['feedData'] = {}
+    if (data['feedData'][URI] === undefined) data['feedData'][URI] = {}
+    else data['feedData'][URI] = {}
+
+    for (let item of jsonData['item']) {
+      let link = item['link']
+      let title = item['title']
+      let description = item['description']
+      let time = Date.parse(item['pubDate'])
+
+      let mediaMatch = null
+      if (item['encoded'] !== undefined) {
+        mediaMatch = item['encoded'].toString().match(/img src=["']((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
+      }
+
+      if (data['feedData'][URI][link] === undefined) {
+        if (mediaMatch === null || mediaMatch[1] === undefined) data['feedData'][URI][link] = [title, time, description, null]
+        else data['feedData'][URI][link] = [title, time, description, mediaMatch[1]]
+      } else {
+        data['feedData'][URI][link][0] = title
+        data['feedData'][URI][link][1] = time
+        data['feedData'][URI][link][2] = description
+        if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][3] = mediaMatch[1]
+      }
+    }
+
+    browser.storage.local.set(data)
+  })
 
   browser.storage.local.get('keywords').then(function (keywordData) {
     if (keywordData === undefined) return true
@@ -135,10 +168,20 @@ browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: 
 
 browser.storage.local.get().then(function (data) {
   browser.alarms.clearAll()
+  if (data['feedData'] === undefined) data['feedData'] = {}
+
+  for (let url of Object.keys(data['feeds'])) {
+    if (data['feedData'][url] === undefined) data['feedData'][url] = {}
+  }
+
+  browser.storage.local.set(data)
+
   if ((data['addon'] === undefined || data['addon']['status'] === undefined) || data['addon']['status'] === 'enabled') {
+
     if (data['feeds'] === undefined) return
     for (let url of Object.keys(data['feeds'])) {
-      browser.alarms.create(url, { 'when': Date.now() + 2000, 'periodInMinutes': data['feeds'][url][1] })
+      browser.alarms.create(url, { 'when': Date.now() + 3000, 'periodInMinutes': data['feeds'][url][1] })
     }
+
   }
 }, errorHandle)
