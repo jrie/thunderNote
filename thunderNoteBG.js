@@ -77,13 +77,14 @@ function processXMLData (xmlDoc, URI) {
       }
 
       if (data['feedData'][URI][link] === undefined) {
-        if (mediaMatch === null || mediaMatch[1] === undefined) data['feedData'][URI][link] = [title, time, description, null]
-        else data['feedData'][URI][link] = [title, time, description, mediaMatch[1]]
+        if (mediaMatch === null || mediaMatch[1] === undefined) data['feedData'][URI][link] = [title, time, description, link, null]
+        else data['feedData'][URI][link] = [title, time, description, link, mediaMatch[1]]
       } else {
         data['feedData'][URI][link][0] = title
         data['feedData'][URI][link][1] = time
         data['feedData'][URI][link][2] = description
-        if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][3] = mediaMatch[1]
+        data['feedData'][URI][link][3] = link
+        if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][4] = mediaMatch[1]
       }
     }
 

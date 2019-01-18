@@ -453,45 +453,41 @@ function fillViews () {
         subList.appendChild(feedNameLi)
 
         let sortedNews = Object.values(data['feedData'][feedURI]).sort(sortByTimeFeeds)
-        let keys = Object.keys(data['feedData'][feedURI])
         for (let item of sortedNews) {
           let liSub = document.createElement('li')
 
-          for (let key of keys) {
-            let dateObj = new Date(item[1])
+          let dateObj = new Date(item[1])
 
-            let entryDate = document.createElement('span')
-            entryDate.className = 'entryDate'
-            entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
+          let entryDate = document.createElement('span')
+          entryDate.className = 'entryDate'
+          entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
 
-            let entryTitle = document.createElement('a')
-            entryTitle.href = key
-            entryTitle.title = key
-            entryTitle.className = 'entryTitle'
-            entryTitle.appendChild(document.createTextNode(item[0]))
-            entryTitle.dataset['index'] = newsIndex++
+          let entryTitle = document.createElement('a')
+          entryTitle.href = item[2]
+          entryTitle.title = item[3]
+          entryTitle.className = 'entryTitle'
+          entryTitle.appendChild(document.createTextNode(item[0]))
+          entryTitle.dataset['index'] = newsIndex++
 
-            let entryContent = document.createElement('div')
-            entryContent.className = 'entryContent'
-            entryContent.classList.add('noImg')
-            if (imagesAllowed) {
-              if (item[3] !== null) {
-                let entryImg = document.createElement('img')
-                entryImg.src = item[3]
-                entryContent.appendChild(entryImg)
-                entryContent.classList.remove('noImg')
-              }
+          let entryContent = document.createElement('div')
+          entryContent.className = 'entryContent'
+          entryContent.classList.add('noImg')
+          if (imagesAllowed) {
+            if (item[4] !== null) {
+              let entryImg = document.createElement('img')
+              entryImg.src = item[4]
+              entryContent.appendChild(entryImg)
+              entryContent.classList.remove('noImg')
             }
-
-            let pContent = document.createElement('p')
-            pContent.innerHTML += filterHTML(item[2])
-            entryContent.appendChild(pContent)
-
-            liSub.appendChild(entryDate)
-            liSub.appendChild(entryTitle)
-            liSub.appendChild(entryContent)
-            break
           }
+
+          let pContent = document.createElement('p')
+          pContent.innerHTML += filterHTML(item[2])
+          entryContent.appendChild(pContent)
+
+          liSub.appendChild(entryDate)
+          liSub.appendChild(entryTitle)
+          liSub.appendChild(entryContent)
 
           subList.appendChild(liSub)
         }
