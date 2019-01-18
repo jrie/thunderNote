@@ -53,8 +53,17 @@ function setFocus (element) {
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
+let inSingleRowMode = false
 
 function handleButtons (evt) {
+  if (evt.target.dataset['cmd'] === 'switchSingleRow') {
+    inSingleRowMode = !inSingleRowMode
+    let activePage = document.querySelector('.page.active')
+    if (activePage.dataset['src'] === 'viewTopics') fillTopics()
+    else if (activePage.dataset['src'] === 'viewFeeds') fillViews()
+    return
+  }
+
   document.querySelector('.headerControl').classList.remove('inactive')
 
   for (let page of document.querySelectorAll('.page')) page.classList.remove('active')
@@ -67,6 +76,7 @@ function handleButtons (evt) {
 
   document.removeEventListener('keyup', handleKeyUp)
   activeNews = -1
+  activeFeedItem = -1
 
   let focusNode = null
 
@@ -138,8 +148,8 @@ function handleButtons (evt) {
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
       document.addEventListener('keyup', handleKeyUp)
-      activeNews = -1
       for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
+
       break
     case 'viewFeeds':
       fillViews()
@@ -147,7 +157,6 @@ function handleButtons (evt) {
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
       document.addEventListener('keyup', handleKeyUp)
-      activeFeedItem = -1
       for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
       break
     case 'displayOptions':
@@ -325,6 +334,7 @@ function fillViews () {
   browser.storage.local.get().then(function (data) {
     let ul = document.querySelector('#viewFeeds')
     removeChildren(ul)
+    if (inSingleRowMode) ul.classList.add('singleRow')
 
     if (data['feedData'] === undefined || Object.keys(data['feedData']).length === 0) {
       let li = document.createElement('li')
@@ -358,7 +368,8 @@ function fillViews () {
     for (let feedURI of sortedFeeds) {
       let fold = document.createElement('button')
       let li = document.createElement('li')
-      li.className = 'newsEntry '
+      if (inSingleRowMode) li.className = 'newsEntry singleRow'
+      else li.className = 'newsEntry'
 
       if (ul.children.length > 0) li.classList.add('folded')
 
@@ -463,7 +474,7 @@ function fillViews () {
           entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
 
           let entryTitle = document.createElement('a')
-          entryTitle.href = item[2]
+          entryTitle.href = item[3]
           entryTitle.title = item[3]
           entryTitle.className = 'entryTitle'
           entryTitle.appendChild(document.createTextNode(item[0]))
@@ -498,13 +509,18 @@ function fillViews () {
       ul.appendChild(li)
       if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
     }
+
+    if (inSingleRowMode) queryResize()
   }, errorHandle)
 }
+
+// --------------------------------------------------------------------------------------------------------------------------------
 
 function fillTopics () {
   browser.storage.local.get().then(function (data) {
     let ul = document.querySelector('#viewTopics')
     removeChildren(ul)
+    if (inSingleRowMode) ul.classList.add('singleRow')
 
     if (data['keywords'] === undefined || data['keywords']['urls'] === undefined || Object.keys(data['keywords']['urls']).length === 0) {
       let li = document.createElement('li')
@@ -538,7 +554,8 @@ function fillTopics () {
     for (let keyword of sortedTopics) {
       let fold = document.createElement('button')
       let li = document.createElement('li')
-      li.className = 'newsEntry '
+      if (inSingleRowMode) li.className = 'newsEntry singleRow'
+      else li.className = 'newsEntry'
 
       if (ul.children.length > 0) li.classList.add('folded')
 
@@ -666,7 +683,7 @@ function fillTopics () {
               }
 
               let pContent = document.createElement('p')
-              pContent.innerHTML += filterHTML(item[3])
+              pContent.textContent += filterHTML(item[3])
               entryContent.appendChild(pContent)
 
               liSub.appendChild(entryDate)
@@ -683,9 +700,30 @@ function fillTopics () {
       }
       li.appendChild(foldBottom)
       ul.appendChild(li)
+
       if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
     }
+
+    if (inSingleRowMode) queryResize()
   }, errorHandle)
+}
+
+function queryResize (evt) {
+  for (let subList of document.querySelectorAll('.page.active .subList')) {
+    let inititialWidth = subList.parentNode.clientWidth
+    subList.style['width'] = inititialWidth * (subList.children.length) + 'px'
+    subList.style['overflow'] = 'hidden'
+    subList.style['transform'] = 'translateX(0px)'
+    subList.style['opacity'] = '1'
+
+    let num = 0
+    for (let element of subList.children) {
+      element.dataset['x'] = inititialWidth * num++
+      element.dataset['max'] = inititialWidth * (subList.children.length - 1)
+      element.style['width'] = inititialWidth + 'px'
+      element.style['float'] = 'left'
+    }
+  }
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -761,13 +799,103 @@ function toggleThunderNodeState (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 let activeNews = -1
 let activeFeedItem = -1
+
 function handleKeyUp (evt) {
   if (evt.target.nodeName === 'INPUT' || evt.target.nodeName === 'TEXTAREA') return
+
+  if (inSingleRowMode && evt.keyCode === 39) {
+    // Arrow right
+    let currentPage = document.querySelector('.page.active')
+    let titleElements
+    let indexStart = -1
+
+    if (currentPage.dataset['src'] === 'viewTopics') {
+      titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
+      indexStart = activeNews
+    } else {
+      titleElements = document.querySelectorAll('#viewFeeds a.entryTitle')
+      indexStart = activeFeedItem
+    }
+
+    evt.preventDefault()
+    if (indexStart >= 0) {
+      titleElements[indexStart].parentNode.classList.remove('highlight')
+      if (parseInt(titleElements[indexStart].parentNode.dataset['x']) !== 0 && parseInt(titleElements[indexStart].parentNode.dataset['x']) !== parseInt(titleElements[indexStart].parentNode.dataset['max'])) {
+        titleElements[indexStart].parentNode.style['opacity'] = '0'
+      }
+    }
+    ++indexStart
+
+    if (indexStart > titleElements.length - 1) indexStart = 0
+
+    titleElements[indexStart].parentNode.parentNode.style['transform'] = 'translateX(-' + titleElements[indexStart].parentNode.dataset['x'] + 'px)'
+    titleElements[indexStart].parentNode.style['opacity'] = '1'
+
+    if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
+      titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
+      setTimeout(function () {
+        titleElements[indexStart].parentNode.focus()
+        titleElements[indexStart].parentNode.classList.add('highlight')
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
+      }, 450)
+    } else {
+      titleElements[indexStart].parentNode.classList.add('highlight')
+      titleElements[indexStart].parentNode.focus()
+      currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
+    }
+
+    if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
+    else activeFeedItem = indexStart
+    return
+  } else if (inSingleRowMode && evt.keyCode === 37) {
+    // Arrow left
+    let currentPage = document.querySelector('.page.active')
+    let titleElements
+    let indexStart = -1
+
+    if (currentPage.dataset['src'] === 'viewTopics') {
+      titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
+      indexStart = activeNews
+    } else {
+      titleElements = document.querySelectorAll('#viewFeeds a.entryTitle')
+      indexStart = activeFeedItem
+    }
+
+    evt.preventDefault()
+    if (indexStart >= 0) {
+      titleElements[indexStart].parentNode.classList.remove('highlight')
+      if (parseInt(titleElements[indexStart].parentNode.dataset['x']) !== 0 && parseInt(titleElements[indexStart].parentNode.dataset['x']) !== parseInt(titleElements[indexStart].parentNode.dataset['max'])) {
+        titleElements[indexStart].parentNode.style['opacity'] = '0'
+      }
+    }
+    --indexStart
+
+    if (indexStart < 0) indexStart = titleElements.length - 1
+    titleElements[indexStart].parentNode.parentNode.style['transform'] = 'translateX(-' + titleElements[indexStart].parentNode.dataset['x'] + 'px)'
+    titleElements[indexStart].parentNode.style['opacity'] = '1'
+
+    if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
+      titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
+      setTimeout(function () {
+        titleElements[indexStart].parentNode.classList.add('highlight')
+        titleElements[indexStart].parentNode.focus()
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+      }, 450)
+    } else {
+      titleElements[indexStart].parentNode.focus()
+      titleElements[indexStart].parentNode.classList.add('highlight')
+      currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+    }
+
+    if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
+    else activeFeedItem = indexStart
+    return
+  }
+
   if (evt.altKey) {
     // Alt key pressed
     let currentPage = document.querySelector('.page.active')
     let titleElements
-
     let indexStart = -1
 
     if (currentPage.dataset['src'] === 'viewTopics') {
@@ -868,6 +996,8 @@ document.querySelector('#switchImages').addEventListener('change', toggleImages)
 document.querySelector('#switchNotifications').addEventListener('change', toggleNotifications)
 
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
+
+window.addEventListener('resize', queryResize)
 browser.runtime.onMessage.addListener(handleMessage)
 
 // --------------------------------------------------------------------------------------------------------------------------------

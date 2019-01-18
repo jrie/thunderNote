@@ -33,6 +33,16 @@
     "message": "Feed section",
     "description": "Information that a new feed section started"
   },
+  "switchReaderMode": {
+    "message": "Switch single reader mode",
+    "description": "Action button to toggle single reader mode"
+  },
+  "howToSingleRow": {
+    "message": "When single reader mode is active, you can use the arrow keys, left and right, to navigate forward and backwards in the articles or feed.",
+    "description": "Button single reader mode"
+  },
+
+
 
   "itemSingular": {
     "message": "$item$ item",

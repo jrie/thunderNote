@@ -34,6 +34,14 @@
     "message": "Feed",
     "description": "Information that a new feed section started"
   },
+  "switchReaderMode": {
+    "message": "Einzeiler Lesemodus umschalten",
+    "description": "Action button to toggle single reader mode"
+  },
+  "howToSingleRow": {
+    "message": "Wenn der Lesemodus aktiv ist, kann mittels der Pfeiltasten Links und Rechts durch die Feeds vorwärts oder zurück gesprungen werden.",
+    "description": "Button single reader mode"
+  },
 
 
   "itemSingular": {

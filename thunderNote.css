@@ -251,13 +251,40 @@ button.bottom {
   padding: 0px;
 }
 
+ul {
+  clear: both;
+}
+
+.newsEntry.singleRow {
+  overflow: hidden;
+  max-width: 100%;
+
+}
+
+.page .subList.singleRow {
+  overflow: hidden;
+  max-width: auto;
+  clear: unset;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.subList.singleRow li {
+  clear: unset;
+  margin-top: 16px;
+  float: left !important;
+}
+
 .newsEntry {
   margin: 0px;
   padding: 0px;
   clear: both;
   box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
   overflow: hidden;
-
+  width: auto;
+  max-width: auto;
+  min-width: auto;
+  float: left;
 }
 
 .newsEntry li {
@@ -266,7 +293,7 @@ button.bottom {
   padding-left: 2%;
   padding-right: 2%;
   border-bottom: 1px solid rgb(105, 105, 225);
-  transition-property: color, background;
+  transition-property: color, background, opacity;
   transition-duration: 460ms;
   transition-delay: 0ms;
   transition-timing-function: ease-in-out;
@@ -371,6 +398,11 @@ button.bottom {
 
 .entryTitle.inactive:hover {
   text-decoration: none;
+}
+
+.entryContent {
+  max-width: 100%;
+  min-width: 100%;
 }
 
 .entryContent p {
