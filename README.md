@@ -3,15 +3,20 @@
 # thunderNote
 Staying on top of news with *thunderNote* RSS feed client browser add-on.
 
+## Demo
+![thunderNote Demo](https://www.picflash.org/img/2019/01/18/singleNews2GO4MTE.webm)
+
 ## Key features
 * Works completely in the sidebar, which is fancy.
 * Add RSS feeds with custom periodically checks for new content
-* Input keywords or buzzwords to match to display news for.
+* Display complete unfiltered feeds
+* Input keywords or buzzwords to match and display news for.
 * Display images via default or disable pictures alltogether
 * Add keywords using ***Add new keyword*** from the context menu once text or a link is selected.
 * Shows notifications, which can be disabled
 * Shortcut **Ctrl + Shift + B** opens/close the sidebar
-* Shortcut **Alt + Arrow up/down** to navigate up/down in the topics view.
+* Shortcut **Alt + Arrow up/down** to navigate up/down in news views.
+* Shortcut **Arrow left/right** to navigate forwards and backwars in news feeds when **Reader mode** is active
 
 ## Installation and testing
 **Firefox addon** page: https://addons.mozilla.org/en-US/firefox/addon/thundernote
