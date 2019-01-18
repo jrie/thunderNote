@@ -15,6 +15,7 @@
       </select>
       <label for="thunderNoteStatus">__MSG_labelNews__</label>
       <button class="controlButton" data-cmd="viewTopics">__MSG_buttonViewTopics__</button>
+      <button class="controlButton" data-cmd="viewFeeds">__MSG_buttonViewFeeds__</button>
       <label for="thunderNoteStatus">__MSG_labelManage__</label>
       <button class="controlButton" data-cmd="manageKeywords">__MSG_buttonManageKeywords__</button>
       <button class="controlButton" data-cmd="manageURIs">__MSG_buttonManageURIs__</button>
@@ -22,7 +23,7 @@
       <button class="controlButton" data-cmd="displayOptions">__MSG_buttonOptions__</button>
     </div>
 
-    <div class="page" data-src='addItem'>
+    <div class="page" data-src="addItem">
       <button class="backButton" data-src="back">&laquo;</button>
       <h2 class="headline">__MSG_titleAddRSS__</h2>
       <span class="clearfix"></span>
@@ -35,34 +36,42 @@
       </select>
       <input id="feedInterval" type="number" min="1" max="360" step="5" title="__MSG_addURIintervalPlaceholder__" placeholder="__MSG_addURIinterval__" autocomplete="false"/>
       <input id="feedMaxAge" type="number" vmin="0" max="120" step="7" title="__MSG_maxAgeURIPlaceholder__" placeholder="__MSG_maxAgeURI__" value="" autocomplete="false"/ >
-      <hr />
+      <hr/>
       <button class="controlButton" data-cmd="add">__MSG_buttonAddURI__</button>
       <hr class="inititalHidden hidden" />
       <button class="controlButton hidden" data-cmd="removeFeed">__MSG_buttonRemoveURI__</button>
 
     </div>
 
-    <div class="page" data-src='manageURIs'>
+    <div class="page" data-src="manageURIs">
       <button class="backButton" data-src="back">&laquo;</button>
       <h2 class="headline">__MSG_titleFeeds__</h2>
       <button class="controlButton" data-cmd="addItem">__MSG_buttonAddUri__</button>
+      <button class="controlButton" data-cmd="forceUpdateAll">__MSG_buttonUpdateAllUri__</button>
+      <hr/>
       <ul id="manageURIs" class="itemList clearfix"></ul>
     </div>
 
-    <div class="page" data-src='manageKeywords'>
+    <div class="page" data-src="manageKeywords">
         <button class="backButton" data-src="back">&laquo;</button>
         <h2 class="headline">__MSG_titleKeywords__</h2>
         <input type="text" placeholder="__MSG_addKeyword__" id="addKeywordInput" value="" />
         <ul id="manageKeywords" class="itemList clearfix"></ul>
     </div>
 
-    <div class="page" data-src='viewTopics'>
+    <div class="page" data-src="viewTopics">
         <button class="backButton" data-src="back">&laquo;</button>
         <h2 class="headline">__MSG_titleTopics__</h2>
         <ul id="viewTopics" class="itemList clearfix"></ul>
     </div>
 
-    <div class="page" data-src='displayOptions'>
+    <div class="page" data-src="viewFeeds">
+      <button class="backButton" data-src="back">&laquo;</button>
+        <h2 class="headline">__MSG_titleViewFeeds__</h2>
+        <ul id="viewFeeds" class="itemList clearfix"></ul>
+    </div>
+
+    <div class="page" data-src="displayOptions">
       <button class="backButton" data-src="back">&laquo;</button>
       <h2 class="headline">__MSG_titleOptions__</h2>
 

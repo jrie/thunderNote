@@ -29,6 +29,26 @@
     "description": "Notification message that thunderNote is stopped."
   },
 
+  "titleFeedOverviewFeed": {
+    "message": "Feed section",
+    "description": "Information that a new feed section started"
+  },
+
+  "itemSingular": {
+    "message": "$item$ item",
+    "description": "Display 1 item",
+    "placeholders": {
+      "item": { "content": "$1", "example": "1"}
+    }
+  },
+  "itemPlural": {
+    "message": "$item$ items",
+    "description": "Display 0 or 2 or more items",
+    "placeholders": {
+      "item": { "content": "$1", "example": "2"}
+    }
+  },
+
 
 
   "RSSupdateTitle": {
@@ -71,6 +91,10 @@
     "message": "Force feed refresh",
     "description": "Interface button to force URI update"
   },
+  "buttonUpdateAllUri": {
+    "message": "Refresh all feeds",
+    "description": "Interface button to force refreshing all URIs"
+  },
   "maxAgeURI": {
     "message": "Number of days to keep news",
     "description": "Placeholder for number of days to keep news items"
@@ -86,12 +110,20 @@
   },
 
   "noTopics": {
-    "message": "No topics matching keyword.",
+    "message": "No topics matching keywords.",
     "description": "Information shown if no topics are found"
+  },
+  "noKeywords": {
+    "message": "No keywords set.",
+    "description": "Information shown if no keywords are set"
   },
   "noFeeds": {
     "message": "No feeds set.",
     "description": "Information shown that no feeds are set"
+  },
+  "noFeedItems": {
+    "message": "No items in feed.",
+    "description": "Information shown that no items are found in feeed"
   },
 
   "addKeywordTitle": {
@@ -119,9 +151,14 @@
     "description": "Interface button, manage keywords"
   },
   "buttonViewTopics": {
-    "message": "View topics",
-    "description": "Interface button, view topics"
+    "message": "View topics by keywords",
+    "description": "Interface button, view topics by keywords"
   },
+  "buttonViewFeeds": {
+    "message": "View feeds",
+    "description": "Interface button, to view all of feeds"
+  },
+
 
   "labelStatus": {
     "message": "Status",
@@ -149,15 +186,17 @@
     "message": "Manage feeds",
     "description": "Manage feeds page title"
   },
-
   "titleKeywords": {
     "message": "Manage keywords",
     "description": "Manage keywords page title"
   },
-
   "titleTopics": {
     "message": "View topics",
     "description": "View topics page title"
+  },
+  "titleViewFeeds": {
+    "message": "Feed overview",
+    "description": "View feed overview"
   },
 
 

@@ -30,6 +30,27 @@
     }
   },
 
+  "titleFeedOverviewFeed": {
+    "message": "Feed",
+    "description": "Information that a new feed section started"
+  },
+
+
+  "itemSingular": {
+    "message": "$item$ Eintrag",
+    "description": "Display 1 item",
+    "placeholders": {
+      "item": { "content": "$1", "example": "1"}
+    }
+  },
+  "itemPlural": {
+    "message": "$item$ Einträge",
+    "description": "Display 0 or 2 or more items",
+    "placeholders": {
+      "item": { "content": "$1", "example": "2"}
+    }
+  },
+
   "thunderNoteEnable": {
     "message": "thunderNote aktiv",
     "description": "Select title to enable thunderNote news fetching"
@@ -64,6 +85,10 @@
     "message": "Einstellungen des Feeds speichern",
     "description": "Interface button to update existing URI"
   },
+  "buttonUpdateAllUri": {
+    "message": "Alle Feed aktualisieren",
+    "description": "Interface button to force refreshing all URIs"
+  },
   "buttonForceURIUpdate": {
     "message": "Feed Inhalte jetzt aktualisieren",
     "description": "Interface button to force URI update"
@@ -86,9 +111,17 @@
     "message": "Keine Themen mit Schlüsselwort gefunden.",
     "description": "Information shown if no topics are found"
   },
+  "noKeywords": {
+    "message": "Keine Schlüsselwörter gesetzt.",
+    "description": "Information shown if no keywords are set"
+  },
   "noFeeds": {
     "message": "Keine Feeds hinterlegt.",
     "description": "Information shown that no feeds are set"
+  },
+  "noFeedItems": {
+    "message": "Keine Inhalte im Feed.",
+    "description": "Information shown that no items are found in feeed"
   },
 
 
@@ -117,8 +150,12 @@
     "description": "Interface button, manage keywords"
   },
   "buttonViewTopics": {
-    "message": "Nachrichten anzeigen",
-    "description": "Interface button, view topics"
+    "message": "Nachrichten nach Schlüsselwörtern",
+    "description": "Interface button, view topics by keywords"
+  },
+  "buttonViewFeeds": {
+    "message": "Feeds anzeigen",
+    "description": "Interface button, view all of feeds"
   },
 
   "labelStatus": {
@@ -147,17 +184,18 @@
     "message": "Feeds bearbeiten",
     "description": "Manage feeds page title"
   },
-
   "titleKeywords": {
     "message": "Schlüsselwörter",
     "description": "Manage keywords page title"
   },
-
   "titleTopics": {
     "message": "Nachrichten",
     "description": "View topics page title"
   },
-
+  "titleViewFeeds": {
+    "message": "Feed Überblick",
+    "description": "View feed overview"
+  },
 
   "addURIinfo": {
     "message": "URL hinzufügen",

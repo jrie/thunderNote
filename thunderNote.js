@@ -138,6 +138,16 @@ function handleButtons (evt) {
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
       document.addEventListener('keyup', handleKeyUp)
+      activeNews = -1
+      for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
+      break
+    case 'viewFeeds':
+      fillViews()
+      document.querySelector('.headerControl').classList.add('inactive')
+      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
+      document.addEventListener('keyup', handleKeyUp)
+      activeFeedItem = -1
       for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
       break
     case 'displayOptions':
@@ -188,12 +198,29 @@ function removeFeed (evt) {
   }, errorHandle)
 }
 
+// --------------------------------------------------------------------------------------------------------------------------------
+
 function forceUpdate (evt) {
-  let feedURI = evt.target.dataset['url']
   browser.storage.local.get('feeds').then(function (data) {
-    if (data['feeds'] !== undefined && data['feeds'][feedURI] !== undefined) {
-      browser.alarms.clear(feedURI)
-      browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
+    if (data['feeds'] !== undefined) {
+      let feedURI = evt.target.dataset['url']
+      if (data['feeds'][feedURI] !== undefined) {
+        browser.alarms.clear(feedURI)
+        browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
+      }
+    }
+  }, errorHandle)
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+function forceUpdateAll (evt) {
+  browser.storage.local.get('feeds').then(function (data) {
+    if (data['feeds'] !== undefined) {
+      browser.alarms.clearAll()
+      for (let feedURI of Object.keys(data['feeds'])) {
+        browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
+      }
     }
   }, errorHandle)
 }
@@ -288,7 +315,195 @@ function sortByTime (a, b) {
   return b[2] - a[2]
 }
 
+function sortByTimeFeeds (a, b) {
+  return b[1] - a[1]
+}
+
 // --------------------------------------------------------------------------------------------------------------------------------
+
+function fillViews () {
+  browser.storage.local.get().then(function (data) {
+    let ul = document.querySelector('#viewFeeds')
+    removeChildren(ul)
+
+    if (data['feedData'] === undefined || Object.keys(data['feedData']).length === 0) {
+      let li = document.createElement('li')
+      li.className = 'newsEntry'
+
+      let subLine = document.createElement('p')
+      subLine.className = 'subTitle'
+      if (data['feedData'] === undefined) {
+        subLine.appendChild(document.createTextNode(getMsg('noFeeds')))
+      } else if (Object.keys(data['feedData']).length === 0) {
+        subLine.appendChild(document.createTextNode(getMsg('noFeedItems')))
+      }
+
+      li.appendChild(subLine)
+      ul.appendChild(li)
+
+      let clone = document.querySelector('.controlButton[data-cmd="addItem"]').cloneNode(true)
+      clone.classList.add('marginTop')
+      clone.addEventListener('click', handleButtons)
+
+      ul.appendChild(clone)
+      return
+    }
+
+    let sortedFeeds = Object.keys(data['feedData']).sort()
+    let now = Date.now()
+    let newsIndex = 0
+
+    let imagesAllowed = data['addon']['images'] === 'enabled'
+
+    for (let feedURI of sortedFeeds) {
+      let fold = document.createElement('button')
+      let li = document.createElement('li')
+      li.className = 'newsEntry '
+
+      if (ul.children.length > 0) li.classList.add('folded')
+
+      fold.className = 'folding'
+      fold.innerHTML = '&laquo;'
+      if (ul.children.length === 0) fold.innerHTML = '&raquo;'
+
+      fold.addEventListener('click', function (evt) {
+        if (evt.target.parentNode.classList.contains('folded')) {
+          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
+          evt.target.parentNode.classList.remove('folded')
+          evt.target.innerHTML = '&raquo;'
+          evt.target.parentNode.lastElementChild.innerHTML = '&raquo;'
+          evt.target.parentNode.lastElementChild.style['opacity'] = 1
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
+        } else {
+          evt.target.parentNode.classList.add('folded')
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.innerHTML = '&laquo;'
+          evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
+          evt.target.parentNode.lastElementChild.style['opacity'] = 0
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-30px'
+        }
+      })
+
+      let foldBottom = document.createElement('button')
+      foldBottom.className = 'folding bottom'
+      foldBottom.innerHTML = fold.innerHTML
+
+      if (ul.children.length > 0) {
+        foldBottom.style['opacity'] = 0
+        foldBottom.style['margin-bottom'] = '-30px'
+      }
+
+      foldBottom.addEventListener('click', function (evt) {
+        if (evt.target.parentNode.classList.contains('folded')) {
+          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
+          evt.target.parentNode.classList.remove('folded')
+          evt.target.innerHTML = '&raquo;'
+          evt.target.parentNode.firstElementChild.innerHTML = '&raquo;'
+          evt.target.style['opacity'] = 1
+          evt.target.style['margin-bottom'] = '12px'
+        } else {
+          evt.target.parentNode.classList.add('folded')
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.innerHTML = '&laquo;'
+          evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
+          evt.target.style['opacity'] = 0
+          evt.target.style['margin-bottom'] = '-30px'
+        }
+      })
+
+      li.appendChild(fold)
+
+      let subLine = document.createElement('h2')
+      subLine.className = 'subTitle'
+      subLine.appendChild(document.createTextNode(getMsg('titleFeedOverviewFeed')))
+
+      let hasDataChange = false
+      for (let newsItem of Object.keys(data['feedData'][feedURI])) {
+        let feedMaxAge = data['feeds'][feedURI][2]
+        if (feedMaxAge === 0) continue
+
+        let age = Math.floor((now - newsItem[1]) / dayLength)
+        if (age >= feedMaxAge) {
+          delete data['feedData'][feedURI][newsItem]
+          hasDataChange = true
+        }
+      }
+
+      if (hasDataChange) browser.storage.local.set(data)
+
+      li.appendChild(subLine)
+
+      if (Object.keys(data['feedData'][feedURI]).length === 0) {
+        let subList = document.createElement('ul')
+        subList.className = 'subList'
+        li.appendChild(subList)
+
+        let entryTitle = document.createElement('li')
+        entryTitle.className = 'entryContent inactive'
+        entryTitle.appendChild(document.createTextNode(getMsg('noTopics')))
+        subList.appendChild(entryTitle)
+      } else {
+        let subList = document.createElement('ul')
+        subList.className = 'subList'
+        li.appendChild(subList)
+
+        let feedNameLi = document.createElement('li')
+        feedNameLi.className = 'feedName'
+        feedNameLi.appendChild(document.createTextNode(feedURI))
+        subList.appendChild(feedNameLi)
+
+        let sortedNews = Object.values(data['feedData'][feedURI]).sort(sortByTimeFeeds)
+        let keys = Object.keys(data['feedData'][feedURI])
+        for (let item of sortedNews) {
+          let liSub = document.createElement('li')
+
+          for (let key of keys) {
+            let dateObj = new Date(item[1])
+
+            let entryDate = document.createElement('span')
+            entryDate.className = 'entryDate'
+            entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
+
+            let entryTitle = document.createElement('a')
+            entryTitle.href = key
+            entryTitle.title = key
+            entryTitle.className = 'entryTitle'
+            entryTitle.appendChild(document.createTextNode(item[0]))
+            entryTitle.dataset['index'] = newsIndex++
+
+            let entryContent = document.createElement('div')
+            entryContent.className = 'entryContent'
+            entryContent.classList.add('noImg')
+            if (imagesAllowed) {
+              if (item[3] !== null) {
+                let entryImg = document.createElement('img')
+                entryImg.src = item[3]
+                entryContent.appendChild(entryImg)
+                entryContent.classList.remove('noImg')
+              }
+            }
+
+            let pContent = document.createElement('p')
+            pContent.innerHTML += filterHTML(item[2])
+            entryContent.appendChild(pContent)
+
+            liSub.appendChild(entryDate)
+            liSub.appendChild(entryTitle)
+            liSub.appendChild(entryContent)
+            break
+          }
+
+          subList.appendChild(liSub)
+        }
+
+        li.appendChild(subList)
+      }
+      li.appendChild(foldBottom)
+      ul.appendChild(li)
+      if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
+    }
+  }, errorHandle)
+}
 
 function fillTopics () {
   browser.storage.local.get().then(function (data) {
@@ -301,7 +516,12 @@ function fillTopics () {
 
       let subLine = document.createElement('p')
       subLine.className = 'subTitle'
-      subLine.appendChild(document.createTextNode(getMsg('noTopics')))
+      if (data['feeds'] === undefined || Object.keys(data['feeds']).length === 0) {
+        subLine.appendChild(document.createTextNode(getMsg('noTopics')))
+      } else {
+        subLine.appendChild(document.createTextNode(getMsg('noKeywords')))
+      }
+
       li.appendChild(subLine)
       ul.appendChild(li)
 
@@ -383,7 +603,7 @@ function fillTopics () {
 
       let subLineCount = document.createElement('span')
       subLineCount.className = 'subCount'
-      subLineCount.appendChild(document.createTextNode(data['keywords']['cnt'][keyword] === 1 ? data['keywords']['cnt'][keyword] + ' item' : data['keywords']['cnt'][keyword] + ' items'))
+      subLineCount.appendChild(document.createTextNode(data['keywords']['cnt'][keyword] === 1 ? getMsg('itemSingular', data['keywords']['cnt'][keyword]) : getMsg('itemPlural', data['keywords']['cnt'][keyword])))
       subLine.appendChild(subLineCount)
       li.appendChild(subLine)
 
@@ -544,54 +764,66 @@ function toggleThunderNodeState (evt) {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 let activeNews = -1
+let activeFeedItem = -1
 function handleKeyUp (evt) {
   if (evt.target.nodeName === 'INPUT' || evt.target.nodeName === 'TEXTAREA') return
   if (evt.altKey) {
     // Alt key pressed
     let currentPage = document.querySelector('.page.active')
-    let titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
+    let titleElements
 
+    let indexStart = -1
+
+    if (currentPage.dataset['src'] === 'viewTopics') {
+      titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
+      indexStart = activeNews
+    } else {
+      titleElements = document.querySelectorAll('#viewFeeds a.entryTitle')
+      indexStart = activeFeedItem
+    }
 
     if (evt.keyCode === 38) {
       // arrow up
       evt.preventDefault()
-      if (activeNews >= 0) titleElements[activeNews].parentNode.classList.remove('highlight')
-      --activeNews
-
-      if (activeNews < 0) activeNews = titleElements.length - 1
-      if (titleElements[activeNews].parentNode.parentNode.parentNode.classList.contains('folded')) {
-        titleElements[activeNews].parentNode.parentNode.parentNode.firstElementChild.click()
+      if (indexStart >= 0) titleElements[indexStart].parentNode.classList.remove('highlight')
+      --indexStart
+      if (indexStart < 0) indexStart = titleElements.length - 1
+      if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
+        titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
         setTimeout(function () {
-          titleElements[activeNews].parentNode.classList.add('highlight')
-          titleElements[activeNews].parentNode.focus()
-          currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+          titleElements[indexStart].parentNode.classList.add('highlight')
+          titleElements[indexStart].parentNode.focus()
+          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
         }, 450)
       } else {
-        titleElements[activeNews].parentNode.focus()
-        titleElements[activeNews].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.5))
+        titleElements[indexStart].parentNode.focus()
+        titleElements[indexStart].parentNode.classList.add('highlight')
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
       }
     } else if (evt.keyCode === 40) {
       // arrow down
       evt.preventDefault()
-      if (activeNews >= 0) titleElements[activeNews].parentNode.classList.remove('highlight')
+      if (indexStart >= 0) titleElements[indexStart].parentNode.classList.remove('highlight')
 
-      ++activeNews
+      ++indexStart
 
-      if (activeNews > titleElements.length - 1) activeNews = 0
-      if (titleElements[activeNews].parentNode.parentNode.parentNode.classList.contains('folded')) {
-        titleElements[activeNews].parentNode.parentNode.parentNode.firstElementChild.click()
+      if (indexStart > titleElements.length - 1) indexStart = 0
+      if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
+        titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
         setTimeout(function () {
-          titleElements[activeNews].parentNode.focus()
-          titleElements[activeNews].parentNode.classList.add('highlight')
-          currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.225))
+          titleElements[indexStart].parentNode.focus()
+          titleElements[indexStart].parentNode.classList.add('highlight')
+          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
         }, 450)
       } else {
-        titleElements[activeNews].parentNode.classList.add('highlight')
-        titleElements[activeNews].parentNode.focus()
-        currentPage.scrollTo(0, titleElements[activeNews].offsetTop - (window.innerHeight * 0.225))
+        titleElements[indexStart].parentNode.classList.add('highlight')
+        titleElements[indexStart].parentNode.focus()
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
       }
     }
+
+    if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
+    else activeFeedItem = indexStart
   }
 }
 
@@ -633,14 +865,16 @@ for (let backButton of document.querySelectorAll('.backButton')) backButton.addE
 
 document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
 document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
+document.querySelector('.controlButton[data-cmd="forceUpdateAll"]').addEventListener('click', forceUpdateAll)
 document.querySelector('#setThunderNoteState').addEventListener('change', toggleThunderNodeState)
+
 document.querySelector('#switchImages').addEventListener('change', toggleImages)
 document.querySelector('#switchNotifications').addEventListener('change', toggleNotifications)
+
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
 browser.runtime.onMessage.addListener(handleMessage)
 
 // --------------------------------------------------------------------------------------------------------------------------------
-
 const dayLength = 24 * 3600 * 1000.0
 
 fillKeywords()
@@ -650,6 +884,7 @@ let domNodes = document.querySelectorAll('*')
 for (let item of domNodes) item.setAttribute('tabindex', -1)
 
 // --------------------------------------------------------------------------------------------------------------------------------
+
 browser.storage.local.get().then(function (data) {
   if (data['addon'] === undefined) data['addon'] = {}
   if (data['addon']['images'] === undefined) data['addon']['images'] = 'enabled'
