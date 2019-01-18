@@ -3,8 +3,8 @@
 # thunderNote
 Staying on top of news with *thunderNote* RSS feed client browser add-on.
 
-## Demo
-![thunderNote Demo](https://www.picflash.org/img/2019/01/18/singleNews2GO4MTE.webm)
+## Video demo
+[![thunderNote Demo](https://www.picflash.org/img/2019/01/18/TBsingleNews2GO4MTE.webm.jpg "Bildtitel")] (https://www.picflash.org/viewer.php?img=singleNews2GO4MTE.webm)
 
 ## Key features
 * Works completely in the sidebar, which is fancy.
