@@ -393,7 +393,7 @@ function fillViews () {
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
-          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '10px'
         }
       })
 
@@ -837,14 +837,16 @@ function handleKeyUp (evt) {
     if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
       titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
       setTimeout(function () {
+        currentPage = document.querySelector('.page.active')
+
         titleElements[indexStart].parentNode.focus()
         titleElements[indexStart].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
+        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
       }, 450)
     } else {
       titleElements[indexStart].parentNode.classList.add('highlight')
       titleElements[indexStart].parentNode.focus()
-      currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
+      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
     }
 
     if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
@@ -882,12 +884,12 @@ function handleKeyUp (evt) {
       setTimeout(function () {
         titleElements[indexStart].parentNode.classList.add('highlight')
         titleElements[indexStart].parentNode.focus()
-        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
       }, 450)
     } else {
       titleElements[indexStart].parentNode.focus()
       titleElements[indexStart].parentNode.classList.add('highlight')
-      currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
     }
 
     if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
@@ -895,7 +897,7 @@ function handleKeyUp (evt) {
     return
   }
 
-  if (evt.altKey) {
+  if (!inSingleRowMode && evt.altKey) {
     // Alt key pressed
     let currentPage = document.querySelector('.page.active')
     let titleElements

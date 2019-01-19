@@ -7,7 +7,7 @@ body {
   font-family: sans;
   font-weight: normal;
   text-shadow: 1px 1px 0px rgba(255,255,255, 0.225);
-  overflow-x: hidden;
+  overflow: hidden;
   font-weight: bold;
   background: rgb(30,87,153);
   background: -moz-linear-gradient(top, rgba(50,107,173,1) 0%, rgba(41,137,216,1) 13%, rgba(32,124,202,1) 95%, rgb(69, 123, 165) 100%);
@@ -262,7 +262,6 @@ ul {
 }
 
 .page .subList.singleRow {
-  overflow: hidden;
   max-width: auto;
   clear: unset;
   max-width: 100%;
