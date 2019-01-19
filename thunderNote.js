@@ -144,6 +144,7 @@ function handleButtons (evt) {
       break
     case 'viewTopics':
       fillTopics()
+      activeNews = -1
       document.querySelector('.headerControl').classList.add('inactive')
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
@@ -153,6 +154,7 @@ function handleButtons (evt) {
       break
     case 'viewFeeds':
       fillViews()
+      activeFeedItem = -1
       document.querySelector('.headerControl').classList.add('inactive')
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
@@ -387,11 +389,11 @@ function fillViews () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 30) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
-          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-30px'
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         }
       })
 
@@ -414,11 +416,11 @@ function fillViews () {
           evt.target.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 30) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
           evt.target.style['opacity'] = 0
-          evt.target.style['margin-bottom'] = '-30px'
+          evt.target.style['margin-bottom'] = '12px'
         }
       })
 
@@ -427,6 +429,11 @@ function fillViews () {
       let subLine = document.createElement('h2')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('titleFeedOverviewFeed')))
+
+      let feedName = document.createElement('h3')
+      feedName.className = 'feedName'
+      feedName.appendChild(document.createTextNode(feedURI))
+      subLine.appendChild(feedName)
 
       let hasDataChange = false
       for (let newsItem of Object.keys(data['feedData'][feedURI])) {
@@ -458,10 +465,6 @@ function fillViews () {
         subList.className = 'subList'
         li.appendChild(subList)
 
-        let feedNameLi = document.createElement('li')
-        feedNameLi.className = 'feedName'
-        feedNameLi.appendChild(document.createTextNode(feedURI))
-        subList.appendChild(feedNameLi)
 
         let sortedNews = Object.values(data['feedData'][feedURI]).sort(sortByTimeFeeds)
         for (let item of sortedNews) {
@@ -709,8 +712,8 @@ function fillTopics () {
 }
 
 function queryResize (evt) {
+  let inititialWidth = parseInt(document.querySelector('body').children[1].clientWidth * 0.9) - 1
   for (let subList of document.querySelectorAll('.page.active .subList')) {
-    let inititialWidth = subList.parentNode.clientWidth
     subList.style['width'] = inititialWidth * (subList.children.length) + 'px'
     subList.style['overflow'] = 'hidden'
     subList.style['transform'] = 'translateX(0px)'

@@ -356,11 +356,8 @@ ul {
 }
 
 .feedName {
-  clear: both;
-  background-color: rgba(0,0,0, 0.08);
-  font-size: 0.85em;
-  margin-bottom: 1em;
-  user-select: none;
+  font-size: 0.65em;
+  user-select: text;
 }
 
 .subList li {
