@@ -4,7 +4,7 @@
 Staying on top of news with *thunderNote* RSS feed client browser add-on.
 
 ## Video demo
-https://www.picflash.org/viewer.php?img=singleNews2GO4MTE.webm
+![Video demo link](https://www.picflash.org/picture.php?key=GO4MTE&action=show)
 
 ## Key features
 * Works completely in the sidebar, which is fancy.
