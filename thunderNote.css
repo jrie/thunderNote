@@ -17,6 +17,9 @@ body {
   background-attachment: fixed;
 }
 
+
+
+
 .headerControl,
 .page {
   position: absolute;
@@ -155,6 +158,15 @@ a {
   color: inherit;
 }
 
+body.noAnim .headerControl,
+body.noAnim .page,
+body.noAnim .newsEntry,
+body.noAnim .newsEntry ul,
+body.noAnim button.folding,
+body.noAnim button.folding.bottom {
+  transition: unset;
+}
+
 .controlButton.removeFeed {
   background-image: url("icons/search_icon.png");
   background-position: 5px center;
@@ -199,6 +211,8 @@ button.backButton {
   text-decoration: none;
   border: none;
 }
+
+
 
 button.folding,
 button.folding.bottom {
@@ -311,6 +325,7 @@ ul {
   color: #dde;
   background-color: rgba(30, 94, 158, 0.724);
 }
+
 .newsEntry,
 .newsEntry ul {
   transition-property: all;

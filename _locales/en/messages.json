@@ -246,6 +246,7 @@
     "message": "Options",
     "description": "Options view title"
   },
+
   "optionsNotificationTitle": {
     "message": "Option changed",
     "description": "Options changed notification title"
@@ -266,6 +267,28 @@
     "message": "thunderNote image display is now disabled",
     "description": "Notifications body image display in news disabled"
   },
+
+  "optionsAnimationsTitle": {
+    "message": "Option changed",
+    "description": "Options changed animations title"
+  },
+  "animationEnable": {
+    "message": "Animations active",
+    "description": "Enabled images option"
+  },
+  "animationDisable": {
+    "message": "Animations inactiv",
+    "description": "Disabled images option"
+  },
+  "optionsBodyAnimationsEnabled": {
+    "message": "thunderNote animations enabled",
+    "description": "Notifications body animations display enabled"
+  },
+  "optionsBodyAnimationsDisabled": {
+    "message": "thunderNote Animations disabled",
+    "description": "Notifications body animations display disabled"
+  },
+
   "notificationsEnable": {
     "message": "Notifications enabled",
     "description": "Enabled notifications option"

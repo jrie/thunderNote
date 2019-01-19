@@ -49,11 +49,14 @@ function isEnabled () {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function setFocus (element) {
-  setTimeout(function () { document.querySelector(element).focus() }, 700)
+  browser.storage.local.get('addon').then(function(data) {
+    if (data['addon']['animations'] === 'enabled') {
+      setTimeout(function () { document.querySelector(element).focus() }, 700)
+    } else document.querySelector(element).focus()
+  })
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-let inSingleRowMode = false
 
 function handleButtons (evt) {
   if (evt.target.dataset['cmd'] === 'switchSingleRow') {
@@ -1026,6 +1029,25 @@ function toggleNotifications (evt) {
     browser.storage.local.set(data)
   }, errorHandle)
 }
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
+function toggleAnimations (evt) {
+  browser.storage.local.get('addon').then(function (data) {
+    if (evt.target.value === 'enabled') {
+      data['addon']['animations'] = 'enabled'
+      document.body.classList.remove('noAnim')
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsEnabled') })
+    } else {
+      document.body.classList.add('noAnim')
+      data['addon']['animations'] = 'disabled'
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsDisabled') })
+    }
+
+    browser.storage.local.set(data)
+  }, errorHandle)
+}
+
 // --------------------------------------------------------------------------------------------------------------------------------
 
 for (let controlButton of document.querySelectorAll('.controlButton')) controlButton.addEventListener('click', handleButtons)
@@ -1038,6 +1060,7 @@ document.querySelector('#setThunderNoteState').addEventListener('change', toggle
 
 document.querySelector('#switchImages').addEventListener('change', toggleImages)
 document.querySelector('#switchNotifications').addEventListener('change', toggleNotifications)
+document.querySelector('#switchAnimations').addEventListener('change', toggleAnimations)
 
 document.querySelector('#addKeywordInput').addEventListener('keyup', addInputKeyword)
 
@@ -1045,6 +1068,8 @@ window.addEventListener('resize', queryResize)
 browser.runtime.onMessage.addListener(handleMessage)
 
 // --------------------------------------------------------------------------------------------------------------------------------
+let inSingleRowMode = false
+
 const dayLength = 24 * 3600 * 1000.0
 
 fillKeywords()
@@ -1059,11 +1084,15 @@ browser.storage.local.get().then(function (data) {
   if (data['addon'] === undefined) data['addon'] = {}
   if (data['addon']['images'] === undefined) data['addon']['images'] = 'enabled'
   if (data['addon']['notifications'] === undefined) data['addon']['notifications'] = 'enabled'
+  if (data['addon']['animations'] === undefined) data['addon']['animations'] = 'enabled'
   if (data['addon']['status'] === undefined) data['addon']['status'] = 'enabled'
 
   if (data['addon']['images'] === 'enabled') document.querySelector('#switchImages').value = 'enabled'
+  if (data['addon']['animations'] === 'enabled') document.querySelector('#switchAnimations').value = 'enabled'
   if (data['addon']['notifications'] === 'enabled') document.querySelector('#switchNotifications').value = 'enabled'
   if (data['addon']['status'] === 'enabled') document.querySelector('#setThunderNoteState').value = 'enabled'
+
+  if (data['addon']['animations'] !== 'enabled') document.body.classList.add('noAnim')
 
   browser.storage.local.set(data)
 })

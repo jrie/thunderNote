@@ -260,6 +260,28 @@
     "message": "thunderNote zeigt nun keine Bilder mehr an",
     "description": "Notifications body image display in news disabled"
   },
+
+  "optionsAnimationsTitle": {
+    "message": "Einstellungen verändert",
+    "description": "Options changed animations title"
+  },
+  "animationEnable": {
+    "message": "Animationen aktiv",
+    "description": "Enabled images option"
+  },
+  "animationDisable": {
+    "message": "Animationen inaktiv",
+    "description": "Disabled images option"
+  },
+  "optionsBodyAnimationsEnabled": {
+    "message": "thunderNote zeigt nun Animationen",
+    "description": "Notifications body animations display enabled"
+  },
+  "optionsBodyAnimationsDisabled": {
+    "message": "thunderNote Animation deaktiviert",
+    "description": "Notifications body animations display disabled"
+  },
+
   "notificationsEnable": {
     "message": "Benachrichtigungen aktivieren",
     "description": "Enabled notifications option"
