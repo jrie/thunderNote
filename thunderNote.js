@@ -150,7 +150,6 @@ function handleButtons (evt) {
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
       document.addEventListener('keyup', handleKeyUp)
       for (let item of document.querySelectorAll('a.entryTitle')) item.addEventListener('focus', function (evt) { activeNews = evt.target.dataset['index'] })
-
       break
     case 'viewFeeds':
       fillViews()
@@ -275,6 +274,8 @@ function fillURIs () {
       return
     }
 
+    for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
+
     for (let url of Object.keys(data['feeds'])) {
       let li = document.createElement('li')
       let button = document.createElement('button')
@@ -360,6 +361,8 @@ function fillViews () {
       ul.appendChild(clone)
       return
     }
+
+    for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
 
     let sortedFeeds = Object.keys(data['feedData']).sort()
     let now = Date.now()
@@ -548,6 +551,8 @@ function fillTopics () {
       return
     }
 
+    for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
+
     let sortedTopics = Object.keys(data['keywords']['cnt']).sort()
     let now = Date.now()
     let newsIndex = 0
@@ -711,25 +716,30 @@ function fillTopics () {
   }, errorHandle)
 }
 
-function queryResize (evt) {
-  let inititialWidth = parseInt(document.querySelector('body').children[1].clientWidth * 0.9) - 1
-  for (let subList of document.querySelectorAll('.page.active .subList')) {
-    subList.style['width'] = inititialWidth * (subList.children.length) + 'px'
-    subList.style['overflow'] = 'hidden'
-    subList.style['transform'] = 'translateX(0px)'
-    subList.style['opacity'] = '1'
+// --------------------------------------------------------------------------------------------------------------------------------
 
-    let num = 0
-    for (let element of subList.children) {
-      element.dataset['x'] = inititialWidth * num++
-      element.dataset['max'] = inititialWidth * (subList.children.length - 1)
-      element.style['width'] = inititialWidth + 'px'
-      element.style['float'] = 'left'
+function queryResize (evt) {
+  if (inSingleRowMode) {
+    let inititialWidth = parseInt(document.querySelector('body').children[1].clientWidth * 0.9) - 1
+    for (let subList of document.querySelectorAll('.page.active .subList')) {
+      subList.style['width'] = inititialWidth * (subList.children.length) + 'px'
+      subList.style['overflow'] = 'hidden'
+      subList.style['transform'] = 'translateX(0px)'
+      subList.style['opacity'] = '1'
+
+      let num = 0
+      for (let element of subList.children) {
+        element.dataset['x'] = inititialWidth * num++
+        element.dataset['max'] = inititialWidth * (subList.children.length - 1)
+        element.style['width'] = inititialWidth + 'px'
+        element.style['float'] = 'left'
+      }
     }
   }
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
+
 function removeNodes (child) {
   for (let childNode of child.children) removeNodes(childNode)
 
@@ -738,6 +748,8 @@ function removeNodes (child) {
     child.parentNode.removeChild(child)
   }
 }
+
+// --------------------------------------------------------------------------------------------------------------------------------
 
 function filterHTML (item) {
   let p = document.createElement('p')
