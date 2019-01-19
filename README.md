@@ -9,7 +9,7 @@ https://www.picflash.org/picture.php?key=GO4MTE&action=show
 ## Key features
 * Works completely in the sidebar, which is fancy.
 * Add RSS feeds with custom periodically checks for new content
-* Display complete unfiltered feeds
+* Display complete unfiltered feeds in ***view feeds***
 * Input keywords or buzzwords to match and display news for.
 * Display images via default or disable pictures alltogether
 * Add keywords using ***Add new keyword*** from the context menu once text or a link is selected.
@@ -25,7 +25,7 @@ For testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary
 
 ## Usage
 1. Open the main sidebar by pressing ***Ctrl + Shift + B*** or using the main menu *View* -> *Sidebar* -> ***thunderNote***
-1. **Add keywords** of interesting topics to look out for, for example *EU* *Sport* or *Europa* either by entering or using the context menu on a text selection
-2. **Add a feed url**, for example: **http://www.tagesschau.de/xml/rss2** for the German **Tagesschau.de RSS feed** with a check of 1 to 15 minutes.
-3. Select **view topics**  after the feed got downloaded
-4. Enjoy news.
+2. **Add keywords** of interesting topics to look out for, for example *EU* *Sport* or *Europa* either by entering or using the context menu on a text selection
+3. **Add a feed url**, for example: **http://www.tagesschau.de/xml/rss2** for the German **Tagesschau.de RSS feed** with a check of 1 to 15 minutes.
+4. Select **view feeds** to view the whole feed *or* Select **view topics**  after the feed got downloaded to look out a selection by keywords
+5. Enjoy reading news.
