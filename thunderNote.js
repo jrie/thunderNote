@@ -59,8 +59,27 @@ function handleButtons (evt) {
   if (evt.target.dataset['cmd'] === 'switchSingleRow') {
     inSingleRowMode = !inSingleRowMode
     let activePage = document.querySelector('.page.active')
-    if (activePage.dataset['src'] === 'viewTopics') fillTopics()
-    else if (activePage.dataset['src'] === 'viewFeeds') fillViews()
+    let indexStart = 0
+    if (activePage.dataset['src'] === 'viewTopics') {
+      fillTopics()
+      indexStart = activeNews
+    } else if (activePage.dataset['src'] === 'viewFeeds') {
+      fillViews()
+      indexStart = activeFeedItem
+    }
+
+    if (indexStart !== -1) {
+      queryResize()
+      setTimeout(function () {
+        let currentPage = document.querySelector('.page.active')
+        let titleElements = document.querySelectorAll('.page.active a.entryTitle')
+
+        titleElements[indexStart].parentNode.focus()
+        titleElements[indexStart].parentNode.classList.add('highlight')
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+      }, 45)
+    }
+
     return
   }
 
@@ -198,12 +217,16 @@ function errorHandle (error) {
 
 function removeFeed (evt) {
   let feedURI = evt.target.dataset['url']
-  browser.storage.local.get('feeds').then(function (data) {
+  browser.storage.local.get().then(function (data) {
     if (data['feeds'] !== undefined && data['feeds'][feedURI] !== undefined) {
       browser.alarms.clear(feedURI)
 
       delete data['feeds'][feedURI]
-      browser.storage.local.set(data).then(fillURIs, errorHandle)
+      delete data['feedData'][feedURI]
+
+      if (Object.keys(data['feeds']).length === 0) {
+        browser.storage.local.remove(['feeds', 'feedData'])
+      } else browser.storage.local.set(data).then(fillURIs, errorHandle)
     }
   }, errorHandle)
 }
@@ -516,7 +539,7 @@ function fillViews () {
       if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
     }
 
-    if (inSingleRowMode) queryResize()
+    queryResize()
   }, errorHandle)
 }
 
@@ -712,7 +735,7 @@ function fillTopics () {
       if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
     }
 
-    if (inSingleRowMode) queryResize()
+    queryResize()
   }, errorHandle)
 }
 
@@ -720,19 +743,23 @@ function fillTopics () {
 
 function queryResize (evt) {
   if (inSingleRowMode) {
-    let inititialWidth = parseInt(document.querySelector('body').children[1].clientWidth * 0.9) - 1
+    let inititialWidth = parseInt(document.querySelector('body').clientWidth * 0.925) - 1
     for (let subList of document.querySelectorAll('.page.active .subList')) {
       subList.style['width'] = inititialWidth * (subList.children.length) + 'px'
       subList.style['overflow'] = 'hidden'
-      subList.style['transform'] = 'translateX(0px)'
       subList.style['opacity'] = '1'
-
+      subList.style['transform'] = 'translateX(0px)'
       let num = 0
       for (let element of subList.children) {
         element.dataset['x'] = inititialWidth * num++
         element.dataset['max'] = inititialWidth * (subList.children.length - 1)
         element.style['width'] = inititialWidth + 'px'
         element.style['float'] = 'left'
+      }
+
+
+      if (activeNews !== -1 || activeFeedItem !== -1) {
+        subList.style['transform'] = 'translateX(-' + subList.children[activeNews !== -1 ? activeNews : activeFeedItem].dataset['x'] + 'px)'
       }
     }
   }

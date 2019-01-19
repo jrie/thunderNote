@@ -258,7 +258,6 @@ ul {
 .newsEntry.singleRow {
   overflow: hidden;
   max-width: 100%;
-
 }
 
 .page .subList.singleRow {
@@ -280,10 +279,14 @@ ul {
   clear: both;
   box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
   overflow: hidden;
-  width: auto;
+  width: 100%;
   max-width: auto;
   min-width: auto;
   float: left;
+  transition-property: color, background, opacity, transform;
+  transition-duration: 460ms;
+  transition-delay: 0ms;
+  transition-timing-function: ease-in-out;
 }
 
 .newsEntry li {
@@ -337,6 +340,7 @@ ul {
   border-radius: 0px 6px 0px 0px;
   padding: 0.85rem 10px 0.85rem;
   background-color: rgba(0,0,0, 0.164);
+  width: 100%;
 }
 
 .subCount {
