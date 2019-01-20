@@ -144,6 +144,15 @@ hr {
   clear: both;
 }
 
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+
 ul, li {
   margin: 0px;
   padding: 0px;
@@ -163,7 +172,8 @@ body.noAnim .page,
 body.noAnim .newsEntry,
 body.noAnim .newsEntry ul,
 body.noAnim button.folding,
-body.noAnim button.folding.bottom {
+body.noAnim button.folding.bottom,
+body.noAnim button.slideButton.button {
   transition: unset;
 }
 
@@ -230,7 +240,7 @@ button.folding.bottom {
   transition-property: all;
   position: relative;
   z-index: 101;
-  transition-duration: 330ms;
+  transition-duration: 100ms;
   transition-delay: 0ms;
   transition-timing-function: ease-in-out;
 }
@@ -240,6 +250,12 @@ button.bottom {
   margin-top: 13px;
   margin-bottom: 30px;
   clear: both;
+  visibility: visible;
+}
+
+.folded button.bottom {
+  visibility: hidden;
+  margin-bottom: -12px;
 }
 
 .headerControl .headline {
@@ -275,7 +291,6 @@ ul {
 }
 
 .page .subList.singleRow {
-  max-width: auto;
   clear: unset;
   max-width: 100%;
   overflow: hidden;
@@ -286,6 +301,34 @@ ul {
   margin-top: 16px;
   float: left !important;
 }
+
+button.slideButton {
+  opacity: 1;
+  visibility: hidden;
+  margin-bottom: 18px;
+  width: 36%;
+  min-width: 36%;
+  max-width: 100%;
+  text-decoration: none;
+  margin-top: 0.5em;
+  font-weight: bold;
+  opacity: 0;
+  transition-property: all;
+  transition-delay: 220ms;
+  transition-duration: 80ms;
+  margin-bottom: -30px;
+}
+
+.singleRow button.slideButton {
+  opacity: 1;
+  visibility: visible;
+  margin-bottom: 12px;
+}
+.singleRow .folded .slideButton {
+  opacity: 0;
+  display: none;
+}
+
 
 .newsEntry {
   margin: 0px;

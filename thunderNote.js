@@ -49,7 +49,7 @@ function isEnabled () {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function setFocus (element) {
-  browser.storage.local.get('addon').then(function(data) {
+  browser.storage.local.get('addon').then(function (data) {
     if (data['addon']['animations'] === 'enabled') {
       setTimeout(function () { document.querySelector(element).focus() }, 700)
     } else document.querySelector(element).focus()
@@ -61,6 +61,8 @@ function setFocus (element) {
 function handleButtons (evt) {
   if (evt.target.dataset['cmd'] === 'switchSingleRow') {
     inSingleRowMode = !inSingleRowMode
+    if (inSingleRowMode === false) for (let item of document.querySelectorAll('.singleRow')) item.classList.remove('singleRow')
+
     let activePage = document.querySelector('.page.active')
     let indexStart = 0
     if (activePage.dataset['src'] === 'viewTopics') {
@@ -363,6 +365,7 @@ function fillViews () {
   browser.storage.local.get().then(function (data) {
     let ul = document.querySelector('#viewFeeds')
     removeChildren(ul)
+
     if (inSingleRowMode) ul.classList.add('singleRow')
 
     if (data['feedData'] === undefined || Object.keys(data['feedData']).length === 0) {
@@ -402,8 +405,6 @@ function fillViews () {
       if (inSingleRowMode) li.className = 'newsEntry singleRow'
       else li.className = 'newsEntry'
 
-      if (ul.children.length > 0) li.classList.add('folded')
-
       fold.className = 'folding'
       fold.innerHTML = '&laquo;'
       if (ul.children.length === 0) fold.innerHTML = '&raquo;'
@@ -430,7 +431,7 @@ function fillViews () {
       foldBottom.className = 'folding bottom'
       foldBottom.innerHTML = fold.innerHTML
 
-      if (ul.children.length > 0) {
+      if (!inSingleRowMode && ul.children.length > 0) {
         foldBottom.style['opacity'] = 0
         foldBottom.style['margin-bottom'] = '-30px'
       }
@@ -494,7 +495,6 @@ function fillViews () {
         subList.className = 'subList'
         li.appendChild(subList)
 
-
         let sortedNews = Object.values(data['feedData'][feedURI]).sort(sortByTimeFeeds)
         for (let item of sortedNews) {
           let liSub = document.createElement('li')
@@ -535,11 +535,29 @@ function fillViews () {
           subList.appendChild(liSub)
         }
 
+        let buttonBackwards = document.createElement('button')
+        buttonBackwards.className = 'slideButton clearfix button left'
+        buttonBackwards.textContent = '<'
+        buttonBackwards.dataset['cmd'] = 'left'
+        buttonBackwards.addEventListener('click', navigateFeed)
+
+        let buttonForward = document.createElement('button')
+        buttonForward.className = 'slideButton button  right'
+        buttonForward.textContent = '>'
+        buttonForward.dataset['cmd'] = 'right'
+        buttonForward.addEventListener('click', navigateFeed)
+
         li.appendChild(subList)
+        li.appendChild(buttonBackwards)
+        li.appendChild(buttonForward)
       }
+
       li.appendChild(foldBottom)
       ul.appendChild(li)
-      if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
+
+      if (ul.children.length > 1 && ul.classList.contains('singleRow')) {
+        foldBottom.click()
+      }
     }
 
     queryResize()
@@ -730,12 +748,27 @@ function fillTopics () {
           subList.appendChild(liSub)
         }
 
+        let buttonBackwards = document.createElement('button')
+        buttonBackwards.className = 'slideButton clearfix button left'
+        buttonBackwards.textContent = '<'
+        buttonBackwards.dataset['cmd'] = 'left'
+        buttonBackwards.addEventListener('click', navigateFeed)
+
+        let buttonForward = document.createElement('button')
+        buttonForward.className = 'slideButton button  right'
+        buttonForward.textContent = '>'
+        buttonForward.dataset['cmd'] = 'right'
+        buttonForward.addEventListener('click', navigateFeed)
+
         li.appendChild(subList)
+        li.appendChild(buttonBackwards)
+        li.appendChild(buttonForward)
       }
+
       li.appendChild(foldBottom)
       ul.appendChild(li)
 
-      if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
+      if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 90) + 'px'
     }
 
     queryResize()
@@ -759,7 +792,6 @@ function queryResize (evt) {
         element.style['width'] = inititialWidth + 'px'
         element.style['float'] = 'left'
       }
-
 
       if (activeNews !== -1 || activeFeedItem !== -1) {
         subList.style['transform'] = 'translateX(-' + subList.children[activeNews !== -1 ? activeNews : activeFeedItem].dataset['x'] + 'px)'
@@ -844,6 +876,39 @@ function toggleThunderNodeState (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 let activeNews = -1
 let activeFeedItem = -1
+
+function navigateFeed (evt) {
+  if (!inSingleRowMode) return
+
+  let current = evt.target.parentNode.querySelector('.highlight')
+  if (current === null) current = evt.target.parentNode.querySelector('li')
+  current.classList.remove('highlight')
+
+  let next = null
+
+  let feedNodes = document.querySelectorAll('.page.active li')
+
+  for (let index = 0; index < feedNodes.length; ++index) {
+    if (feedNodes[index] === current) {
+      activeFeedItem = index
+      activeNews = index
+      break
+    }
+  }
+
+  let childLists = evt.target.parentNode.querySelectorAll('li')
+  if (evt.target.dataset['cmd'] === 'right') {
+    next = current.nextSibling
+    if (next === null) next = childLists[0]
+  } else {
+    next = current.previousSibling
+    if (next === null) next = childLists[childLists.length - 1]
+  }
+
+  current.parentNode.style['transform'] = 'translateX(-' + next.dataset['x'] + 'px)'
+  next.style['opacity'] = '1'
+  next.classList.add('highlight')
+}
 
 function handleKeyUp (evt) {
   if (evt.target.nodeName === 'INPUT' || evt.target.nodeName === 'TEXTAREA') return
