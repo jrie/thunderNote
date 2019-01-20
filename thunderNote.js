@@ -60,11 +60,13 @@ function setFocus (element) {
 
 function handleButtons (evt) {
   if (evt.target.dataset['cmd'] === 'switchSingleRow') {
+    activeNews = 0
+    activeFeedItem = 0
     inSingleRowMode = !inSingleRowMode
     if (inSingleRowMode === false) for (let item of document.querySelectorAll('.singleRow')) item.classList.remove('singleRow')
 
     let activePage = document.querySelector('.page.active')
-    let indexStart = 0
+    let indexStart = -1
     if (activePage.dataset['src'] === 'viewTopics') {
       fillTopics()
       indexStart = activeNews
@@ -79,9 +81,11 @@ function handleButtons (evt) {
         let currentPage = document.querySelector('.page.active')
         let titleElements = document.querySelectorAll('.page.active a.entryTitle')
 
-        titleElements[indexStart].parentNode.focus()
-        titleElements[indexStart].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+        if (titleElements !== null) {
+          titleElements[indexStart].parentNode.focus()
+          titleElements[indexStart].parentNode.classList.add('highlight')
+          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
+        }
       }, 45)
     }
 
@@ -99,8 +103,6 @@ function handleButtons (evt) {
   if (evt.target.dataset['cmd'] !== 'removeFeed' || evt.target.dataset['cmd'] !== 'addItem') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
 
   document.removeEventListener('keyup', handleKeyUp)
-  activeNews = -1
-  activeFeedItem = -1
 
   let focusNode = null
 
@@ -402,12 +404,15 @@ function fillViews () {
     for (let feedURI of sortedFeeds) {
       let fold = document.createElement('button')
       let li = document.createElement('li')
+
       if (inSingleRowMode) li.className = 'newsEntry singleRow'
       else li.className = 'newsEntry'
 
       fold.className = 'folding'
       fold.innerHTML = '&laquo;'
-      if (ul.children.length === 0) fold.innerHTML = '&raquo;'
+
+      if (ul.children.length > 0) fold.innerHTML = '&raquo;'
+
 
       fold.addEventListener('click', function (evt) {
         if (evt.target.parentNode.classList.contains('folded')) {
@@ -555,8 +560,10 @@ function fillViews () {
       li.appendChild(foldBottom)
       ul.appendChild(li)
 
-      if (ul.children.length > 1 && ul.classList.contains('singleRow')) {
-        foldBottom.click()
+      if (ul.children.length > 0) {
+        if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
+        li.classList.add('folded')
+        fold.click()
       }
     }
 
@@ -636,11 +643,6 @@ function fillTopics () {
       let foldBottom = document.createElement('button')
       foldBottom.className = 'folding bottom'
       foldBottom.innerHTML = fold.innerHTML
-
-      if (ul.children.length > 0) {
-        foldBottom.style['opacity'] = 0
-        foldBottom.style['margin-bottom'] = '-30px'
-      }
 
       foldBottom.addEventListener('click', function (evt) {
         if (evt.target.parentNode.classList.contains('folded')) {
@@ -768,7 +770,11 @@ function fillTopics () {
       li.appendChild(foldBottom)
       ul.appendChild(li)
 
-      if (ul.children.length > 1) li.children[2].style['margin-bottom'] = (-li.clientHeight - 90) + 'px'
+      if (ul.children.length > 0) {
+        if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
+        li.classList.add('folded')
+        fold.click()
+      }
     }
 
     queryResize()
@@ -928,7 +934,7 @@ function handleKeyUp (evt) {
     }
 
     evt.preventDefault()
-    if (indexStart >= 0) {
+    if (indexStart != -1) {
       titleElements[indexStart].parentNode.classList.remove('highlight')
       if (parseInt(titleElements[indexStart].parentNode.dataset['x']) !== 0 && parseInt(titleElements[indexStart].parentNode.dataset['x']) !== parseInt(titleElements[indexStart].parentNode.dataset['max'])) {
         titleElements[indexStart].parentNode.style['opacity'] = '0'
@@ -948,12 +954,12 @@ function handleKeyUp (evt) {
 
         titleElements[indexStart].parentNode.focus()
         titleElements[indexStart].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
+        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
       }, 450)
     } else {
       titleElements[indexStart].parentNode.classList.add('highlight')
       titleElements[indexStart].parentNode.focus()
-      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
+      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
     }
 
     if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
@@ -991,12 +997,12 @@ function handleKeyUp (evt) {
       setTimeout(function () {
         titleElements[indexStart].parentNode.classList.add('highlight')
         titleElements[indexStart].parentNode.focus()
-        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
+        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
       }, 450)
     } else {
       titleElements[indexStart].parentNode.focus()
       titleElements[indexStart].parentNode.classList.add('highlight')
-      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.5))
+      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
     }
 
     if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
@@ -1029,12 +1035,12 @@ function handleKeyUp (evt) {
         setTimeout(function () {
           titleElements[indexStart].parentNode.classList.add('highlight')
           titleElements[indexStart].parentNode.focus()
-          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
         }, 450)
       } else {
         titleElements[indexStart].parentNode.focus()
         titleElements[indexStart].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.5))
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
       }
     } else if (evt.keyCode === 40) {
       // arrow down

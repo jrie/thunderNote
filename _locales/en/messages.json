@@ -85,7 +85,7 @@
   },
 
   "contextMenuAddKeyword": {
-    "message": "Add news keyword",
+    "message": "Add selection as keyword for thunderNote",
     "description": "Context menu entry to add a keyword"
   },
 
@@ -120,7 +120,7 @@
   },
 
   "noTopics": {
-    "message": "No topics matching keywords.",
+    "message": "No topics matching keyword.",
     "description": "Information shown if no topics are found"
   },
   "noKeywords": {

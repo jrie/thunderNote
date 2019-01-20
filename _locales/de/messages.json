@@ -81,7 +81,7 @@
   },
 
   "contextMenuAddKeyword": {
-    "message": "Auswahl als Schlüsselwort",
+    "message": "Auswahl als Schlüsselwort für thunderNote",
     "description": "Context menu entry to add a keyword"
   },
 
@@ -134,7 +134,7 @@
 
 
   "addKeywordTitle": {
-    "message": "Schlüsselwort eingetragen",
+    "message": "thunderNote: Schlüsselwort eingetragen",
     "description": "Notification title for adding keyword"
   },
   "addKeywordBody": {
