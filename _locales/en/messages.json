@@ -62,7 +62,7 @@
 
 
   "RSSupdateTitle": {
-    "message": "RSS updated",
+    "message": "thunderNote: RSS updated",
     "description": "Notification title for updated RSS feed"
   },
   "RSSupdateInformation": {
@@ -73,7 +73,7 @@
     }
   },
   "RSSupdateFailTitle": {
-    "message": "Fetching feed error",
+    "message": "thunderNote: Fetching RSS error",
     "description": "Notification title for failing RSS feed update"
   },
   "RSSupdateInformationFail": {
@@ -137,7 +137,7 @@
   },
 
   "addKeywordTitle": {
-    "message": "Added keyword",
+    "message": "thunderNote: Added keyword",
     "description": "Notification title for adding keyword"
   },
   "addKeywordBody": {
@@ -248,7 +248,7 @@
   },
 
   "optionsNotificationTitle": {
-    "message": "Option changed",
+    "message": "thunderNote: Option changed",
     "description": "Options changed notification title"
   },
   "imagesEnable": {
@@ -269,7 +269,7 @@
   },
 
   "optionsAnimationsTitle": {
-    "message": "Option changed",
+    "message": "thunderNote: Option changed",
     "description": "Options changed animations title"
   },
   "animationEnable": {
@@ -277,7 +277,7 @@
     "description": "Enabled images option"
   },
   "animationDisable": {
-    "message": "Animations inactiv",
+    "message": "Animations inactive",
     "description": "Disabled images option"
   },
   "optionsBodyAnimationsEnabled": {

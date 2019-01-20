@@ -8,7 +8,7 @@
   },
 
   "RSSupdateTitle": {
-    "message": "RSS aktualisiert",
+    "message": "thunderNote: RSS aktualisiert",
     "description": "Notification title for updated RSS feed"
   },
   "RSSupdateInformation": {
@@ -19,7 +19,7 @@
     }
   },
   "RSSupdateFailTitle": {
-    "message": "Aktualisierung fehlgeschlagen",
+    "message": "thunderNote: Aktualisierung fehlgeschlagen",
     "description": "Notification title for failing RSS feed update"
   },
   "RSSupdateInformationFail": {
@@ -241,7 +241,7 @@
     "description": "Options view title"
   },
   "optionsNotificationTitle": {
-    "message": "Einstellungen verändert",
+    "message": "thunderNote: Einstellungen verändert",
     "description": "Options changed notification title"
   },
   "imagesEnable": {
@@ -262,7 +262,7 @@
   },
 
   "optionsAnimationsTitle": {
-    "message": "Einstellungen verändert",
+    "message": "thunderNote: Einstellungen verändert",
     "description": "Options changed animations title"
   },
   "animationEnable": {
@@ -274,7 +274,7 @@
     "description": "Disabled images option"
   },
   "optionsBodyAnimationsEnabled": {
-    "message": "thunderNote zeigt nun Animationen",
+    "message": "thunderNote Animationen aktiviert",
     "description": "Notifications body animations display enabled"
   },
   "optionsBodyAnimationsDisabled": {
