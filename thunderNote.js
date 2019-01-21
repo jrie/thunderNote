@@ -100,8 +100,6 @@ function handleButtons (evt) {
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
   let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
-  if (evt.target.dataset['cmd'] !== 'removeFeed' || evt.target.dataset['cmd'] !== 'addItem') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
-
   document.removeEventListener('keyup', handleKeyUp)
 
   let focusNode = null
@@ -119,6 +117,7 @@ function handleButtons (evt) {
 
         addButton.textContent = getMsg('buttonAddURI')
       } else {
+        document.querySelector('#feedURI').dataset['srcUrl'] = evt.target.dataset.url
         removalButton.dataset['url'] = evt.target.dataset['url']
         forceUpdateButton.dataset['url'] = evt.target.dataset['url']
 
@@ -147,10 +146,16 @@ function handleButtons (evt) {
         return
       }
 
-      browser.storage.local.get('feeds').then(function (data) {
+      browser.storage.local.get().then(function (data) {
         if (data['feeds'] === undefined) data['feeds'] = {}
-        data['feeds'][url] = [type, crawlTime, maxAge]
+        if (url.dataset['srcUrl'] !== undefined) {
+          delete data['feeds']['srcUrl']
+          delete data['feedData']['srcUrl']
+          browser.alarms.clear(srcUrl)
+        }
 
+        browser.alarms.clear(feedURI)
+        data['feeds'][url] = [type, crawlTime, maxAge]
         browser.storage.local.set(data)
         if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
       }, errorHandle)
@@ -211,6 +216,13 @@ function handleButtons (evt) {
   }
 
   if (focusNode !== null) setFocus(focusNode)
+
+  if (evt.target.className === 'backButton' || document.querySelector('.headerControl').classList.contains('inactive')) {
+    browser.storage.local.get('addon').then( function (data) {
+      if (data['addon']['animations'] !== 'enabled') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
+      else setTimeout(function () { for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden') }, 750)
+    })
+  }
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -412,7 +424,6 @@ function fillViews () {
       fold.innerHTML = '&laquo;'
 
       if (ul.children.length > 0) fold.innerHTML = '&raquo;'
-
 
       fold.addEventListener('click', function (evt) {
         if (evt.target.parentNode.classList.contains('folded')) {
