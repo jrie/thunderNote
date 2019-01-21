@@ -151,8 +151,9 @@ function handleButtons (evt) {
         if (url.dataset['srcUrl'] !== undefined) {
           let srcUrl = url.dataset['srcUrl']
           delete data['feeds'][srcUrl]
-          delete data['feedData'][srcUrl]
           browser.alarms.clear(srcUrl)
+
+          data['feedData'][url] = data['feedData'][srcUrl]
         }
 
         browser.alarms.clear(url)
