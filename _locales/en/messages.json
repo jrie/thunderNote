@@ -149,15 +149,15 @@
   },
 
   "buttonRemoveURI": {
-    "message": "Delete from watchlist",
+    "message": "Delete from feeds",
     "description": "Interface button, delete URI from watchlist"
   },
   "buttonManageURIs": {
-    "message": "Manage active watchlist",
+    "message": "Manage feeds",
     "description": "Interface button, manage URI watchlist"
   },
   "buttonManageKeywords": {
-    "message": "Manage active keywords",
+    "message": "Manage keywords",
     "description": "Interface button, manage keywords"
   },
   "buttonViewTopics": {
