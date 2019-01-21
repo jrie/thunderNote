@@ -116,8 +116,8 @@ function handleButtons (evt) {
         forceUpdateButton.classList.add('hidden')
 
         addButton.textContent = getMsg('buttonAddURI')
+        addButton.dataset['srcUrl'] = ''
       } else {
-        document.querySelector('#feedURI').dataset['srcUrl'] = evt.target.dataset.url
         removalButton.dataset['url'] = evt.target.dataset['url']
         forceUpdateButton.dataset['url'] = evt.target.dataset['url']
 
@@ -125,6 +125,7 @@ function handleButtons (evt) {
         forceUpdateButton.classList.remove('hidden')
 
         addButton.textContent = getMsg('buttonUpdateURI')
+        addButton.dataset['srcUrl'] = evt.target.dataset.url
         for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
       }
 
@@ -138,6 +139,7 @@ function handleButtons (evt) {
       let crawlTime = parseInt(document.querySelector('#feedInterval').value)
       let maxAge = parseInt(document.querySelector('#feedMaxAge').value)
 
+      console.log(evt.target)
       if (isNaN(maxAge)) maxAge = 0
 
       if (url === '' || isNaN(crawlTime)) {
@@ -148,13 +150,16 @@ function handleButtons (evt) {
 
       browser.storage.local.get().then(function (data) {
         if (data['feeds'] === undefined) data['feeds'] = {}
-        if (url.dataset['srcUrl'] !== undefined) {
-          let srcUrl = url.dataset['srcUrl']
-          delete data['feeds'][srcUrl]
+        let srcUrl = evt.target.dataset['srcUrl']
+        if (srcUrl !== url) {
           browser.alarms.clear(srcUrl)
 
-          data['feedData'][url] = data['feedData'][srcUrl]
-          delete data['feedData'][srcUrl]
+          if (data['feeds'][srcUrl] !== undefined) {
+            delete data['feeds'][srcUrl]
+
+            data['feedData'][url] = data['feedData'][srcUrl]
+            delete data['feedData'][srcUrl]
+          }
         }
 
         browser.alarms.clear(url)
@@ -220,7 +225,7 @@ function handleButtons (evt) {
 
   if (focusNode !== null) setFocus(focusNode)
 
-  if (evt.target.className === 'backButton' || document.querySelector('.headerControl').classList.contains('inactive')) {
+  if (evt.target.className === 'backButton' || !document.querySelector('.headerControl').classList.contains('inactive')) {
     browser.storage.local.get('addon').then(function (data) {
       if (data['addon']['animations'] !== 'enabled') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
       else setTimeout(function () { for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden') }, 750)
@@ -948,7 +953,7 @@ function handleKeyUp (evt) {
     }
 
     evt.preventDefault()
-    if (indexStart != -1) {
+    if (indexStart !== -1) {
       titleElements[indexStart].parentNode.classList.remove('highlight')
       if (parseInt(titleElements[indexStart].parentNode.dataset['x']) !== 0 && parseInt(titleElements[indexStart].parentNode.dataset['x']) !== parseInt(titleElements[indexStart].parentNode.dataset['max'])) {
         titleElements[indexStart].parentNode.style['opacity'] = '0'
