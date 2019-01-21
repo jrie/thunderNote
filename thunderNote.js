@@ -154,6 +154,7 @@ function handleButtons (evt) {
           browser.alarms.clear(srcUrl)
 
           data['feedData'][url] = data['feedData'][srcUrl]
+          delete data['feedData'][srcUrl]
         }
 
         browser.alarms.clear(url)
