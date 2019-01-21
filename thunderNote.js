@@ -219,7 +219,7 @@ function handleButtons (evt) {
   if (focusNode !== null) setFocus(focusNode)
 
   if (evt.target.className === 'backButton' || document.querySelector('.headerControl').classList.contains('inactive')) {
-    browser.storage.local.get('addon').then( function (data) {
+    browser.storage.local.get('addon').then(function (data) {
       if (data['addon']['animations'] !== 'enabled') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
       else setTimeout(function () { for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden') }, 750)
     })
@@ -875,7 +875,7 @@ function addInputKeyword (evt) {
 
 function toggleThunderNodeState (evt) {
   browser.storage.local.get().then(function (data) {
-    data['addon'] = { 'status': evt.target.value }
+    data['addon']['status'] = evt.target.value
     browser.storage.local.set(data)
 
     if (!isEnabled()) {
