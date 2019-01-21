@@ -149,12 +149,13 @@ function handleButtons (evt) {
       browser.storage.local.get().then(function (data) {
         if (data['feeds'] === undefined) data['feeds'] = {}
         if (url.dataset['srcUrl'] !== undefined) {
-          delete data['feeds']['srcUrl']
-          delete data['feedData']['srcUrl']
+          let srcUrl = url.dataset['srcUrl']
+          delete data['feeds'][srcUrl]
+          delete data['feedData'][srcUrl]
           browser.alarms.clear(srcUrl)
         }
 
-        browser.alarms.clear(feedURI)
+        browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
         browser.storage.local.set(data)
         if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
