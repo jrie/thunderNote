@@ -18,6 +18,14 @@
       "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
     }
   },
+  "RSSupdateError": {
+    "message": "'$feedURI$' konnten nicht gelesen werden, Fehler in der Konsole.",
+    "description": "Notifcation message that URI data could not be read.",
+    "placeholders": {
+      "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
+    }
+  },
+
   "RSSupdateFailTitle": {
     "message": "thunderNote: Aktualisierung fehlgeschlagen",
     "description": "Notification title for failing RSS feed update"

@@ -46,7 +46,16 @@ function handleRSS (URI) {
 // -------------------------------------------------------------------------------------------------------
 function processXMLData (xmlDoc, URI) {
   let x2js = new X2JS()
-  let json = x2js.xml2json(xmlDoc)
+  let json
+
+  try {
+    x2js.xml2json(xmlDoc)
+  } catch (error) {
+    browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+    console.warn(getMsg('RSSupdateInformation', URI))
+    console.warn(error)
+    return
+  }
 
   let jsonData
   if (json['channel'] !== undefined) {
@@ -56,7 +65,6 @@ function processXMLData (xmlDoc, URI) {
   }
 
   if (jsonData['item'] === undefined) {
-    // TODO: Return feed items could not be read, please report url
     return false
   }
 

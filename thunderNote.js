@@ -151,7 +151,7 @@ function handleButtons (evt) {
       browser.storage.local.get().then(function (data) {
         if (data['feeds'] === undefined) data['feeds'] = {}
         let srcUrl = evt.target.dataset['srcUrl']
-        if (srcUrl !== url) {
+        if (srcUrl.length !== 0 && srcUrl !== url) {
           browser.alarms.clear(srcUrl)
 
           if (data['feeds'][srcUrl] !== undefined) {
@@ -162,10 +162,16 @@ function handleButtons (evt) {
           }
         }
 
+        delete evt.target.dataset['srcUrl']
+
+        console.log(srcUrl)
+        console.log(url)
+
         browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
-        browser.storage.local.set(data)
-        if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
+        browser.storage.local.set(data).then(function() {
+          if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
+        })
       }, errorHandle)
       break
 
