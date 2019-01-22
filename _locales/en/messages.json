@@ -73,7 +73,7 @@
     }
   },
   "RSSupdateError": {
-    "message": "'$feedURI$' could not be read, see console.",
+    "message": "'$feedURI$' could not be read, see console for details.",
     "description": "Notifcation message that URI data could not be read.",
     "placeholders": {
       "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}

@@ -23,13 +23,15 @@ function handleRSS (URI) {
   let request = new XMLHttpRequest()
   request.addEventListener('readystatechange', function (evt) {
     if (evt.target.readyState === 4) {
-      if (evt.target.status === 200) {
+      if (evt.target.status === 200 || evt.target.status === 304) { // TODO: Create meaning with 304 - not modified since response
         if (processXMLData(evt.target.responseXML, URI)) {
           browser.storage.local.get('addon').then(function (data) {
             if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
           })
           return
         }
+
+        return
       }
 
       browser.storage.local.get('addon').then(function (data) {
@@ -45,16 +47,24 @@ function handleRSS (URI) {
 
 // -------------------------------------------------------------------------------------------------------
 function processXMLData (xmlDoc, URI) {
+  if (xmlDoc === null) {
+    browser.storage.local.get('addon').then(function (data) {
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+    })
+
+    return false
+  }
+
   let x2js = new X2JS()
   let json
 
   try {
     json = x2js.xml2json(xmlDoc)
   } catch (error) {
-    browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
-    console.warn(getMsg('RSSupdateInformation', URI))
+    browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateError', URI) })
+    console.warn(getMsg('RSSupdateError', URI))
     console.warn(error)
-    return
+    return false
   }
 
   let jsonData

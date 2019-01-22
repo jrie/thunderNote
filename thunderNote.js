@@ -81,7 +81,7 @@ function handleButtons (evt) {
         let currentPage = document.querySelector('.page.active')
         let titleElements = document.querySelectorAll('.page.active a.entryTitle')
 
-        if (titleElements !== null) {
+        if (titleElements !== null && titleElements[indexStart] !== undefined) {
           titleElements[indexStart].parentNode.focus()
           titleElements[indexStart].parentNode.classList.add('highlight')
           currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
@@ -139,7 +139,6 @@ function handleButtons (evt) {
       let crawlTime = parseInt(document.querySelector('#feedInterval').value)
       let maxAge = parseInt(document.querySelector('#feedMaxAge').value)
 
-      console.log(evt.target)
       if (isNaN(maxAge)) maxAge = 0
 
       if (url === '' || isNaN(crawlTime)) {
@@ -163,9 +162,6 @@ function handleButtons (evt) {
         }
 
         delete evt.target.dataset['srcUrl']
-
-        console.log(srcUrl)
-        console.log(url)
 
         browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
