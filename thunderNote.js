@@ -850,7 +850,7 @@ function handleMessage (message) {
   if (message['addKeyword'] !== undefined) {
     fillKeywords()
     browser.storage.local.get('addon').then(function (data) {
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
     })
   }
 }
@@ -872,7 +872,7 @@ function addInputKeyword (evt) {
     browser.storage.local.set(data)
 
     fillKeywords()
-    if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
+    if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
     evt.target.value = ''
     evt.target.focus()
   }, errorHandle)
@@ -887,13 +887,13 @@ function toggleThunderNodeState (evt) {
 
     if (!isEnabled()) {
       browser.alarms.clearAll()
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
     } else {
       if (data['feeds'] !== undefined) {
         for (let url of Object.keys(data['feeds'])) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][url][1] })
       }
 
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteEnabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteEnabled') })
     }
   }, errorHandle)
 }
@@ -1094,10 +1094,10 @@ function toggleImages (evt) {
   browser.storage.local.get('addon').then(function (data) {
     if (evt.target.value === 'enabled') {
       data['addon']['images'] = 'enabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesEnabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesEnabled') })
     } else {
       data['addon']['images'] = 'disabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesDisabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesDisabled') })
     }
 
     browser.storage.local.set(data)
@@ -1110,10 +1110,10 @@ function toggleNotifications (evt) {
   browser.storage.local.get('addon').then(function (data) {
     if (evt.target.value === 'enabled') {
       data['addon']['notifications'] = 'enabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsEnabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsEnabled') })
     } else {
       data['addon']['notifications'] = 'disabled'
-      // browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsDisabled') })
+      // browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsDisabled') })
     }
 
     browser.storage.local.set(data)
@@ -1127,11 +1127,11 @@ function toggleAnimations (evt) {
     if (evt.target.value === 'enabled') {
       data['addon']['animations'] = 'enabled'
       document.body.classList.remove('noAnim')
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsEnabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsEnabled') })
     } else {
       document.body.classList.add('noAnim')
       data['addon']['animations'] = 'disabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsDisabled') })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsDisabled') })
     }
 
     browser.storage.local.set(data)
