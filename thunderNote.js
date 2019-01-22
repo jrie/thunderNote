@@ -106,6 +106,7 @@ function handleButtons (evt) {
 
   switch (evt.target.dataset['cmd']) {
     case 'addItem':
+      console.log(evt.target.dataset)
       if (evt.target.dataset['url'] === undefined) {
         document.querySelector('#feedURI').value = ''
         document.querySelector('#feedType').value = 'rss'
@@ -118,6 +119,12 @@ function handleButtons (evt) {
         addButton.textContent = getMsg('buttonAddURI')
         addButton.dataset['srcUrl'] = ''
       } else {
+        document.querySelector('#feedURI').value = evt.target.dataset['url']
+        browser.storage.local.get('feeds').then(function (data) {
+          document.querySelector('#feedType').value = data['feeds'][url][0]
+          document.querySelector('#feedInterval').value = data['feeds'][url][1]
+          document.querySelector('#feedMaxAge').value = data['feeds'][url][2]
+        })
         removalButton.dataset['url'] = evt.target.dataset['url']
         forceUpdateButton.dataset['url'] = evt.target.dataset['url']
 
@@ -125,7 +132,7 @@ function handleButtons (evt) {
         forceUpdateButton.classList.remove('hidden')
 
         addButton.textContent = getMsg('buttonUpdateURI')
-        addButton.dataset['srcUrl'] = evt.target.dataset.url
+        addButton.dataset['srcUrl'] = evt.target.dataset['url']
         for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
       }
 
@@ -149,6 +156,7 @@ function handleButtons (evt) {
 
       browser.storage.local.get().then(function (data) {
         if (data['feeds'] === undefined) data['feeds'] = {}
+
         let srcUrl = evt.target.dataset['srcUrl']
         if (srcUrl.length !== 0 && srcUrl !== url) {
           browser.alarms.clear(srcUrl)
@@ -161,11 +169,11 @@ function handleButtons (evt) {
           }
         }
 
-        delete evt.target.dataset['srcUrl']
+        evt.target.dataset['srcUrl'] = ''
 
         browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
-        browser.storage.local.set(data).then(function() {
+        browser.storage.local.set(data).then(function () {
           if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
         })
       }, errorHandle)

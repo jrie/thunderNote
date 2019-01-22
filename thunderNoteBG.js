@@ -40,7 +40,7 @@ function handleRSS (URI) {
     }
   })
 
-  request.timeout = 30000
+  request.timeout = 40000
   request.open('GET', URI)
   request.send()
 }
@@ -49,7 +49,7 @@ function handleRSS (URI) {
 function processXMLData (xmlDoc, URI) {
   if (xmlDoc === null) {
     browser.storage.local.get('addon').then(function (data) {
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateError', URI) })
     })
 
     return false
