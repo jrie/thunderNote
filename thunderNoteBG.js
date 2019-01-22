@@ -49,7 +49,7 @@ function processXMLData (xmlDoc, URI) {
   let json
 
   try {
-    x2js.xml2json(xmlDoc)
+    json = x2js.xml2json(xmlDoc)
   } catch (error) {
     browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
     console.warn(getMsg('RSSupdateInformation', URI))
