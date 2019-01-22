@@ -103,10 +103,9 @@ function handleButtons (evt) {
   document.removeEventListener('keyup', handleKeyUp)
 
   let focusNode = null
-
+  console.log(evt.target.dataset)
   switch (evt.target.dataset['cmd']) {
     case 'addItem':
-      console.log(evt.target.dataset)
       if (evt.target.dataset['url'] === undefined) {
         document.querySelector('#feedURI').value = ''
         document.querySelector('#feedType').value = 'rss'
@@ -120,11 +119,14 @@ function handleButtons (evt) {
         addButton.dataset['srcUrl'] = ''
       } else {
         document.querySelector('#feedURI').value = evt.target.dataset['url']
+
         browser.storage.local.get('feeds').then(function (data) {
+          let url = document.querySelector('#feedURI').value
           document.querySelector('#feedType').value = data['feeds'][url][0]
           document.querySelector('#feedInterval').value = data['feeds'][url][1]
           document.querySelector('#feedMaxAge').value = data['feeds'][url][2]
         })
+
         removalButton.dataset['url'] = evt.target.dataset['url']
         forceUpdateButton.dataset['url'] = evt.target.dataset['url']
 
@@ -167,9 +169,10 @@ function handleButtons (evt) {
             data['feedData'][url] = data['feedData'][srcUrl]
             delete data['feedData'][srcUrl]
           }
+
+          evt.target.dataset['srcUrl'] = ''
         }
 
-        evt.target.dataset['srcUrl'] = ''
 
         browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
