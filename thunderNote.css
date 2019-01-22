@@ -389,6 +389,7 @@ button.slideButton {
   word-wrap: break-word;
   border-radius: 0px 6px 0px 6px;
   padding-left: 1rem;
+  max-width: 100%;
 }
 
 .subTitle {
@@ -439,6 +440,7 @@ button.slideButton {
   display: inline-block;
   -moz-user-select: text;
   width: 100%;
+  word-wrap: break-word;
   max-width: 100%;
   line-height: 130%;
 }
@@ -465,11 +467,13 @@ button.slideButton {
   display: inline-block;
   width: 71%;
   left: 27%;
+  word-wrap: break-word;
 }
 
 .entryContent.noImg p {
   width: 100%;
   left: 0%;
+  word-wrap: break-word;
 }
 
 .entryContent {
