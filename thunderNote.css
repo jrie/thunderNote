@@ -170,7 +170,8 @@ body.noAnim .newsEntry,
 body.noAnim .newsEntry ul,
 body.noAnim button.folding,
 body.noAnim button.folding.bottom,
-body.noAnim button.slideButton.button {
+body.noAnim button.slideButton.button,
+body.noAnim .singleNewsIndex {
   transition: unset;
 }
 
@@ -300,8 +301,7 @@ ul {
 }
 
 button.slideButton {
-  opacity: 1;
-  visibility: hidden;
+  display: none;
   margin-bottom: 18px;
   width: 36%;
   min-width: 36%;
@@ -313,19 +313,34 @@ button.slideButton {
   transition-property: all;
   transition-delay: 220ms;
   transition-duration: 80ms;
-  margin-bottom: -30px;
+}
+
+.singleNewsIndex {
+  clear: both;
+  display: none;
+  opacity: 0;
+  transition-property: all;
+  transition-delay: 220ms;
+  transition-duration: 80ms;
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.75em;
+}
+
+.singleRow .singleNewsIndex {
+  display: inline-block;
+  opacity: 1;
 }
 
 .singleRow button.slideButton {
   opacity: 1;
-  visibility: visible;
+  display: inherit;
   margin-bottom: 12px;
 }
 .singleRow .folded .slideButton {
   opacity: 0;
   display: none;
 }
-
 
 .newsEntry {
   margin: 0px;
@@ -415,8 +430,13 @@ button.slideButton {
 }
 
 .feedName {
-  font-size: 0.65em;
+  clear: both;
+  font-size: 0.75em;
+  width: 100%;
+  max-width: 100%;
   user-select: text;
+  margin: 0px;
+  padding: 0px;
 }
 
 .subList li {

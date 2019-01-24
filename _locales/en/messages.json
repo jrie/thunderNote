@@ -59,6 +59,23 @@
     }
   },
 
+  "itemCountSingular": {
+    "message": "Reading $current$ of $item$ item",
+    "description": "Display 1 item",
+    "placeholders": {
+      "current": { "content": "$1", "example": "1"},
+      "item": { "content": "$2", "example": "1"}
+    }
+  },
+  "itemCountPlural": {
+    "message": "Reading $current$ of $item$ items",
+    "description": "Display 0 or 2 or more items",
+    "placeholders": {
+      "current": { "content": "$1", "example": "1"},
+      "item": { "content": "$2", "example": "2"}
+    }
+  },
+
 
 
   "RSSupdateTitle": {
