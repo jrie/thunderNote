@@ -24,7 +24,13 @@ function handleRSS (URI) {
   request.addEventListener('readystatechange', function (evt) {
     if (evt.target.readyState === 4) {
       if (evt.target.status === 200 || evt.target.status === 304) { // TODO: Create meaning with 304 - not modified since response
-        if (processXMLData(evt.target.responseXML, URI)) {
+        let xml = evt.target.responseXML
+        if (xml === null) {
+          let xmlParser = new DOMParser()
+          xml = xmlParser.parseFromString(evt.target.response, 'text/xml')
+        }
+
+        if (processXMLData(xml, URI)) {
           browser.storage.local.get('addon').then(function (data) {
             if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
           })
