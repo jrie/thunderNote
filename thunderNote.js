@@ -103,7 +103,7 @@ function handleButtons (evt) {
   document.removeEventListener('keyup', handleKeyUp)
 
   let focusNode = null
-  console.log(evt.target.dataset)
+
   switch (evt.target.dataset['cmd']) {
     case 'addItem':
       if (evt.target.dataset['url'] === undefined) {
@@ -177,7 +177,7 @@ function handleButtons (evt) {
         browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
         browser.storage.local.set(data).then(function () {
-          if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': crawlTime })
+          if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 150, 'periodInMinutes': crawlTime })
         })
       }, errorHandle)
       break
@@ -279,7 +279,7 @@ function forceUpdate (evt) {
       let feedURI = evt.target.dataset['url']
       if (data['feeds'][feedURI] !== undefined) {
         browser.alarms.clear(feedURI)
-        browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
+        browser.alarms.create(feedURI, { 'when': Date.now() + 150, 'periodInMinutes': data['feeds'][feedURI][1] })
       }
     }
   }, errorHandle)
@@ -291,8 +291,10 @@ function forceUpdateAll (evt) {
   browser.storage.local.get('feeds').then(function (data) {
     if (data['feeds'] !== undefined) {
       browser.alarms.clearAll()
+      let updateSchedule = 0
       for (let feedURI of Object.keys(data['feeds'])) {
-        browser.alarms.create(feedURI, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][feedURI][1] })
+        browser.alarms.create(feedURI, { 'when': Date.now() + (updateSchedule * 1000), 'periodInMinutes': data['feeds'][feedURI][1] })
+        ++updateSchedule
       }
     }
   }, errorHandle)
@@ -572,21 +574,31 @@ function fillViews () {
           subList.appendChild(liSub)
         }
 
-        let buttonBackwards = document.createElement('button')
-        buttonBackwards.className = 'slideButton clearfix button left'
-        buttonBackwards.textContent = '<'
-        buttonBackwards.dataset['cmd'] = 'left'
-        buttonBackwards.addEventListener('click', navigateFeed)
-
-        let buttonForward = document.createElement('button')
-        buttonForward.className = 'slideButton button  right'
-        buttonForward.textContent = '>'
-        buttonForward.dataset['cmd'] = 'right'
-        buttonForward.addEventListener('click', navigateFeed)
-
         li.appendChild(subList)
-        li.appendChild(buttonBackwards)
-        li.appendChild(buttonForward)
+
+        if (inSingleRowMode) {
+          let buttonBackwards = document.createElement('button')
+          buttonBackwards.className = 'slideButton clearfix button left'
+          buttonBackwards.textContent = '<'
+          buttonBackwards.dataset['cmd'] = 'left'
+          buttonBackwards.addEventListener('click', navigateFeed)
+
+          let buttonForward = document.createElement('button')
+          buttonForward.className = 'slideButton button  right'
+          buttonForward.textContent = '>'
+          buttonForward.dataset['cmd'] = 'right'
+          buttonForward.addEventListener('click', navigateFeed)
+          li.appendChild(buttonBackwards)
+          li.appendChild(buttonForward)
+        }
+      }
+
+      let currentDisplay = document.createElement('span')
+      if (inSingleRowMode) {
+
+        currentDisplay.className = 'singleNewsIndex'
+        currentDisplay.dataset['src'] = feedURI
+        subLine.appendChild(currentDisplay)
       }
 
       li.appendChild(foldBottom)
@@ -594,8 +606,13 @@ function fillViews () {
 
       if (ul.children.length > 0) {
         if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
+
         li.classList.add('folded')
         fold.click()
+
+        if (inSingleRowMode) {
+          li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
+        }
       }
     }
 
@@ -782,21 +799,24 @@ function fillTopics () {
           subList.appendChild(liSub)
         }
 
-        let buttonBackwards = document.createElement('button')
-        buttonBackwards.className = 'slideButton clearfix button left'
-        buttonBackwards.textContent = '<'
-        buttonBackwards.dataset['cmd'] = 'left'
-        buttonBackwards.addEventListener('click', navigateFeed)
-
-        let buttonForward = document.createElement('button')
-        buttonForward.className = 'slideButton button  right'
-        buttonForward.textContent = '>'
-        buttonForward.dataset['cmd'] = 'right'
-        buttonForward.addEventListener('click', navigateFeed)
-
         li.appendChild(subList)
-        li.appendChild(buttonBackwards)
-        li.appendChild(buttonForward)
+
+        if (inSingleRowMode) {
+          let buttonBackwards = document.createElement('button')
+          buttonBackwards.className = 'slideButton clearfix button left'
+          buttonBackwards.textContent = '<'
+          buttonBackwards.dataset['cmd'] = 'left'
+          buttonBackwards.addEventListener('click', navigateFeed)
+
+          let buttonForward = document.createElement('button')
+          buttonForward.className = 'slideButton button  right'
+          buttonForward.textContent = '>'
+          buttonForward.dataset['cmd'] = 'right'
+          buttonForward.addEventListener('click', navigateFeed)
+
+          li.appendChild(buttonBackwards)
+          li.appendChild(buttonForward)
+        }
       }
 
       li.appendChild(foldBottom)
@@ -825,6 +845,7 @@ function queryResize (evt) {
       subList.style['transform'] = 'translateX(0px)'
       let num = 0
       for (let element of subList.children) {
+        element.dataset['idx'] = num + 1
         element.dataset['x'] = inititialWidth * num++
         element.dataset['max'] = inititialWidth * (subList.children.length - 1)
         element.style['width'] = inititialWidth + 'px'
@@ -903,7 +924,11 @@ function toggleThunderNodeState (evt) {
       if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
     } else {
       if (data['feeds'] !== undefined) {
-        for (let url of Object.keys(data['feeds'])) browser.alarms.create(url, { 'when': Date.now() + 250, 'periodInMinutes': data['feeds'][url][1] })
+        let updateSchedule = 0
+        for (let url of Object.keys(data['feeds'])) {
+          browser.alarms.create(url, { 'when': Date.now() + (updateSchedule * 1000), 'periodInMinutes': data['feeds'][url][1] })
+          ++updateSchedule
+        }
       }
 
       if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteEnabled') })
@@ -925,8 +950,9 @@ function navigateFeed (evt) {
   let next = null
 
   let feedNodes = document.querySelectorAll('.page.active li')
+  let index = 0
 
-  for (let index = 0; index < feedNodes.length; ++index) {
+  for (index = 0; index < feedNodes.length; ++index) {
     if (feedNodes[index] === current) {
       activeFeedItem = index
       activeNews = index
@@ -946,6 +972,7 @@ function navigateFeed (evt) {
   current.parentNode.style['transform'] = 'translateX(-' + next.dataset['x'] + 'px)'
   next.style['opacity'] = '1'
   next.classList.add('highlight')
+  next.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = childLists.length === 1 ? getMsg('itemCountSingular', [1, 1]) : getMsg('itemCountPlural', [next.dataset['idx'], childLists.length])
 }
 
 function handleKeyUp (evt) {
@@ -978,6 +1005,12 @@ function handleKeyUp (evt) {
 
     titleElements[indexStart].parentNode.parentNode.style['transform'] = 'translateX(-' + titleElements[indexStart].parentNode.dataset['x'] + 'px)'
     titleElements[indexStart].parentNode.style['opacity'] = '1'
+
+    if (titleElements[indexStart].parentNode.parentNode.children.length === 1) {
+      titleElements[indexStart].parentNode.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = getMsg('itemCountSingular', [1, 1])
+    } else {
+      titleElements[indexStart].parentNode.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = getMsg('itemCountPlural', [titleElements[indexStart].parentNode.dataset['idx'], titleElements[indexStart].parentNode.parentNode.children.length])
+    }
 
     if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
       titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
@@ -1023,6 +1056,11 @@ function handleKeyUp (evt) {
     if (indexStart < 0) indexStart = titleElements.length - 1
     titleElements[indexStart].parentNode.parentNode.style['transform'] = 'translateX(-' + titleElements[indexStart].parentNode.dataset['x'] + 'px)'
     titleElements[indexStart].parentNode.style['opacity'] = '1'
+    if (titleElements[indexStart].parentNode.parentNode.children.length === 1) {
+      titleElements[indexStart].parentNode.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = getMsg('itemCountSingular', [1, 1])
+    } else {
+      titleElements[indexStart].parentNode.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = getMsg('itemCountPlural', [titleElements[indexStart].parentNode.dataset['idx'], titleElements[indexStart].parentNode.parentNode.children.length])
+    }
 
     if (titleElements[indexStart].parentNode.parentNode.parentNode.classList.contains('folded')) {
       titleElements[indexStart].parentNode.parentNode.parentNode.firstElementChild.click()
