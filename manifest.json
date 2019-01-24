@@ -24,7 +24,7 @@
   "homepage_url": "https://github.com/jrie/thunderNote",
   "manifest_version": 2,
   "name": "thunderNote",
-  "version": "0.0.37",
+  "version": "0.0.39",
   "permissions": ["<all_urls>", "activeTab", "storage", "unlimitedStorage", "alarms", "notifications", "contextMenus"],
   "background": {
     "scripts": [
