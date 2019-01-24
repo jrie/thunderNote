@@ -41,7 +41,7 @@ function handleRSS (URI) {
       }
 
       browser.storage.local.get('addon').then(function (data) {
-        if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateInformation', URI) })
+        if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateFailTitle'), 'message': getMsg('RSSupdateError', URI) })
       })
     }
   })
@@ -87,7 +87,6 @@ function processXMLData (xmlDoc, URI) {
   browser.storage.local.get().then(function (data) {
     if (data['feedData'] === undefined) data['feedData'] = {}
     if (data['feedData'][URI] === undefined) data['feedData'][URI] = {}
-    else data['feedData'][URI] = {}
 
     for (let item of jsonData['item']) {
       let link = item['link']
