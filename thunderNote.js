@@ -650,7 +650,6 @@ function fillViews () {
 
       let currentDisplay = document.createElement('span')
       if (inSingleRowMode) {
-
         currentDisplay.className = 'singleNewsIndex'
         currentDisplay.dataset['src'] = feedURI
         subLine.appendChild(currentDisplay)
@@ -854,6 +853,8 @@ function fillTopics () {
           subList.appendChild(liSub)
         }
 
+
+
         li.appendChild(subList)
 
         if (inSingleRowMode) {
@@ -874,6 +875,13 @@ function fillTopics () {
         }
       }
 
+      let currentDisplay = document.createElement('span')
+      if (inSingleRowMode) {
+        currentDisplay.className = 'singleNewsIndex'
+        currentDisplay.dataset['src'] = keyword
+        subLine.appendChild(currentDisplay)
+      }
+
       li.appendChild(foldBottom)
       ul.appendChild(li)
 
@@ -881,6 +889,11 @@ function fillTopics () {
         if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
         li.classList.add('folded')
         fold.click()
+
+      }
+
+      if (inSingleRowMode) {
+        li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
       }
     }
 
@@ -1039,6 +1052,7 @@ function handleKeyUp (evt) {
     let titleElements
     let indexStart = -1
 
+
     if (currentPage.dataset['src'] === 'viewTopics') {
       titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
       indexStart = activeNews
@@ -1054,6 +1068,7 @@ function handleKeyUp (evt) {
         titleElements[indexStart].parentNode.style['opacity'] = '0'
       }
     }
+
     ++indexStart
 
     if (indexStart > titleElements.length - 1) indexStart = 0
