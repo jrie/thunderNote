@@ -24,6 +24,8 @@ function generateZip (rawData) {
     dlLink.click()
     dlLink.parentNode.removeChild(dlLink)
     URL.revokeObjectURL(dlLink.href)
+
+    if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('settingsExportedTitle'), 'message': getMsg('settingsExportedBody') })
   })
 }
 
@@ -33,13 +35,63 @@ function exportSettings () {
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
-function triggerImport () {
-  browser.runtime.getBackgroundPage().then(function (bgPage) {
-    bgPage.document.adoptNode(document.querySelector('#importFile')).addEventListener('change', bgPage.importSettings)
-  }, errorHandle)
+function importSettings (evt) {
+  if (evt.target.files[0] === undefined) return
+
+  let file = evt.target.files[0]
+
+  JSZip.loadAsync(file).then(function (zip) {
+    if (zip.files['thunderNote.json'] === undefined) return
+
+    zip.files['thunderNote.json'].async('string').then(async function (stringData) {
+      let importData = JSON.parse(stringData)
+      browser.storage.local.get().then(function (data) {
+        if (importData['addon'] !== undefined) {
+          if (data['addon'] === undefined) data['addon'] = {}
+
+          for (let key of Object.keys(importData['addon'])) {
+            if (data['addon'][key] === undefined) data['addon'][key] = importData['addon'][key]
+          }
+        }
+
+        if (importData['feeds'] !== undefined) {
+          if (data['feeds'] === undefined) data['feeds'] = {}
+
+          for (let key of Object.keys(importData['feeds'])) {
+            if (data['feeds'][key] === undefined) data['feeds'][key] = importData['feeds'][key]
+          }
+        }
+
+        if (importData['feedData'] !== undefined) {
+          if (data['feedData'] === undefined) data['feedData'] = {}
+
+          for (let key of Object.keys(importData['feedData'])) {
+            if (data['feedData'][key] === undefined) data['feedData'][key] = importData['feedData'][key]
+            else {
+              for (let news of Object.keys(importData['feedData'][key])) {
+                if (data['feedData'][key][news] === undefined) data['feedData'][key][news] = importData['feedData'][key][news]
+              }
+            }
+          }
+        }
+
+        if (importData['keywords'] !== undefined) {
+          if (data['keywords'] === undefined) data['keywords'] = {}
+
+          for (let key of Object.keys(importData['keywords'])) {
+            if (data['keywords'][key] === undefined) data['keywords'][key] = importData['keywords'][key]
+          }
+        }
+
+        browser.storage.local.set(data)
+
+        if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('settingsImportedTitle'), 'message': getMsg('settingsImportedBody') })
+      })
+    })
+  })
 }
 
-// document.querySelector('#importFile').addEventListener('click', triggerImport)
+document.querySelector('#importFile').addEventListener('change', importSettings)
 
 // --------------------------------------------------------------------------------------------------------------------------------
 function isEnabled () {
@@ -105,6 +157,9 @@ function handleButtons (evt) {
   let focusNode = null
 
   switch (evt.target.dataset['cmd']) {
+    case 'exportAddonData':
+      exportSettings()
+      break
     case 'addItem':
       if (evt.target.dataset['url'] === undefined) {
         document.querySelector('#feedURI').value = ''
@@ -458,7 +513,7 @@ function fillViews () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 30) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
@@ -485,7 +540,7 @@ function fillViews () {
           evt.target.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 30) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
           evt.target.style['opacity'] = 0

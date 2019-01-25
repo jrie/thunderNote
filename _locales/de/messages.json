@@ -323,5 +323,30 @@
   "optionsBodyNotificationsDisabled": {
     "message": "thunderNote Benachrichtigungen sind deaktiviert",
     "description": "Notifications body notifications disabled"
+  },
+
+  "exportAddonData": {
+    "message": "Einstellungen und Daten exportieren",
+    "description": "Button export addon data"
+  },
+  "importAddonData": {
+    "message": "Einstellunge und Daten importieren",
+    "description": "Button import addon data"
+  },
+  "settingsExportedTitle": {
+    "message": "thunderNote: Einstellungen exportiert",
+    "description": "Title of notifaction about succesfull export"
+  },
+  "settingsExportedBody": {
+    "message": "Einstellungen exportiert",
+    "description": "Body of notifaction about succesfull export"
+  },
+  "settingsImportedTitle": {
+    "message": "thunderNote: Einstellungen importiert",
+    "description": "Notification title settings importet"
+  },
+  "settingsImportedBody": {
+    "message": "Daten und Einstellungen erfolgreich importiert",
+    "description": "Body about succesful import of addon data"
   }
 }
