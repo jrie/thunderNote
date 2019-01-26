@@ -201,22 +201,22 @@ browser.storage.local.get().then(function (data) {
   browser.storage.local.set(data)
 
   if ((data['addon'] === undefined || data['addon']['status'] === undefined) || data['addon']['status'] === 'enabled') {
-
     if (data['feeds'] === undefined) return
     for (let url of Object.keys(data['feeds'])) {
       browser.alarms.create(url, { 'when': Date.now() + 3000, 'periodInMinutes': data['feeds'][url][1] })
     }
-
   }
 }, errorHandle)
 
 // -------------------------------------------------------------------------------------------------------
 
-browser.runtime.onInstalled.addListener(async ({ reason, temporary, }) => {
+browser.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
   switch (reason) {
     case 'install':
-      const url = browser.runtime.getURL('postInstall.html')
-      browser.tabs.create({ url })
+      browser.tabs.create({ 'url': browser.runtime.getURL('postInstall.html') })
+      break
+    case 'update':
+      browser.tabs.create({ 'url': browser.runtime.getURL('postUpdate.html') })
       break
     default:
       break

@@ -228,7 +228,6 @@ function handleButtons (evt) {
           evt.target.dataset['srcUrl'] = ''
         }
 
-
         browser.alarms.clear(url)
         data['feeds'][url] = [type, crawlTime, maxAge]
         browser.storage.local.set(data).then(function () {
@@ -1045,7 +1044,6 @@ function handleKeyUp (evt) {
     let currentPage = document.querySelector('.page.active')
     let titleElements
     let indexStart = -1
-
 
     if (currentPage.dataset['src'] === 'viewTopics') {
       titleElements = document.querySelectorAll('#viewTopics a.entryTitle')
