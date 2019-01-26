@@ -719,8 +719,6 @@ function fillTopics () {
       if (inSingleRowMode) li.className = 'newsEntry singleRow'
       else li.className = 'newsEntry'
 
-      if (ul.children.length > 0) li.classList.add('folded')
-
       fold.className = 'folding'
       fold.innerHTML = '&laquo;'
       if (ul.children.length === 0) fold.innerHTML = '&raquo;'
@@ -853,8 +851,6 @@ function fillTopics () {
           subList.appendChild(liSub)
         }
 
-
-
         li.appendChild(subList)
 
         if (inSingleRowMode) {
@@ -884,16 +880,14 @@ function fillTopics () {
 
       li.appendChild(foldBottom)
       ul.appendChild(li)
-
       if (ul.children.length > 0) {
         if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
         li.classList.add('folded')
         fold.click()
 
-      }
-
-      if (inSingleRowMode) {
-        li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
+        if (inSingleRowMode) {
+          li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
+        }
       }
     }
 
