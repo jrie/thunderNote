@@ -272,6 +272,26 @@ button.bottom {
   padding: 10px 0px 10px 42px;
 }
 
+.postInstall {
+  padding: 20px 30px;
+}
+
+.postInstall p {
+  max-width: 88%;
+  font-weight: normal;
+}
+
+.postInstall .logo {
+  margin-top: 20px;
+  margin-right: 30px;
+  padding: 64px 64px 64px 164px;
+  display: inline-block;
+  background: url('icons/thunderNote.svg') left center;
+  background-repeat: no-repeat;
+  background-size: 128px;
+
+}
+
 .subList {
   box-shadow: -4px 2px 5px rgba(0,0,0, 0.265);
 }

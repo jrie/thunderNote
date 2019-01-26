@@ -209,3 +209,16 @@ browser.storage.local.get().then(function (data) {
 
   }
 }, errorHandle)
+
+// -------------------------------------------------------------------------------------------------------
+
+browser.runtime.onInstalled.addListener(async ({ reason, temporary, }) => {
+  switch (reason) {
+    case 'install':
+      const url = browser.runtime.getURL('postInstall.html')
+      browser.tabs.create({ url })
+      break
+    default:
+      break
+  }
+})
