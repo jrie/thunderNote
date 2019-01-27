@@ -110,38 +110,53 @@ function setFocus (element) {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
+function hideContent () {
+  let items = document.querySelectorAll('.page.active ul.subList .entryContent')
+  if (inHeaderOnlyMode) for (let item of items) item.classList.add('subHidden')
+  else for (let item of items) item.classList.remove('subHidden')
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------
+
 function handleButtons (evt) {
-  if (evt.target.dataset['cmd'] === 'switchSingleRow') {
-    activeNews = 0
-    activeFeedItem = 0
-    inSingleRowMode = !inSingleRowMode
-    if (inSingleRowMode === false) for (let item of document.querySelectorAll('.singleRow')) item.classList.remove('singleRow')
+  switch (evt.target.dataset['cmd']) {
+    case 'switchSingleRow':
+      activeNews = 0
+      activeFeedItem = 0
+      inSingleRowMode = !inSingleRowMode
+      if (inSingleRowMode === false) for (let item of document.querySelectorAll('.singleRow')) item.classList.remove('singleRow')
 
-    let activePage = document.querySelector('.page.active')
-    let indexStart = -1
-    if (activePage.dataset['src'] === 'viewTopics') {
-      fillTopics()
-      indexStart = activeNews
-    } else if (activePage.dataset['src'] === 'viewFeeds') {
-      fillViews()
-      indexStart = activeFeedItem
-    }
+      let activePage = document.querySelector('.page.active')
+      let indexStart = -1
+      if (activePage.dataset['src'] === 'viewTopics') {
+        fillTopics()
+        indexStart = activeNews
+      } else if (activePage.dataset['src'] === 'viewFeeds') {
+        fillViews()
+        indexStart = activeFeedItem
+      }
 
-    if (indexStart !== -1) {
-      queryResize()
-      setTimeout(function () {
-        let currentPage = document.querySelector('.page.active')
-        let titleElements = document.querySelectorAll('.page.active a.entryTitle')
+      if (indexStart !== -1) {
+        queryResize()
+        setTimeout(function () {
+          let currentPage = document.querySelector('.page.active')
+          let titleElements = document.querySelectorAll('.page.active a.entryTitle')
 
-        if (titleElements !== null && titleElements[indexStart] !== undefined) {
-          titleElements[indexStart].parentNode.focus()
-          titleElements[indexStart].parentNode.classList.add('highlight')
-          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
-        }
-      }, 45)
-    }
+          if (titleElements !== null && titleElements[indexStart] !== undefined) {
+            titleElements[indexStart].parentNode.focus()
+            titleElements[indexStart].parentNode.classList.add('highlight')
+            currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
+          }
+        }, 45)
+      }
 
-    return
+      return
+    case 'switchHeaderViewMode':
+      inHeaderOnlyMode = !inHeaderOnlyMode
+      hideContent()
+      return
+    default:
+      break
   }
 
   document.querySelector('.headerControl').classList.remove('inactive')
@@ -503,7 +518,6 @@ function fillViews () {
       if (ul.children.length > 0) fold.innerHTML = '&raquo;'
 
       fold.addEventListener('click', function (evt) {
-        console.log(evt.target.parentNode)
         if (evt.target.parentNode.classList.contains('folded')) {
           evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
           evt.target.parentNode.classList.remove('folded')
@@ -525,20 +539,15 @@ function fillViews () {
       foldBottom.className = 'folding bottom'
       foldBottom.innerHTML = fold.innerHTML
 
-      if (!inSingleRowMode && ul.children.length > 0) {
-        foldBottom.style['opacity'] = 0
-        foldBottom.style['margin-bottom'] = '-30px'
-      }
-
       foldBottom.addEventListener('click', function (evt) {
         if (evt.target.parentNode.classList.contains('folded')) {
-          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
           evt.target.parentNode.classList.remove('folded')
           evt.target.innerHTML = '&raquo;'
           evt.target.parentNode.firstElementChild.innerHTML = '&raquo;'
+
           evt.target.style['opacity'] = 1
           evt.target.style['margin-bottom'] = '12px'
-          evt.target.parentNode.children[2].style['height'] = 'auto'
+          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
           evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
@@ -659,9 +668,10 @@ function fillViews () {
 
       li.appendChild(foldBottom)
       ul.appendChild(li)
-      queryResize()
     }
 
+    hideContent()
+    queryResize()
   }, errorHandle)
 }
 
@@ -872,9 +882,10 @@ function fillTopics () {
 
       li.appendChild(foldBottom)
       ul.appendChild(li)
-      queryResize()
     }
 
+    hideContent()
+    queryResize()
   }, errorHandle)
 }
 
@@ -1256,6 +1267,7 @@ browser.runtime.onMessage.addListener(handleMessage)
 
 // --------------------------------------------------------------------------------------------------------------------------------
 let inSingleRowMode = false
+let inHeaderOnlyMode = false
 
 const dayLength = 24 * 3600 * 1000.0
 

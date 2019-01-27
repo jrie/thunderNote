@@ -237,9 +237,9 @@ button.folding.bottom {
   margin-left: 12px;
   text-decoration: none;
   border: none;
-  transition-property: all;
   position: relative;
-  z-index: 101;
+  z-index: 99;
+  transition-property: all;
   transition-duration: 100ms;
   transition-delay: 0ms;
   transition-timing-function: ease-in-out;
@@ -459,6 +459,7 @@ button.slideButton {
   user-select: text;
   margin: 0px;
   padding: 0px;
+  line-height: 130%;
 }
 
 .subList li {
@@ -502,6 +503,15 @@ button.slideButton {
 .entryContent {
   max-width: 100%;
   min-width: 100%;
+  display: inherit;
+}
+
+.folded div.entryContent.subHidden {
+  display: inline;
+}
+
+div.entryContent.subHidden {
+  display: none;
 }
 
 .entryContent p {

@@ -50,6 +50,10 @@
     "message": "Wenn der Lesemodus aktiv ist, kann mittels der Pfeiltasten Links und Rechts durch die Feeds vorwärts oder zurück gesprungen werden.",
     "description": "Button single reader mode"
   },
+  "switchHeaderOnlyViewMode": {
+    "message": "Überschriften Modus umschalten",
+    "description": "Action button to toggle header only mode on/off"
+  },
 
 
   "itemSingular": {

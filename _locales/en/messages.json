@@ -41,6 +41,10 @@
     "message": "When single reader mode is active, you can use the arrow keys, left and right, to navigate forward and backwards in the articles or feed.",
     "description": "Button single reader mode"
   },
+  "switchHeaderOnlyViewMode": {
+    "message": "Switch header only mode",
+    "description": "Action button to toggle header only mode on/off"
+  },
 
 
 
