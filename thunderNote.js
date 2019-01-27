@@ -503,6 +503,7 @@ function fillViews () {
       if (ul.children.length > 0) fold.innerHTML = '&raquo;'
 
       fold.addEventListener('click', function (evt) {
+        console.log(evt.target.parentNode)
         if (evt.target.parentNode.classList.contains('folded')) {
           evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
           evt.target.parentNode.classList.remove('folded')
@@ -512,7 +513,7 @@ function fillViews () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
@@ -537,9 +538,10 @@ function fillViews () {
           evt.target.parentNode.firstElementChild.innerHTML = '&raquo;'
           evt.target.style['opacity'] = 1
           evt.target.style['margin-bottom'] = '12px'
+          evt.target.parentNode.children[2].style['height'] = 'auto'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
           evt.target.style['opacity'] = 0
@@ -651,25 +653,15 @@ function fillViews () {
       if (inSingleRowMode) {
         currentDisplay.className = 'singleNewsIndex'
         currentDisplay.dataset['src'] = feedURI
+        li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
         subLine.appendChild(currentDisplay)
       }
 
       li.appendChild(foldBottom)
       ul.appendChild(li)
-
-      if (ul.children.length > 0) {
-        if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
-
-        li.classList.add('folded')
-        fold.click()
-
-        if (inSingleRowMode) {
-          li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
-        }
-      }
+      queryResize()
     }
 
-    queryResize()
   }, errorHandle)
 }
 
@@ -732,7 +724,7 @@ function fillTopics () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
@@ -754,7 +746,7 @@ function fillTopics () {
           evt.target.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.clientHeight - 60) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
           evt.target.style['opacity'] = 0
@@ -874,23 +866,15 @@ function fillTopics () {
       if (inSingleRowMode) {
         currentDisplay.className = 'singleNewsIndex'
         currentDisplay.dataset['src'] = keyword
+        li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
         subLine.appendChild(currentDisplay)
       }
 
       li.appendChild(foldBottom)
       ul.appendChild(li)
-      if (ul.children.length > 0) {
-        if (!inSingleRowMode) li.children[2].style['margin-bottom'] = (-li.clientHeight - 60) + 'px'
-        li.classList.add('folded')
-        fold.click()
-
-        if (inSingleRowMode) {
-          li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
-        }
-      }
+      queryResize()
     }
 
-    queryResize()
   }, errorHandle)
 }
 
