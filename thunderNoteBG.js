@@ -222,3 +222,7 @@ browser.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
       break
   }
 })
+
+browser.browserAction.onClicked.addListener(function () {
+  browser.sidebarAction.open()
+})

@@ -9,6 +9,17 @@
     "url": "https://github.com/jrie"
   },
   "default_locale": "en",
+  "browser_action": {
+    "default_title": "thunderNote",
+    "default_icon": {
+      "16": "icons/thunderNote.svg",
+      "32": "icons/thunderNote.svg",
+      "48": "icons/thunderNote.svg",
+      "64": "icons/thunderNote.svg",
+      "96": "icons/thunderNote.svg",
+      "128": "icons/thunderNote.svg"
+    }
+  },
   "sidebar_action": {
     "default_title": "thunderNote",
     "default_panel": "thunderNote.html",
@@ -24,7 +35,7 @@
   "homepage_url": "https://github.com/jrie/thunderNote",
   "manifest_version": 2,
   "name": "thunderNote",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "permissions": ["<all_urls>", "activeTab", "storage", "unlimitedStorage", "alarms", "notifications", "contextMenus"],
   "background": {
     "scripts": [
