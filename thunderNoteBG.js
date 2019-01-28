@@ -23,7 +23,7 @@ function handleRSS (URI) {
   let request = new XMLHttpRequest()
   request.addEventListener('readystatechange', function (evt) {
     if (evt.target.readyState === 4) {
-      if (evt.target.status === 200 || evt.target.status === 304) { // TODO: Create meaning with 304 - not modified since response
+      if (evt.target.status === 200 || evt.target.status === 304) {
         let xml = evt.target.responseXML
         if (xml === null) {
           let xmlParser = new DOMParser()
@@ -31,13 +31,8 @@ function handleRSS (URI) {
         }
 
         if (processXMLData(xml, URI)) {
-          browser.storage.local.get('addon').then(function (data) {
-            if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSupdateTitle'), 'message': getMsg('RSSupdateInformation', URI) })
-          })
           return
         }
-
-        return
       }
 
       browser.storage.local.get('addon').then(function (data) {
@@ -88,20 +83,23 @@ function processXMLData (xmlDoc, URI) {
     if (data['feedData'] === undefined) data['feedData'] = {}
     if (data['feedData'][URI] === undefined) data['feedData'][URI] = {}
 
+    let refreshTime = 0
     for (let item of jsonData['item']) {
       let link = item['link']
       let title = item['title']
       let description = item['description']
       let time = Date.parse(item['pubDate'])
 
+      if (refreshTime === 0 || refreshTime < time) refreshTime = time
+
       let mediaMatch = null
       if (item['encoded'] !== undefined) {
-        mediaMatch = item['encoded'].toString().match(/img src=["']((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
+        mediaMatch = item['encoded'].toString().match(/img.*src=["']((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
       }
 
       if (data['feedData'][URI][link] === undefined) {
         if (mediaMatch === null || mediaMatch[1] === undefined) data['feedData'][URI][link] = [title, time, description, link, null]
-        else data['feedData'][URI][link] = [title, time, description, link, mediaMatch[1]]
+        else data['feedData'][URI][link] = [title, time, description, link, time, mediaMatch[1]]
       } else {
         data['feedData'][URI][link][0] = title
         data['feedData'][URI][link][1] = time
@@ -109,6 +107,14 @@ function processXMLData (xmlDoc, URI) {
         data['feedData'][URI][link][3] = link
         if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][4] = mediaMatch[1]
       }
+    }
+
+    if (data['feeds'][URI][3] === undefined) data['feeds'][URI].push(refreshTime)
+    else {
+      if (data['feeds'][URI][3] !== refreshTime) {
+        if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSnewTitle'), 'message': getMsg('RSSnewInformation', URI) })
+      }
+      data['feeds'][URI][3] = refreshTime
     }
 
     browser.storage.local.set(data)

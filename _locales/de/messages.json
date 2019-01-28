@@ -18,6 +18,18 @@
       "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
     }
   },
+  "RSSnewTitle": {
+    "message": "thunderNote: Aktualisierte RSS Daten",
+    "description": "Notification title for new or added RSS feed data"
+  },
+  "RSSnewInformation": {
+    "message": "'$feedURI$' hat neue RSS Daten",
+    "description": "Notifcation message that URI has new articles.",
+    "placeholders": {
+      "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
+    }
+  },
+
   "RSSupdateError": {
     "message": "'$feedURI$' konnten nicht gelesen werden, Fehler in der Konsole protokolliert.",
     "description": "Notifcation message that URI data could not be read.",

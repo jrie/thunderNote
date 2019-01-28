@@ -246,7 +246,7 @@ function handleButtons (evt) {
         }
 
         browser.alarms.clear(url)
-        data['feeds'][url] = [type, crawlTime, maxAge]
+        data['feeds'][url] = [type, crawlTime, maxAge, 0]
         browser.storage.local.set(data).then(function () {
           if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 150, 'periodInMinutes': crawlTime })
         })
@@ -657,15 +657,14 @@ function fillViews () {
         currentDisplay.dataset['src'] = feedURI
         li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
         subLine.appendChild(currentDisplay)
-
       }
+
       li.appendChild(foldBottom)
       ul.appendChild(li)
     }
 
     queryResize()
     hideContent()
-
   }, errorHandle)
 }
 

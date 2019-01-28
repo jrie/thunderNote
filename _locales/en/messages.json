@@ -80,8 +80,6 @@
     }
   },
 
-
-
   "RSSupdateTitle": {
     "message": "thunderNote: RSS updated",
     "description": "Notification title for updated RSS feed"
@@ -89,6 +87,17 @@
   "RSSupdateInformation": {
     "message": "'$feedURI$' was updated.",
     "description": "Notifcation message that URI was updated.",
+    "placeholders": {
+      "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
+    }
+  },
+  "RSSnewTitle": {
+    "message": "thunderNote: Updated RSS data",
+    "description": "Notification title for updated RSS feed"
+  },
+  "RSSnewInformation": {
+    "message": "'$feedURI$' has updated articles",
+    "description": "Notifcation message that URI has new or updated articles.",
     "placeholders": {
       "feedURI": { "content": "$1", "example": "https://domain.com/rss2"}
     }
