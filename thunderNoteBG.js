@@ -219,6 +219,8 @@ browser.storage.local.get().then(function (data) {
 // -------------------------------------------------------------------------------------------------------
 
 browser.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
+  if (temporary) return
+
   switch (reason) {
     case 'install':
       browser.tabs.create({ 'url': browser.runtime.getURL('postInstall.html') })
