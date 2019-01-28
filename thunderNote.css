@@ -240,8 +240,8 @@ button.folding.bottom {
   position: relative;
   z-index: 99;
   transition-property: all;
-  transition-duration: 100ms;
-  transition-delay: 0ms;
+  transition-duration: 200ms;
+  transition-delay: 80ms;
   transition-timing-function: ease-in-out;
 }
 
@@ -255,7 +255,7 @@ button.bottom {
 
 .folded button.bottom {
   visibility: hidden;
-  margin-bottom: -12px;
+  margin-bottom: -1em;
 }
 
 .headerControl .headline {
@@ -507,7 +507,7 @@ button.slideButton {
 }
 
 .folded div.entryContent.subHidden {
-  display: inline;
+  display: inherit;
 }
 
 div.entryContent.subHidden {

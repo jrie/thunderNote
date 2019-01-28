@@ -120,6 +120,11 @@ function hideContent () {
 
 function handleButtons (evt) {
   switch (evt.target.dataset['cmd']) {
+    case 'importAddonData':
+      return
+    case 'exportAddonData':
+      exportSettings()
+      return
     case 'switchSingleRow':
       activeNews = 0
       activeFeedItem = 0
@@ -172,9 +177,6 @@ function handleButtons (evt) {
   let focusNode = null
 
   switch (evt.target.dataset['cmd']) {
-    case 'exportAddonData':
-      exportSettings()
-      break
     case 'addItem':
       if (evt.target.dataset['url'] === undefined) {
         document.querySelector('#feedURI').value = ''
@@ -527,11 +529,11 @@ function fillViews () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
-          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '10px'
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-24px'
         }
       })
 
@@ -540,22 +542,12 @@ function fillViews () {
       foldBottom.innerHTML = fold.innerHTML
 
       foldBottom.addEventListener('click', function (evt) {
-        if (evt.target.parentNode.classList.contains('folded')) {
-          evt.target.parentNode.classList.remove('folded')
-          evt.target.innerHTML = '&raquo;'
-          evt.target.parentNode.firstElementChild.innerHTML = '&raquo;'
-
-          evt.target.style['opacity'] = 1
-          evt.target.style['margin-bottom'] = '12px'
-          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
-        } else {
-          evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
-          evt.target.innerHTML = '&laquo;'
-          evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
-          evt.target.style['opacity'] = 0
-          evt.target.style['margin-bottom'] = '12px'
-        }
+        evt.target.parentNode.classList.add('folded')
+        evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
+        evt.target.innerHTML = '&laquo;'
+        evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
+        evt.target.style['opacity'] = 0
+        evt.target.style['margin-bottom'] = '-24px'
       })
 
       li.appendChild(fold)
@@ -649,10 +641,11 @@ function fillViews () {
           buttonBackwards.addEventListener('click', navigateFeed)
 
           let buttonForward = document.createElement('button')
-          buttonForward.className = 'slideButton button  right'
+          buttonForward.className = 'slideButton button right'
           buttonForward.textContent = '>'
           buttonForward.dataset['cmd'] = 'right'
           buttonForward.addEventListener('click', navigateFeed)
+
           li.appendChild(buttonBackwards)
           li.appendChild(buttonForward)
         }
@@ -664,14 +657,15 @@ function fillViews () {
         currentDisplay.dataset['src'] = feedURI
         li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
         subLine.appendChild(currentDisplay)
-      }
 
+      }
       li.appendChild(foldBottom)
       ul.appendChild(li)
     }
 
-    hideContent()
     queryResize()
+    hideContent()
+
   }, errorHandle)
 }
 
@@ -722,7 +716,8 @@ function fillTopics () {
 
       fold.className = 'folding'
       fold.innerHTML = '&laquo;'
-      if (ul.children.length === 0) fold.innerHTML = '&raquo;'
+
+      if (ul.children.length > 0) fold.innerHTML = '&raquo;'
 
       fold.addEventListener('click', function (evt) {
         if (evt.target.parentNode.classList.contains('folded')) {
@@ -734,11 +729,11 @@ function fillTopics () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
         } else {
           evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
+          evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
           evt.target.parentNode.lastElementChild.style['opacity'] = 0
-          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-30px'
+          evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-24px'
         }
       })
 
@@ -747,21 +742,12 @@ function fillTopics () {
       foldBottom.innerHTML = fold.innerHTML
 
       foldBottom.addEventListener('click', function (evt) {
-        if (evt.target.parentNode.classList.contains('folded')) {
-          evt.target.parentNode.children[2].style['margin-bottom'] = '12px'
-          evt.target.parentNode.classList.remove('folded')
-          evt.target.innerHTML = '&raquo;'
-          evt.target.parentNode.firstElementChild.innerHTML = '&raquo;'
-          evt.target.style['opacity'] = 1
-          evt.target.style['margin-bottom'] = '12px'
-        } else {
-          evt.target.parentNode.classList.add('folded')
-          evt.target.parentNode.children[2].style['margin-bottom'] = -(evt.target.parentNode.children[2].clientHeight + 30) + 'px'
-          evt.target.innerHTML = '&laquo;'
-          evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
-          evt.target.style['opacity'] = 0
-          evt.target.style['margin-bottom'] = '-30px'
-        }
+        evt.target.parentNode.classList.add('folded')
+        evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
+        evt.target.innerHTML = '&laquo;'
+        evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
+        evt.target.style['opacity'] = 0
+        evt.target.style['margin-bottom'] = '-24px'
       })
 
       li.appendChild(fold)
