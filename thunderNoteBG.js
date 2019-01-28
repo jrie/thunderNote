@@ -194,9 +194,12 @@ function errorHandle (error) {
 }
 
 // -------------------------------------------------------------------------------------------------------
-
 browser.alarms.onAlarm.addListener(handleAlarms)
+browser.contextMenus.create({ title: getMsg('contextMenuToggleThunderNote'), contexts: ['all'], command: "_execute_sidebar_action" })
 browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
+browser.contextMenus.create({ title: getMsg('contextMenuHighlightOn'), contexts: ['all'], onclick (info) { browser.find.highlightResults() } })
+browser.contextMenus.create({ title: getMsg('contextMenuHighlightOff'), contexts: ['all'], onclick (info) { browser.find.removeHighlighting() } })
+
 
 browser.storage.local.get().then(function (data) {
   browser.alarms.clearAll()

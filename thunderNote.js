@@ -150,7 +150,7 @@ function handleButtons (evt) {
           if (titleElements !== null && titleElements[indexStart] !== undefined) {
             titleElements[indexStart].parentNode.focus()
             titleElements[indexStart].parentNode.classList.add('highlight')
-            currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
+            currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.6))
           }
         }, 45)
       }
@@ -529,7 +529,7 @@ function fillViews () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
           setTimeout(function () {
             let currentPage = document.querySelector('.page.active')
-            currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.4))
+            currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.6))
 
             evt.target.parentNode.children[2].children[0].focus()
             evt.target.parentNode.children[2].children[0].classList.add('highlight')
@@ -670,8 +670,8 @@ function fillViews () {
       ul.appendChild(li)
     }
 
-    queryResize()
     hideContent()
+    queryResize()
   }, errorHandle)
 }
 
@@ -735,7 +735,7 @@ function fillTopics () {
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
           setTimeout(function () {
             let currentPage = document.querySelector('.page.active')
-            currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.4))
+            currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.6))
 
             evt.target.parentNode.children[2].children[0].focus()
             evt.target.parentNode.children[2].children[0].classList.add('highlight')
@@ -824,6 +824,14 @@ function fillTopics () {
               entryTitle.className = 'entryTitle'
               entryTitle.appendChild(document.createTextNode(item[0]))
               entryTitle.dataset['index'] = newsIndex++
+              entryTitle.addEventListener('click', function (evt) {
+                highlightKey = evt.target.parentNode.parentNode.parentNode.childNodes[1].firstChild.textContent
+                setTimeout(function () {
+                  browser.find.find(highlightKey).then(function (matches) {
+                    browser.find.highlightResults()
+                  })
+                }, 1200)
+              })
 
               let entryContent = document.createElement('div')
               entryContent.className = 'entryContent'
@@ -1075,12 +1083,12 @@ function handleKeyUp (evt) {
 
         titleElements[indexStart].parentNode.focus()
         titleElements[indexStart].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
+        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.6))
       }, 450)
     } else {
       titleElements[indexStart].parentNode.classList.add('highlight')
       titleElements[indexStart].parentNode.focus()
-      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
+      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.6))
     }
 
     if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
@@ -1123,12 +1131,12 @@ function handleKeyUp (evt) {
       setTimeout(function () {
         titleElements[indexStart].parentNode.classList.add('highlight')
         titleElements[indexStart].parentNode.focus()
-        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
+        currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.6))
       }, 450)
     } else {
       titleElements[indexStart].parentNode.focus()
       titleElements[indexStart].parentNode.classList.add('highlight')
-      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.4))
+      currentPage.scrollTo(0, titleElements[indexStart].parentNode.parentNode.offsetTop - (window.innerHeight * 0.6))
     }
 
     if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
@@ -1161,12 +1169,12 @@ function handleKeyUp (evt) {
         setTimeout(function () {
           titleElements[indexStart].parentNode.classList.add('highlight')
           titleElements[indexStart].parentNode.focus()
-          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
+          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.6))
         }, 450)
       } else {
         titleElements[indexStart].parentNode.focus()
         titleElements[indexStart].parentNode.classList.add('highlight')
-        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.4))
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.6))
       }
     } else if (evt.keyCode === 40) {
       // arrow down
@@ -1181,12 +1189,12 @@ function handleKeyUp (evt) {
         setTimeout(function () {
           titleElements[indexStart].parentNode.focus()
           titleElements[indexStart].parentNode.classList.add('highlight')
-          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
+          currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.6))
         }, 450)
       } else {
         titleElements[indexStart].parentNode.classList.add('highlight')
         titleElements[indexStart].parentNode.focus()
-        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.225))
+        currentPage.scrollTo(0, titleElements[indexStart].offsetTop - (window.innerHeight * 0.6))
       }
     }
 
@@ -1267,11 +1275,9 @@ browser.runtime.onMessage.addListener(handleMessage)
 // --------------------------------------------------------------------------------------------------------------------------------
 let inSingleRowMode = false
 let inHeaderOnlyMode = false
+let highlightKey = null
 
 const dayLength = 24 * 3600 * 1000.0
-
-fillKeywords()
-fillTopics()
 
 let domNodes = document.querySelectorAll('*')
 for (let item of domNodes) item.setAttribute('tabindex', -1)

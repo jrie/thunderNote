@@ -122,9 +122,21 @@
     "description": "Notification message that thunderNote is stopped."
   },
 
+  "contextMenuToggleThunderNote": {
+    "message": "Anzeigen/Verstecken der thunderNote Seitenleiste",
+    "description": "Context menu entry to open/hide thunderNote sidebar"
+  },
   "contextMenuAddKeyword": {
-    "message": "Auswahl als Schlüsselwort für thunderNote",
+    "message": "Auswahl als Schlüsselwort",
     "description": "Context menu entry to add a keyword"
+  },
+  "contextMenuHighlightOn": {
+    "message": "Hervorherbungen aktivieren",
+    "description": "Context menu entry to enable keyword highlighting"
+  },
+  "contextMenuHighlightOff": {
+    "message": "Hervorhebungen ausblenden",
+    "description": "Context menu entry to disable keyword highlighting"
   },
 
   "buttonAddURI": {

@@ -121,9 +121,21 @@
     }
   },
 
+  "contextMenuToggleThunderNote": {
+    "message": "Display/hide thunderNote sidebar",
+    "description": "Context menu entry to open/hide thunderNote sidebar"
+  },
   "contextMenuAddKeyword": {
     "message": "Add selection as keyword for thunderNote",
     "description": "Context menu entry to add a keyword"
+  },
+  "contextMenuHighlightOn": {
+    "message": "Switch highlight on",
+    "description": "Context menu entry to enable keyword highlighting"
+  },
+  "contextMenuHighlightOff": {
+    "message": "Switch highlight off",
+    "description": "Context menu entry to disable keyword highlighting"
   },
 
   "buttonAddURI": {
