@@ -109,8 +109,10 @@ function processXMLData (xmlDoc, URI) {
       }
     }
 
-    if (data['feeds'][URI][3] === undefined) data['feeds'][URI].push(refreshTime)
-    else {
+    if (data['feeds'][URI][3] === undefined) {
+      data['feeds'][URI].push(refreshTime)
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSnewTitle'), 'message': getMsg('RSSnewInformation', URI) })
+    } else {
       if (data['feeds'][URI][3] !== refreshTime) {
         if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('RSSnewTitle'), 'message': getMsg('RSSnewInformation', URI) })
       }
@@ -228,6 +230,8 @@ browser.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
       break
   }
 })
+
+// -------------------------------------------------------------------------------------------------------
 
 browser.browserAction.onClicked.addListener(function () {
   browser.sidebarAction.open()
