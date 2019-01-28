@@ -527,6 +527,13 @@ function fillViews () {
           evt.target.parentNode.lastElementChild.innerHTML = '&raquo;'
           evt.target.parentNode.lastElementChild.style['opacity'] = 1
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
+          setTimeout(function () {
+            let currentPage = document.querySelector('.page.active')
+            currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.4))
+
+            evt.target.parentNode.children[2].children[0].focus()
+            evt.target.parentNode.children[2].children[0].classList.add('highlight')
+          }, 450)
         } else {
           evt.target.parentNode.classList.add('folded')
           evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
@@ -726,6 +733,13 @@ function fillTopics () {
           evt.target.parentNode.lastElementChild.innerHTML = '&raquo;'
           evt.target.parentNode.lastElementChild.style['opacity'] = 1
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
+          setTimeout(function () {
+            let currentPage = document.querySelector('.page.active')
+            currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.4))
+
+            evt.target.parentNode.children[2].children[0].focus()
+            evt.target.parentNode.children[2].children[0].classList.add('highlight')
+          }, 450)
         } else {
           evt.target.parentNode.classList.add('folded')
           evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
