@@ -83,11 +83,11 @@ label:first-of-type {
   margin-top: 0px;
 }
 
-
 input,
 select,
 button,
-label.controlButton {
+label.controlButton,
+.controlInput {
   margin: 0px;
   padding: 8px 9px;
   max-width: 100%;
@@ -134,6 +134,7 @@ hr {
   border-bottom: none;
 }
 
+.tempHidden,
 .hidden {
   visibility: hidden;
   display: none;
