@@ -66,6 +66,10 @@
     "message": "Überschriften Modus umschalten",
     "description": "Action button to toggle header only mode on/off"
   },
+  "searchTopicsArticles": {
+    "message": "Live Suche",
+    "description": "Placeholder for search in views"
+  },
 
 
   "itemSingular": {

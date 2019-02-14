@@ -45,6 +45,11 @@
     "message": "Switch header only mode",
     "description": "Action button to toggle header only mode on/off"
   },
+  "searchTopicsArticles": {
+    "message": "Live search",
+    "description": "Placeholder for search in views"
+  },
+
 
 
 
