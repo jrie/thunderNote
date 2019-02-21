@@ -1030,40 +1030,70 @@ function navigateFeed (evt) {
   let hidden = evt.target.parentNode.querySelectorAll('.tempHidden')
   let hasHidden = hidden.length !== 0
   let next = null
+  let isSameRoot = true
 
-  if (current === null) {
+  if (current === null || current.parentNode.parentNode !== evt.target.parentNode) {
     current = evt.target.parentNode.querySelector('li')
-    currentX = -width
+    currentX = parseInt(current.parentNode.style['transform'].match(/[\d]+/))
+    let targetX = 0
+
+    if (evt.target.dataset['cmd'] === 'right') targetX = currentX + width
+    else targetX = currentX
+
+    if (targetX < 0) targetX = 0
+
+    while (targetX !== 0) {
+      if (!current.classList.contains('tempHidden')) targetX -= width
+      if (targetX === 0) break
+
+      if (current.nextSibling === null) break
+      current = current.nextSibling
+    }
+
+    isSameRoot = false
   } else {
     currentX = parseInt(current.parentNode.style['transform'].match(/[\d]+/))
     current.classList.remove('highlight')
   }
 
-  if (evt.target.dataset['cmd'] === 'right') {
-    next = current.nextSibling
+  if (isSameRoot) {
+    if (evt.target.dataset['cmd'] === 'right') {
+      next = current.nextSibling
 
-    if (hasHidden) while (next !== null && next.classList.contains('tempHidden')) next = next.nextSibling
+      if (hasHidden) while (next !== null && next.classList.contains('tempHidden')) next = next.nextSibling
 
-    if (next === null) {
-      next = childLists[0]
-      while (next !== null && next.classList.contains('tempHidden')) next = next.nextSibling
-      currentX = -width
-    }
-  } else {
-    next = current.previousSibling
-    if (hasHidden) while (next !== null && next.classList.contains('tempHidden')) next = next.previousSibling
-
-    if (next === null) {
-      next = childLists[childLists.length - 1]
+      if (next === null) {
+        next = childLists[0]
+        while (next !== null && next.classList.contains('tempHidden')) next = next.nextSibling
+        currentX = -width
+      }
+    } else {
+      next = current.previousSibling
       if (hasHidden) while (next !== null && next.classList.contains('tempHidden')) next = next.previousSibling
 
-      currentX = ((childLists.length - hidden.length) * width)
-    }
-  }
+      if (next === null) {
+        next = childLists[childLists.length - 1]
+        if (hasHidden) while (next !== null && next.classList.contains('tempHidden')) next = next.previousSibling
 
-  if (evt.target.dataset['cmd'] === 'right') currentX += width
-  else currentX -= width
-  next.parentNode.style['transform'] = 'translateX(-' + currentX.toString() + 'px)'
+        currentX = ((childLists.length - hidden.length) * width)
+      }
+    }
+
+    if (evt.target.dataset['cmd'] === 'right') currentX += width
+    else currentX -= width
+    next.parentNode.style['transform'] = 'translateX(-' + currentX.toString() + 'px)'
+
+    current.style['opacity'] = '0'
+    current.classList.remove('highlight')
+    next.style['opacity'] = '1'
+    next.classList.add('highlight')
+    next.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = childLists.length === 1 ? getMsg('itemCountSingular', [1, 1]) : getMsg('itemCountPlural', [Math.floor(currentX / width) + 1, childLists.length - hidden.length])
+  } else {
+    current.style['opacity'] = '1'
+    current.classList.add('highlight')
+    current.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = childLists.length === 1 ? getMsg('itemCountSingular', [1, 1]) : getMsg('itemCountPlural', [Math.floor(currentX / width) + 1, childLists.length - hidden.length])
+    current.parentNode.style['transform'] = 'translateX(-' + (currentX).toString() + 'px)'
+  }
 
   let currentPage = document.querySelector('.page.active')
   if (currentPage.dataset['src'] === 'viewTopics') {
@@ -1071,12 +1101,6 @@ function navigateFeed (evt) {
   } else if (currentPage.dataset['src'] === 'viewFeeds') {
     activeFeedItem = Math.floor(currentX / width)
   }
-
-  current.style['opacity'] = '0'
-  current.classList.remove('highlight')
-  next.style['opacity'] = '1'
-  next.classList.add('highlight')
-  next.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = childLists.length === 1 ? getMsg('itemCountSingular', [1, 1]) : getMsg('itemCountPlural', [Math.floor(currentX / width) + 1, childLists.length - hidden.length])
 }
 
 function handleKeyUp (evt) {
