@@ -30,9 +30,7 @@ function handleRSS (URI) {
           xml = xmlParser.parseFromString(evt.target.response, 'text/xml')
         }
 
-        if (processXMLData(xml, URI)) {
-          return
-        }
+        if (processXMLData(xml, URI)) return
       }
 
       browser.storage.local.get('addon').then(function (data) {
@@ -98,15 +96,15 @@ function processXMLData (xmlDoc, URI) {
       }
 
       if (data['feedData'][URI][link] === undefined) {
-        if (mediaMatch === null || mediaMatch[1] === undefined) data['feedData'][URI][link] = [title, time, description, link, null]
-        else data['feedData'][URI][link] = [title, time, description, link, time, mediaMatch[1]]
+        data['feedData'][URI][link] = [title, time, description, link, time, null]
       } else {
         data['feedData'][URI][link][0] = title
         data['feedData'][URI][link][1] = time
         data['feedData'][URI][link][2] = description
         data['feedData'][URI][link][3] = link
-        if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][4] = mediaMatch[1]
       }
+
+      if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][4] = mediaMatch[1]
     }
 
     if (data['feeds'][URI][3] === undefined) {
@@ -195,15 +193,15 @@ function errorHandle (error) {
 
 // -------------------------------------------------------------------------------------------------------
 browser.alarms.onAlarm.addListener(handleAlarms)
-browser.contextMenus.create({ title: getMsg('contextMenuToggleThunderNote'), contexts: ['all'], command: "_execute_sidebar_action" })
+browser.contextMenus.create({ title: getMsg('contextMenuToggleThunderNote'), contexts: ['all'], command: '_execute_sidebar_action' })
 browser.contextMenus.create({ title: getMsg('contextMenuAddKeyword'), contexts: ['link', 'selection'], onclick (info) { browser.storage.local.get('keywords').then(function (data) { addKeyword(data, info) }, errorHandle) } })
 browser.contextMenus.create({ title: getMsg('contextMenuHighlightOn'), contexts: ['all'], onclick (info) { browser.find.highlightResults() } })
 browser.contextMenus.create({ title: getMsg('contextMenuHighlightOff'), contexts: ['all'], onclick (info) { browser.find.removeHighlighting() } })
 
-
 browser.storage.local.get().then(function (data) {
   browser.alarms.clearAll()
   if (data['feedData'] === undefined) data['feedData'] = {}
+  if (data['feeds'] === undefined) return
 
   for (let url of Object.keys(data['feeds'])) {
     if (data['feedData'][url] === undefined) data['feedData'][url] = {}
@@ -212,7 +210,6 @@ browser.storage.local.get().then(function (data) {
   browser.storage.local.set(data)
 
   if ((data['addon'] === undefined || data['addon']['status'] === undefined) || data['addon']['status'] === 'enabled') {
-    if (data['feeds'] === undefined) return
     for (let url of Object.keys(data['feeds'])) {
       browser.alarms.create(url, { 'when': Date.now() + 3000, 'periodInMinutes': data['feeds'][url][1] })
     }
