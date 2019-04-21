@@ -1,6 +1,6 @@
 {
   "AddonDescription": {
-    "message": "A slick RSS feed and news client inside Firefox."
+    "message": "A slick RSS2 feed and news client inside Firefox."
   },
   "ShortcutSidebar": {
     "message": "Quickly open the sidebar by pressing Ctrl + Shift + B",
