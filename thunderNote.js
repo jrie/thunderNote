@@ -156,7 +156,6 @@ function handleButtons (evt) {
         }, 45)
       }
 
-
       if (activePage.dataset['src'] === 'viewTopics') fillTopics()
       else if (activePage.dataset['src'] === 'viewFeeds') fillViews()
 
@@ -177,7 +176,7 @@ function handleButtons (evt) {
   let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
   let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
-  //document.removeEventListener('keyup', handleKeyUp)
+  // document.removeEventListener('keyup', handleKeyUp)
   document.removeEventListener('keydown', handleKeyUp)
 
   let focusNode = null
@@ -278,7 +277,7 @@ function handleButtons (evt) {
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
       document.addEventListener('keydown', handleKeyUp)
-      //document.addEventListener('keyup', handleKeyUp)
+      // document.addEventListener('keyup', handleKeyUp)
       break
     case 'viewFeeds':
       fillViews()
@@ -286,7 +285,7 @@ function handleButtons (evt) {
       document.querySelector('.headerControl').classList.add('inactive')
       document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
       focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
-      //document.addEventListener('keyup', handleKeyUp)
+      // document.addEventListener('keyup', handleKeyUp)
       document.addEventListener('keydown', handleKeyUp)
       break
     case 'displayOptions':
@@ -715,8 +714,6 @@ function fillTopics () {
 
     let sortedTopics = Object.keys(data['keywords']['cnt']).sort()
     let now = Date.now()
-    let newsIndex = 0
-
     let imagesAllowed = data['addon']['images'] === 'enabled'
 
     for (let keyword of sortedTopics) {
@@ -911,7 +908,7 @@ function queryResize (evt) {
       subList.style['overflow'] = 'hidden'
       subList.style['opacity'] = '1'
       subList.style['transform'] = 'translateX(0px)'
-      let num = 0
+
       for (let element of subList.children) {
         element.style['width'] = inititialWidth + 'px'
         element.style['float'] = 'left'
@@ -954,7 +951,7 @@ function handleMessage (message) {
       data['keywords']['cnt'][message['addKeyword']] = 0
       data['keywords']['urls'][message['addKeyword']] = {}
       browser.storage.local.set(data)
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
+      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
     }, errorHandle)
 
     browser.storage.local.get('addon').then(function (data) {
@@ -1311,7 +1308,6 @@ function handleKeyUp (evt) {
         ++indexStart
       }
     }
-
 
     if (evt.keyCode === 38) {
       // arrow up
