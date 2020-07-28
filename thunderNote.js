@@ -1105,15 +1105,53 @@ function handleKeyUp (evt) {
     return
   }
 
-  if (inSingleRowMode && (evt.keyCode === 39 || (evt.keyCode === 9 && !evt.shiftKey))) {
-    // Arrow right
-    evt.preventDefault()
-    evt.target.parentNode.querySelector('.slideButton.right').click()
+  if (evt.altKey) {
+    let currentPage = document.querySelector('.page.active')
+    let current = currentPage.querySelector('.highlight a.entryTitle')
+    if (current === null) current = currentPage.querySelector('a.entryTitle')
 
-  } else if (inSingleRowMode && (evt.keyCode === 37 || (evt.keyCode === 9 && evt.shiftKey))) {
-    // Arrow left
-    evt.preventDefault()
-    evt.target.parentNode.querySelector('.slideButton.left').click()
+    if (evt.keyCode === 33) {
+      // Page up
+      let prevNews = current.parentNode.parentNode.parentNode.previousSibling
+      if (prevNews !== null) {
+        current.parentNode.classList.remove('highlight')
+        current = prevNews.querySelector('a.entryTitle')
+        current.parentNode.classList.add('highlight')
+        current.parentNode.focus()
+        current.parentNode.click()
+        currentPage.scrollTo(0, current.offsetTop - (window.innerHeight * 0.425))
+      }
+
+      return
+
+    } else if (evt.keyCode === 34) {
+      // Page down
+      let nextNews = current.parentNode.parentNode.parentNode.nextSibling
+      if (nextNews !== null) {
+        current.parentNode.classList.remove('highlight')
+        current = nextNews.querySelector('a.entryTitle')
+        current.parentNode.classList.add('highlight')
+        current.parentNode.focus()
+        current.parentNode.click()
+        currentPage.scrollTo(0, current.offsetTop - (window.innerHeight * 0.425))
+      }
+
+      return
+    }
+  }
+
+  if (inSingleRowMode) {
+    if (evt.keyCode === 39 || (evt.keyCode === 9 && !evt.shiftKey)) {
+      // Arrow right
+      evt.preventDefault()
+      evt.target.parentNode.querySelector('.slideButton.right').click()
+      return
+    } else if (evt.keyCode === 37 || (evt.keyCode === 9 && evt.shiftKey)) {
+      // Arrow left
+      evt.preventDefault()
+      evt.target.parentNode.querySelector('.slideButton.left').click()
+      return
+    }
   }
 
   if (!inSingleRowMode && evt.altKey) {
