@@ -1,5 +1,5 @@
 ![thunderNote Logo](https://www.picflash.org/img/2019/01/14/m9gr45u7t1hi6rk.png "thunderNote Logo")
- 
+
 # thunderNote
 Staying on top of news with *thunderNote* RSS feed client browser add-on.
 
@@ -14,9 +14,9 @@ https://dwrox.net/demo.webm
 * Display images via default or disable pictures alltogether
 * Add keywords using ***Add new keyword*** from the context menu once text or a link is selected.
 * Shows notifications, which can be disabled
-* Shortcut **Ctrl + Shift + B** opens/close the sidebar
-* Shortcut **Alt + Arrow up/down** to navigate up/down in news views.
-* Shortcut **Arrow left/right** to navigate forwards and backwars in news feeds when **Reader mode** is active
+* Shortcut `Ctrl + Shift + B` opens/close the sidebar
+* Shortcut `Alt + Arrow up/down` to navigate up/down in news views.
+* Shortcut `Arrow left/right` to navigate forwards and backwards in news feeds when **Single reader mode** is active
 
 ## Installation and testing
 **Firefox addon** page: https://addons.mozilla.org/en-US/firefox/addon/thundernote
