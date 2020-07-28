@@ -336,7 +336,7 @@
     "description": "Notifications body animations display enabled"
   },
   "optionsBodyAnimationsDisabled": {
-    "message": "thunderNote Animation deaktiviert",
+    "message": "thunderNote Animationen deaktiviert",
     "description": "Notifications body animations display disabled"
   },
 
@@ -362,7 +362,7 @@
     "description": "Button export addon data"
   },
   "importAddonData": {
-    "message": "Einstellunge und Daten importieren",
+    "message": "Einstellungen und Daten importieren",
     "description": "Button import addon data"
   },
   "settingsExportedTitle": {
