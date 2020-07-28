@@ -24,8 +24,8 @@ https://dwrox.net/demo.webm
 For testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary addon"** and then select ***manifest.json*** from ***thunderNote***.
 
 ## Usage
-1. Open the main sidebar by pressing ***Ctrl + Shift + B*** or using the main menu *View* -> *Sidebar* -> ***thunderNote***
-2. **Add keywords** of interesting topics to look out for, for example *EU* *Sport* or *Europa* either by entering or using the context menu on a text selection
-3. **Add a feed url**, for example: **http://www.tagesschau.de/xml/rss2** for the German **Tagesschau.de RSS feed** with a check of 1 to 15 minutes.
-4. Select **view feeds** to view the whole feed *or* Select **view topics**  after the feed got downloaded to look out a selection by keywords
+1. Open the main sidebar by pressing `Ctrl + Shift + B` or using the main menu `View` -> `Sidebar` -> `thunderNote`
+2. `Add keywords` of interesting topics to look out for, for example *EU* *Sport* or *Europa* either by entering or using the context menu on a text selection
+3. `Add a feed url`, for example: `http://www.tagesschau.de/xml/rss2` for the German **Tagesschau RSS feed** with a check of 1 to 15 minutes.
+4. Select `view feeds` to view the whole feed *or* Select `view topics`  after the feed got downloaded to look out a selection by keywords
 5. Enjoy reading news.
