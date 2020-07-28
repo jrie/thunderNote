@@ -90,21 +90,23 @@ function processXMLData (xmlDoc, URI) {
 
       if (refreshTime === 0 || refreshTime < time) refreshTime = time
 
-      let mediaMatch = null
-      if (item['encoded'] !== undefined) {
-        mediaMatch = item['encoded'].toString().match(/img.*src=["']((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
-      }
-
       if (data['feedData'][URI][link] === undefined) {
-        data['feedData'][URI][link] = [title, time, description, link, time, null]
+        data['feedData'][URI][link] = [title, time, description, link, null]
       } else {
         data['feedData'][URI][link][0] = title
         data['feedData'][URI][link][1] = time
         data['feedData'][URI][link][2] = description
         data['feedData'][URI][link][3] = link
+        data['feedData'][URI][link][4] = null
       }
 
-      if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][4] = mediaMatch[1]
+      let mediaMatch = null
+      if (item['enclosure'] !== undefined) {
+        if (item['enclosure']['_url'] !== undefined) data['feedData'][URI][link][4] = item['enclosure']['_url']
+      } else if (item['encoded'] !== undefined) {
+        mediaMatch = item['encoded'].toString().match(/img.*src=["']((http|https):\/\/.*\.(jpg|jpeg|png|gif|webm|mp4|tiff))/i)
+        if (mediaMatch !== null && mediaMatch[1] !== undefined) data['feedData'][URI][link][4] = mediaMatch[1]
+      }
     }
 
     if (data['feeds'][URI][3] === undefined) {
