@@ -16,6 +16,7 @@ https://dwrox.net/demo.webm
 * Shows notifications, which can be disabled
 * Shortcut `Ctrl + Shift + B` opens/close the sidebar
 * Shortcut `Alt + Arrow up/down` to navigate up/down in news views.
+* Shortcut `Alt + Page up/ Page down` to navigate through feeds
 * Shortcut `Arrow left/right` to navigate forwards and backwards in news feeds when **Single reader mode** is active
 
 ## Installation and testing
