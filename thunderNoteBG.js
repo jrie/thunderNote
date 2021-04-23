@@ -238,5 +238,5 @@ browser.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
 // -------------------------------------------------------------------------------------------------------
 
 browser.browserAction.onClicked.addListener(function () {
-  browser.sidebarAction.open()
+  browser.sidebarAction.toggle()
 })

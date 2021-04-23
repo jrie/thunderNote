@@ -1,7 +1,7 @@
 {
   "applications": {
     "gecko": {
-      "strict_min_version": "56.0"
+      "strict_min_version": "57.0"
     }
   },
   "developer": {
@@ -42,13 +42,5 @@
       "libs/x2js/xml2json.min.js",
       "thunderNoteBG.js"
     ]
-  },
-  "commands": {
-    "_execute_sidebar_action": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+B"
-      },
-      "description": "__MSG_ShortcutSidebar__"
-    }
   }
 }
