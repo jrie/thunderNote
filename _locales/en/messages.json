@@ -2,11 +2,6 @@
   "AddonDescription": {
     "message": "A slick RSS2 feed and news client inside Firefox."
   },
-  "ShortcutSidebar": {
-    "message": "Quickly open the sidebar by pressing Ctrl + Shift + B",
-    "description": "Text for keyboard shortcut to active or deactivate the sidebar"
-  },
-
 
   "thunderNoteEnable": {
     "message": "thunderNote active",
