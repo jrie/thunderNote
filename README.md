@@ -14,10 +14,8 @@ https://dwrox.net/demo.webm
 * Display images via default or disable pictures alltogether
 * Add keywords using ***Add new keyword*** from the context menu once text or a link is selected.
 * Shows notifications, which can be disabled
-* Shortcut `Ctrl + Shift + B` opens/close the sidebar
-* Shortcut `Alt + Arrow up/down` to navigate up/down in news views.
-* Shortcut `Alt + Page up/ Page down` to navigate through feeds
 * Shortcut `Arrow left/right` to navigate forwards and backwards in news feeds when **Single reader mode** is active
+* Allow export and import of settings and feed data
 
 ## Installation and testing
 **Firefox addon** page: https://addons.mozilla.org/en-US/firefox/addon/thundernote
@@ -25,7 +23,7 @@ https://dwrox.net/demo.webm
 For testing in **Firefox**: Open **"about:debugging"**, select **"Load temporary addon"** and then select ***manifest.json*** from ***thunderNote***.
 
 ## Usage
-1. Open the main sidebar by pressing `Ctrl + Shift + B` or using the main menu `View` -> `Sidebar` -> `thunderNote`
+1. Open the Thundernote by clicking on the thunderbold icon in your addon bar
 2. `Add keywords` of interesting topics to look out for, for example *EU* *Sport* or *Europa* either by entering or using the context menu on a text selection
 3. `Add a feed url`, for example: `http://www.tagesschau.de/xml/rss2` for the German **Tagesschau RSS feed** with a check of 1 to 15 minutes.
 4. Select `view feeds` to view the whole feed *or* Select `view topics`  after the feed got downloaded to look out a selection by keywords
