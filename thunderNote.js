@@ -5,27 +5,27 @@ function getFirefoxMessage (messageName, params) {
   return browser.i18n.getMessage(messageName)
 }
 
-let getMsg = getFirefoxMessage
+const getMsg = getFirefoxMessage
 
 // -------------------------------------------------------------------------------------------------------
 
 function generateZip (rawData) {
-  let data = JSON.stringify(rawData)
-  let zip = new JSZip()
+  const data = JSON.stringify(rawData)
+  const zip = new JSZip()
   zip.file('thunderNote.json', data)
 
-  zip.generateAsync({ 'type': 'blob' }).then(function (blob) {
-    let dlLink = document.createElement('a')
+  zip.generateAsync({ type: 'blob' }).then(function (blob) {
+    const dlLink = document.createElement('a')
     dlLink.href = URL.createObjectURL(blob)
 
-    let dateObj = new Date()
+    const dateObj = new Date()
     dlLink.download = 'thunderNote_' + dateObj.getFullYear().toString() + '-' + (dateObj.getMonth() + 1).toString() + '-' + dateObj.getDate().toString() + '.zip'
     document.body.appendChild(dlLink)
     dlLink.click()
     dlLink.parentNode.removeChild(dlLink)
     URL.revokeObjectURL(dlLink.href)
 
-    if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('settingsExportedTitle'), 'message': getMsg('settingsExportedBody') })
+    if (rawData.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('settingsExportedTitle'), message: getMsg('settingsExportedBody') })
   })
 }
 
@@ -38,54 +38,70 @@ function exportSettings () {
 function importSettings (evt) {
   if (evt.target.files[0] === undefined) return
 
-  let file = evt.target.files[0]
+  const file = evt.target.files[0]
 
   JSZip.loadAsync(file).then(function (zip) {
     if (zip.files['thunderNote.json'] === undefined) return
 
     zip.files['thunderNote.json'].async('string').then(async function (stringData) {
-      let importData = JSON.parse(stringData)
+      const importData = JSON.parse(stringData)
+
       browser.storage.local.get().then(function (data) {
-        if (importData['addon'] !== undefined) {
-          if (data['addon'] === undefined) data['addon'] = {}
+        if (importData.addon !== undefined) {
+          if (data.addon === undefined) data.addon = {}
 
-          for (let key of Object.keys(importData['addon'])) {
-            if (data['addon'][key] === undefined) data['addon'][key] = importData['addon'][key]
+          for (const key of Object.keys(importData.addon)) {
+            data.addon[key] = importData.addon[key]
+          }
+
+          if (data.addon.images === 'enabled') document.querySelector('#switchImages').value = 'enabled'
+          else document.querySelector('#switchImages').value = 'disabled'
+          document.querySelector('#switchImages').dispatchEvent(new Event('change'))
+
+          if (data.addon.animations === 'enabled') document.querySelector('#switchAnimations').value = 'enabled'
+          else document.querySelector('#switchAnimations').value = 'disabled'
+          document.querySelector('#switchAnimations').dispatchEvent(new Event('change'))
+
+          if (data.addon.notifications === 'enabled') document.querySelector('#switchNotifications').value = 'enabled'
+          else document.querySelector('#switchNotifications').value = 'disabled'
+          document.querySelector('#switchNotifications').dispatchEvent(new Event('change'))
+
+          if (data.addon.status === 'enabled') document.querySelector('#setThunderNoteState').value = 'enabled'
+          else document.querySelector('#setThunderNoteState').value = 'disabled'
+          document.querySelector('#setThunderNoteState').dispatchEvent(new Event('change'))
+        }
+
+        if (importData.feeds !== undefined) {
+          if (data.feeds === undefined) data.feeds = {}
+
+          for (const key of Object.keys(importData.feeds)) {
+            data.feeds[key] = importData.feeds[key]
           }
         }
 
-        if (importData['feeds'] !== undefined) {
-          if (data['feeds'] === undefined) data['feeds'] = {}
+        if (importData.feedData !== undefined) {
+          if (data.feedData === undefined) data.feedData = {}
 
-          for (let key of Object.keys(importData['feeds'])) {
-            if (data['feeds'][key] === undefined) data['feeds'][key] = importData['feeds'][key]
-          }
-        }
-
-        if (importData['feedData'] !== undefined) {
-          if (data['feedData'] === undefined) data['feedData'] = {}
-
-          for (let key of Object.keys(importData['feedData'])) {
-            if (data['feedData'][key] === undefined) data['feedData'][key] = importData['feedData'][key]
+          for (const key of Object.keys(importData.feedData)) {
+            if (data.feedData[key] === undefined) data.feedData[key] = importData.feedData[key]
             else {
-              for (let news of Object.keys(importData['feedData'][key])) {
-                if (data['feedData'][key][news] === undefined) data['feedData'][key][news] = importData['feedData'][key][news]
+              for (const news of Object.keys(importData.feedData[key])) {
+                if (data.feedData[key][news] === undefined) data.feedData[key][news] = importData.feedData[key][news]
               }
             }
           }
         }
 
-        if (importData['keywords'] !== undefined) {
-          if (data['keywords'] === undefined) data['keywords'] = {}
+        if (importData.keywords !== undefined) {
+          if (data.keywords === undefined) data.keywords = {}
 
-          for (let key of Object.keys(importData['keywords'])) {
-            if (data['keywords'][key] === undefined) data['keywords'][key] = importData['keywords'][key]
+          for (const key of Object.keys(importData.keywords)) {
+            if (data.keywords[key] === undefined) data.keywords[key] = importData.keywords[key]
           }
         }
 
         browser.storage.local.set(data)
-
-        if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('settingsImportedTitle'), 'message': getMsg('settingsImportedBody') })
+        browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('settingsImportedTitle'), message: getMsg('settingsImportedBody') })
       })
     })
   })
@@ -102,7 +118,7 @@ function isEnabled () {
 
 function setFocus (element) {
   browser.storage.local.get('addon').then(function (data) {
-    if (data['addon']['animations'] === 'enabled') {
+    if (data.addon.animations === 'enabled') {
       setTimeout(function () { document.querySelector(element).focus() }, 700)
     } else document.querySelector(element).focus()
   })
@@ -111,15 +127,18 @@ function setFocus (element) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function hideContent () {
-  let items = document.querySelectorAll('.page.active ul.subList .entryContent')
-  if (inHeaderOnlyMode) for (let item of items) item.classList.add('subHidden')
-  else for (let item of items) item.classList.remove('subHidden')
+  const items = document.querySelectorAll('.page.active ul.subList .entryContent')
+  if (inHeaderOnlyMode) for (const item of items) item.classList.add('subHidden')
+  else for (const item of items) item.classList.remove('subHidden')
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function handleButtons (evt) {
-  switch (evt.target.dataset['cmd']) {
+  let activePage = ''
+  let indexStart = -1
+
+  switch (evt.target.dataset.cmd) {
     case 'importAddonData':
       return
     case 'exportAddonData':
@@ -129,15 +148,15 @@ function handleButtons (evt) {
       activeNews = 0
       activeFeedItem = 0
       inSingleRowMode = !inSingleRowMode
-      if (inSingleRowMode === false) for (let item of document.querySelectorAll('.singleRow')) item.classList.remove('singleRow')
+      if (inSingleRowMode === false) for (const item of document.querySelectorAll('.singleRow')) item.classList.remove('singleRow')
 
-      let activePage = document.querySelector('.page.active')
+      activePage = document.querySelector('.page.active')
 
-      let indexStart = -1
-      if (activePage.dataset['src'] === 'viewTopics') {
+      indexStart = -1
+      if (activePage.dataset.src === 'viewTopics') {
         fillTopics()
         indexStart = activeNews
-      } else if (activePage.dataset['src'] === 'viewFeeds') {
+      } else if (activePage.dataset.src === 'viewFeeds') {
         fillViews()
         indexStart = activeFeedItem
       }
@@ -145,8 +164,8 @@ function handleButtons (evt) {
       if (indexStart !== -1) {
         queryResize()
         setTimeout(function () {
-          let currentPage = document.querySelector('.page.active')
-          let titleElements = document.querySelectorAll('.page.active a.entryTitle')
+          const currentPage = document.querySelector('.page.active')
+          const titleElements = document.querySelectorAll('.page.active a.entryTitle')
 
           if (titleElements !== null && titleElements[indexStart] !== undefined) {
             titleElements[indexStart].parentNode.parentNode.focus()
@@ -156,8 +175,8 @@ function handleButtons (evt) {
         }, 45)
       }
 
-      if (activePage.dataset['src'] === 'viewTopics') fillTopics()
-      else if (activePage.dataset['src'] === 'viewFeeds') fillViews()
+      if (activePage.dataset.src === 'viewTopics') fillTopics()
+      else if (activePage.dataset.src === 'viewFeeds') fillViews()
 
       return
     case 'switchHeaderViewMode':
@@ -170,20 +189,24 @@ function handleButtons (evt) {
 
   document.querySelector('.headerControl').classList.remove('inactive')
 
-  for (let page of document.querySelectorAll('.page')) page.classList.remove('active')
+  for (const page of document.querySelectorAll('.page')) page.classList.remove('active')
 
-  let addButton = document.querySelector('.controlButton[data-cmd="add"]')
-  let removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
-  let forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
+  const addButton = document.querySelector('.controlButton[data-cmd="add"]')
+  const removalButton = document.querySelector('.controlButton[data-cmd="removeFeed"]')
+  const forceUpdateButton = document.querySelector('.controlButton[data-cmd="forceUpdate"]')
 
   // document.removeEventListener('keyup', handleKeyUp)
   document.removeEventListener('keydown', handleKeyUp)
 
   let focusNode = null
+  let url = ''
+  let type = ''
+  let crawlTime = 0
+  let maxAge = 0
 
-  switch (evt.target.dataset['cmd']) {
+  switch (evt.target.dataset.cmd) {
     case 'addItem':
-      if (evt.target.dataset['url'] === undefined) {
+      if (evt.target.dataset.url === undefined) {
         document.querySelector('#feedURI').value = ''
         document.querySelector('#feedType').value = 'rss'
         document.querySelector('#feedInterval').value = ''
@@ -193,37 +216,37 @@ function handleButtons (evt) {
         forceUpdateButton.classList.add('hidden')
 
         addButton.textContent = getMsg('buttonAddURI')
-        addButton.dataset['srcUrl'] = ''
+        addButton.dataset.srcUrl = ''
       } else {
-        document.querySelector('#feedURI').value = evt.target.dataset['url']
+        document.querySelector('#feedURI').value = evt.target.dataset.url
 
         browser.storage.local.get('feeds').then(function (data) {
-          let url = document.querySelector('#feedURI').value
-          document.querySelector('#feedType').value = data['feeds'][url][0]
-          document.querySelector('#feedInterval').value = data['feeds'][url][1]
-          document.querySelector('#feedMaxAge').value = data['feeds'][url][2]
+          const url = document.querySelector('#feedURI').value
+          document.querySelector('#feedType').value = data.feeds[url][0]
+          document.querySelector('#feedInterval').value = data.feeds[url][1]
+          document.querySelector('#feedMaxAge').value = data.feeds[url][2]
         })
 
-        removalButton.dataset['url'] = evt.target.dataset['url']
-        forceUpdateButton.dataset['url'] = evt.target.dataset['url']
+        removalButton.dataset.url = evt.target.dataset.url
+        forceUpdateButton.dataset.url = evt.target.dataset.url
 
         removalButton.classList.remove('hidden')
         forceUpdateButton.classList.remove('hidden')
 
         addButton.textContent = getMsg('buttonUpdateURI')
-        addButton.dataset['srcUrl'] = evt.target.dataset['url']
-        for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
+        addButton.dataset.srcUrl = evt.target.dataset.url
+        for (const item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
       }
 
-      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      document.querySelector('.page[data-src="' + evt.target.dataset.cmd + '"').classList.add('active')
       document.querySelector('.headerControl').classList.add('inactive')
       focusNode = '#feedURI'
       break
     case 'add':
-      let url = document.querySelector('#feedURI').value
-      let type = document.querySelector('#feedType').value
-      let crawlTime = parseInt(document.querySelector('#feedInterval').value)
-      let maxAge = parseInt(document.querySelector('#feedMaxAge').value)
+      url = document.querySelector('#feedURI').value
+      type = document.querySelector('#feedType').value
+      crawlTime = parseInt(document.querySelector('#feedInterval').value)
+      maxAge = parseInt(document.querySelector('#feedMaxAge').value)
 
       if (isNaN(maxAge)) maxAge = 0
 
@@ -234,26 +257,26 @@ function handleButtons (evt) {
       }
 
       browser.storage.local.get().then(function (data) {
-        if (data['feeds'] === undefined) data['feeds'] = {}
+        if (data.feeds === undefined) data.feeds = {}
 
-        let srcUrl = evt.target.dataset['srcUrl']
+        const srcUrl = evt.target.dataset.srcUrl
         if (srcUrl.length !== 0 && srcUrl !== url) {
           browser.alarms.clear(srcUrl)
 
-          if (data['feeds'][srcUrl] !== undefined) {
-            delete data['feeds'][srcUrl]
+          if (data.feeds[srcUrl] !== undefined) {
+            delete data.feeds[srcUrl]
 
-            data['feedData'][url] = data['feedData'][srcUrl]
-            delete data['feedData'][srcUrl]
+            data.feedData[url] = data.feedData[srcUrl]
+            delete data.feedData[srcUrl]
           }
 
-          evt.target.dataset['srcUrl'] = ''
+          evt.target.dataset.srcUrl = ''
         }
 
         browser.alarms.clear(url)
-        data['feeds'][url] = [type, crawlTime, maxAge, 0]
+        data.feeds[url] = [type, crawlTime, maxAge, 0]
         browser.storage.local.set(data).then(function () {
-          if (isEnabled()) browser.alarms.create(url, { 'when': Date.now() + 150, 'periodInMinutes': crawlTime })
+          if (isEnabled()) browser.alarms.create(url, { when: Date.now() + 150, periodInMinutes: crawlTime })
         })
       }, errorHandle)
       break
@@ -261,21 +284,21 @@ function handleButtons (evt) {
     case 'manageURIs':
       fillURIs()
       document.querySelector('.headerControl').classList.add('inactive')
-      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
-      focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
+      document.querySelector('.page[data-src="' + evt.target.dataset.cmd + '"').classList.add('active')
+      focusNode = '.page[data-src="' + evt.target.dataset.cmd + '"'
       break
     case 'manageKeywords':
       fillKeywords()
       document.querySelector('.headerControl').classList.add('inactive')
-      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      document.querySelector('.page[data-src="' + evt.target.dataset.cmd + '"').classList.add('active')
       focusNode = '#addKeywordInput'
       break
     case 'viewTopics':
       fillTopics()
       activeNews = 0
       document.querySelector('.headerControl').classList.add('inactive')
-      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
-      focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
+      document.querySelector('.page[data-src="' + evt.target.dataset.cmd + '"').classList.add('active')
+      focusNode = '.page[data-src="' + evt.target.dataset.cmd + '"'
       document.addEventListener('keydown', handleKeyUp)
       // document.addEventListener('keyup', handleKeyUp)
       break
@@ -283,41 +306,41 @@ function handleButtons (evt) {
       fillViews()
       activeFeedItem = 0
       document.querySelector('.headerControl').classList.add('inactive')
-      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
-      focusNode = '.page[data-src="' + evt.target.dataset['cmd'] + '"'
+      document.querySelector('.page[data-src="' + evt.target.dataset.cmd + '"').classList.add('active')
+      focusNode = '.page[data-src="' + evt.target.dataset.cmd + '"'
       // document.addEventListener('keyup', handleKeyUp)
       document.addEventListener('keydown', handleKeyUp)
       break
     case 'displayOptions':
       document.querySelector('.headerControl').classList.add('inactive')
-      document.querySelector('.page[data-src="' + evt.target.dataset['cmd'] + '"').classList.add('active')
+      document.querySelector('.page[data-src="' + evt.target.dataset.cmd + '"').classList.add('active')
       break
     default:
       break
   }
 
-  let domNodes = document.querySelectorAll('*')
-  for (let item of domNodes) item.setAttribute('tabindex', -1)
+  const domNodes = document.querySelectorAll('*')
+  for (const item of domNodes) item.setAttribute('tabindex', -1)
 
-  let activePage = document.querySelector('.page.active')
+  activePage = document.querySelector('.page.active')
 
   let tabIndex = 1
   if (activePage !== null) {
-    browser.sidebarAction.setTitle({ 'title': document.querySelector('.headerControl h2').textContent + ': ' + activePage.querySelector('h2').textContent })
-    for (let child of activePage.children) {
+    browser.sidebarAction.setTitle({ title: document.querySelector('.headerControl h2').textContent + ': ' + activePage.querySelector('h2').textContent })
+    for (const child of activePage.children) {
       if ((child.nodeName === 'BUTTON' && child.className !== 'backButton') || child.nodeName === 'INPUT' || child.nodeName === 'SELECT') child.setAttribute('tabindex', tabIndex++)
     }
   } else {
-    for (let child of document.querySelector('.headerControl').children) child.setAttribute('tabindex', tabIndex++)
-    browser.sidebarAction.setTitle({ 'title': document.querySelector('.headerControl h2').textContent })
+    for (const child of document.querySelector('.headerControl').children) child.setAttribute('tabindex', tabIndex++)
+    browser.sidebarAction.setTitle({ title: document.querySelector('.headerControl h2').textContent })
   }
 
   if (focusNode !== null) setFocus(focusNode)
 
   if (evt.target.className === 'backButton' || !document.querySelector('.headerControl').classList.contains('inactive')) {
     browser.storage.local.get('addon').then(function (data) {
-      if (data['addon']['animations'] !== 'enabled') for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
-      else setTimeout(function () { for (let item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden') }, 750)
+      if (data.addon.animations !== 'enabled') for (const item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden')
+      else setTimeout(function () { for (const item of document.querySelectorAll('.inititalHidden')) item.classList.add('hidden') }, 750)
     })
   }
 }
@@ -332,15 +355,15 @@ function errorHandle (error) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function removeFeed (evt) {
-  let feedURI = evt.target.dataset['url']
+  const feedURI = evt.target.dataset.url
   browser.storage.local.get().then(function (data) {
-    if (data['feeds'] !== undefined && data['feeds'][feedURI] !== undefined) {
+    if (data.feeds !== undefined && data.feeds[feedURI] !== undefined) {
       browser.alarms.clear(feedURI)
 
-      delete data['feeds'][feedURI]
-      delete data['feedData'][feedURI]
+      delete data.feeds[feedURI]
+      delete data.feedData[feedURI]
 
-      if (Object.keys(data['feeds']).length === 0) {
+      if (Object.keys(data.feeds).length === 0) {
         browser.storage.local.remove(['feeds', 'feedData'])
       } else browser.storage.local.set(data).then(fillURIs, errorHandle)
     }
@@ -351,11 +374,11 @@ function removeFeed (evt) {
 
 function forceUpdate (evt) {
   browser.storage.local.get('feeds').then(function (data) {
-    if (data['feeds'] !== undefined) {
-      let feedURI = evt.target.dataset['url']
-      if (data['feeds'][feedURI] !== undefined) {
+    if (data.feeds !== undefined) {
+      const feedURI = evt.target.dataset.url
+      if (data.feeds[feedURI] !== undefined) {
         browser.alarms.clear(feedURI)
-        browser.alarms.create(feedURI, { 'when': Date.now() + 150, 'periodInMinutes': data['feeds'][feedURI][1] })
+        browser.alarms.create(feedURI, { when: Date.now() + 150, periodInMinutes: data.feeds[feedURI][1] })
       }
     }
   }, errorHandle)
@@ -365,11 +388,11 @@ function forceUpdate (evt) {
 
 function forceUpdateAll (evt) {
   browser.storage.local.get('feeds').then(function (data) {
-    if (data['feeds'] !== undefined) {
+    if (data.feeds !== undefined) {
       browser.alarms.clearAll()
       let updateSchedule = 0
-      for (let feedURI of Object.keys(data['feeds'])) {
-        browser.alarms.create(feedURI, { 'when': Date.now() + (updateSchedule * 1000), 'periodInMinutes': data['feeds'][feedURI][1] })
+      for (const feedURI of Object.keys(data.feeds)) {
+        browser.alarms.create(feedURI, { when: Date.now() + (updateSchedule * 1000), periodInMinutes: data.feeds[feedURI][1] })
         ++updateSchedule
       }
     }
@@ -385,11 +408,11 @@ function removeChildren (element) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function removeKeyword (evt) {
-  let feedKeyword = evt.target.dataset['key']
+  const feedKeyword = evt.target.dataset.key
   browser.storage.local.get('keywords').then(function (data) {
-    if (data['keywords'] !== undefined && data['keywords']['cnt'][feedKeyword] !== undefined) {
-      delete data['keywords']['cnt'][feedKeyword]
-      delete data['keywords']['urls'][feedKeyword]
+    if (data.keywords !== undefined && data.keywords.cnt[feedKeyword] !== undefined) {
+      delete data.keywords.cnt[feedKeyword]
+      delete data.keywords.urls[feedKeyword]
       browser.storage.local.set(data).then(fillKeywords, errorHandle)
       document.querySelector('#addKeywordInput').focus()
     }
@@ -400,14 +423,14 @@ function removeKeyword (evt) {
 
 function fillURIs () {
   browser.storage.local.get('feeds').then(function (data) {
-    let ul = document.querySelector('#manageURIs')
+    const ul = document.querySelector('#manageURIs')
     removeChildren(ul)
 
-    if (data['feeds'] === undefined || Object.keys(data['feeds']).length === 0) {
-      let li = document.createElement('li')
+    if (data.feeds === undefined || Object.keys(data.feeds).length === 0) {
+      const li = document.createElement('li')
       li.className = 'newsEntry'
 
-      let subLine = document.createElement('p')
+      const subLine = document.createElement('p')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('noFeeds')))
       li.appendChild(subLine)
@@ -415,20 +438,20 @@ function fillURIs () {
       return
     }
 
-    for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
+    for (const item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
 
-    for (let url of Object.keys(data['feeds'])) {
-      let li = document.createElement('li')
-      let button = document.createElement('button')
+    for (const url of Object.keys(data.feeds)) {
+      const li = document.createElement('li')
+      const button = document.createElement('button')
       button.value = url
       button.className = 'controlButton removeFeed'
-      button.dataset['cmd'] = 'addItem'
-      button.dataset['url'] = url
+      button.dataset.cmd = 'addItem'
+      button.dataset.url = url
 
       document.querySelector('#feedURI').value = url
-      document.querySelector('#feedType').value = data['feeds'][url][0]
-      document.querySelector('#feedInterval').value = data['feeds'][url][1]
-      document.querySelector('#feedMaxAge').value = data['feeds'][url][2] === undefined ? 0 : data['feeds'][url][2]
+      document.querySelector('#feedType').value = data.feeds[url][0]
+      document.querySelector('#feedInterval').value = data.feeds[url][1]
+      document.querySelector('#feedMaxAge').value = data.feeds[url][2] === undefined ? 0 : data.feeds[url][2]
 
       button.appendChild(document.createTextNode(url))
       button.addEventListener('click', handleButtons)
@@ -442,17 +465,17 @@ function fillURIs () {
 
 function fillKeywords () {
   browser.storage.local.get('keywords').then(function (data) {
-    if (data['keywords'] === undefined) return
-    let ul = document.querySelector('#manageKeywords')
+    if (data.keywords === undefined) return
+    const ul = document.querySelector('#manageKeywords')
     removeChildren(ul)
 
-    for (let wordTrigger of Object.keys(data['keywords']['cnt'])) {
-      let li = document.createElement('li')
-      let button = document.createElement('button')
+    for (const wordTrigger of Object.keys(data.keywords.cnt)) {
+      const li = document.createElement('li')
+      const button = document.createElement('button')
       button.value = wordTrigger
       button.className = 'controlButton removeKeyword'
-      button.dataset['cmd'] = 'removeKeyword'
-      button.dataset['key'] = wordTrigger
+      button.dataset.cmd = 'removeKeyword'
+      button.dataset.key = wordTrigger
 
       button.appendChild(document.createTextNode(wordTrigger))
       button.addEventListener('click', removeKeyword)
@@ -476,27 +499,27 @@ function sortByTimeFeeds (a, b) {
 
 function fillViews () {
   browser.storage.local.get().then(function (data) {
-    let ul = document.querySelector('#viewFeeds')
+    const ul = document.querySelector('#viewFeeds')
     removeChildren(ul)
 
     if (inSingleRowMode) ul.classList.add('singleRow')
 
-    if (data['feedData'] === undefined || Object.keys(data['feedData']).length === 0) {
-      let li = document.createElement('li')
+    if (data.feedData === undefined || Object.keys(data.feedData).length === 0) {
+      const li = document.createElement('li')
       li.className = 'newsEntry'
 
-      let subLine = document.createElement('p')
+      const subLine = document.createElement('p')
       subLine.className = 'subTitle'
-      if (data['feedData'] === undefined) {
+      if (data.feedData === undefined) {
         subLine.appendChild(document.createTextNode(getMsg('noFeeds')))
-      } else if (Object.keys(data['feedData']).length === 0) {
+      } else if (Object.keys(data.feedData).length === 0) {
         subLine.appendChild(document.createTextNode(getMsg('noFeedItems')))
       }
 
       li.appendChild(subLine)
       ul.appendChild(li)
 
-      let clone = document.querySelector('.controlButton[data-cmd="addItem"]').cloneNode(true)
+      const clone = document.querySelector('.controlButton[data-cmd="addItem"]').cloneNode(true)
       clone.classList.add('marginTop')
       clone.addEventListener('click', handleButtons)
 
@@ -504,16 +527,16 @@ function fillViews () {
       return
     }
 
-    for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
+    for (const item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
 
-    let sortedFeeds = Object.keys(data['feedData']).sort()
-    let now = Date.now()
+    const sortedFeeds = Object.keys(data.feedData).sort()
+    const now = Date.now()
 
-    let imagesAllowed = data['addon']['images'] === 'enabled'
+    const imagesAllowed = data.addon.images === 'enabled'
 
-    for (let feedURI of sortedFeeds) {
-      let fold = document.createElement('button')
-      let li = document.createElement('li')
+    for (const feedURI of sortedFeeds) {
+      const fold = document.createElement('button')
+      const li = document.createElement('li')
 
       if (inSingleRowMode) li.className = 'newsEntry singleRow'
       else li.className = 'newsEntry'
@@ -529,10 +552,10 @@ function fillViews () {
           evt.target.parentNode.classList.remove('folded')
           evt.target.innerHTML = '&raquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&raquo;'
-          evt.target.parentNode.lastElementChild.style['opacity'] = 1
+          evt.target.parentNode.lastElementChild.style.opacity = 1
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
           setTimeout(function () {
-            let currentPage = document.querySelector('.page.active')
+            const currentPage = document.querySelector('.page.active')
             currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.425))
 
             evt.target.parentNode.children[2].children[0].focus()
@@ -543,12 +566,12 @@ function fillViews () {
           evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
-          evt.target.parentNode.lastElementChild.style['opacity'] = 0
+          evt.target.parentNode.lastElementChild.style.opacity = 0
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-24px'
         }
       })
 
-      let foldBottom = document.createElement('button')
+      const foldBottom = document.createElement('button')
       foldBottom.className = 'folding bottom'
       foldBottom.innerHTML = fold.innerHTML
 
@@ -557,30 +580,30 @@ function fillViews () {
         evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
         evt.target.innerHTML = '&laquo;'
         evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
-        evt.target.style['opacity'] = 0
+        evt.target.style.opacity = 0
         evt.target.style['margin-bottom'] = '-24px'
       })
 
       li.appendChild(fold)
 
-      let subLine = document.createElement('h2')
+      const subLine = document.createElement('h2')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(getMsg('titleFeedOverviewFeed')))
 
-      let feedName = document.createElement('h3')
+      const feedName = document.createElement('h3')
       feedName.className = 'feedName'
       feedName.appendChild(document.createTextNode(feedURI))
       subLine.appendChild(feedName)
 
       let hasDataChange = false
-      for (let newsItemKey of Object.keys(data['feedData'][feedURI])) {
-        let newsItem = data['feedData'][feedURI][newsItemKey]
-        let feedMaxAge = data['feeds'][feedURI][2]
+      for (const newsItemKey of Object.keys(data.feedData[feedURI])) {
+        const newsItem = data.feedData[feedURI][newsItemKey]
+        const feedMaxAge = data.feeds[feedURI][2]
         if (feedMaxAge === 0) continue
 
-        let age = Math.floor((now - newsItem[1]) / dayLength)
+        const age = Math.floor((now - newsItem[1]) / dayLength)
         if (age >= feedMaxAge) {
-          delete data['feedData'][feedURI][newsItemKey]
+          delete data.feedData[feedURI][newsItemKey]
           hasDataChange = true
         }
       }
@@ -589,49 +612,49 @@ function fillViews () {
 
       li.appendChild(subLine)
 
-      if (Object.keys(data['feedData'][feedURI]).length === 0) {
-        let subList = document.createElement('ul')
+      if (Object.keys(data.feedData[feedURI]).length === 0) {
+        const subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
 
-        let entryTitle = document.createElement('li')
+        const entryTitle = document.createElement('li')
         entryTitle.className = 'entryContent inactive'
         entryTitle.appendChild(document.createTextNode(getMsg('noTopics')))
         subList.appendChild(entryTitle)
       } else {
-        let subList = document.createElement('ul')
+        const subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
 
-        let sortedNews = Object.values(data['feedData'][feedURI]).sort(sortByTimeFeeds)
-        for (let item of sortedNews) {
-          let liSub = document.createElement('li')
+        const sortedNews = Object.values(data.feedData[feedURI]).sort(sortByTimeFeeds)
+        for (const item of sortedNews) {
+          const liSub = document.createElement('li')
 
-          let dateObj = new Date(item[1])
+          const dateObj = new Date(item[1])
 
-          let entryDate = document.createElement('span')
+          const entryDate = document.createElement('span')
           entryDate.className = 'entryDate'
           entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
 
-          let entryTitle = document.createElement('a')
+          const entryTitle = document.createElement('a')
           entryTitle.href = item[3]
           entryTitle.title = item[3]
           entryTitle.className = 'entryTitle'
           entryTitle.appendChild(document.createTextNode(item[0]))
 
-          let entryContent = document.createElement('div')
+          const entryContent = document.createElement('div')
           entryContent.className = 'entryContent'
           entryContent.classList.add('noImg')
           if (imagesAllowed) {
             if (item[4] !== null) {
-              let entryImg = document.createElement('img')
+              const entryImg = document.createElement('img')
               entryImg.src = item[4]
               entryContent.appendChild(entryImg)
               entryContent.classList.remove('noImg')
             }
           }
 
-          let pContent = document.createElement('p')
+          const pContent = document.createElement('p')
           pContent.innerHTML += filterHTML(item[2])
           entryContent.appendChild(pContent)
 
@@ -645,16 +668,16 @@ function fillViews () {
         li.appendChild(subList)
 
         if (inSingleRowMode) {
-          let buttonBackwards = document.createElement('button')
+          const buttonBackwards = document.createElement('button')
           buttonBackwards.className = 'slideButton clearfix button left'
           buttonBackwards.textContent = '<'
-          buttonBackwards.dataset['cmd'] = 'left'
+          buttonBackwards.dataset.cmd = 'left'
           buttonBackwards.addEventListener('click', navigateFeed)
 
-          let buttonForward = document.createElement('button')
+          const buttonForward = document.createElement('button')
           buttonForward.className = 'slideButton button right'
           buttonForward.textContent = '>'
-          buttonForward.dataset['cmd'] = 'right'
+          buttonForward.dataset.cmd = 'right'
           buttonForward.addEventListener('click', navigateFeed)
 
           li.appendChild(buttonBackwards)
@@ -662,10 +685,10 @@ function fillViews () {
         }
       }
 
-      let currentDisplay = document.createElement('span')
+      const currentDisplay = document.createElement('span')
       if (inSingleRowMode) {
         currentDisplay.className = 'singleNewsIndex'
-        currentDisplay.dataset['src'] = feedURI
+        currentDisplay.dataset.src = feedURI
         li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
         subLine.appendChild(currentDisplay)
       }
@@ -683,17 +706,17 @@ function fillViews () {
 
 function fillTopics () {
   browser.storage.local.get().then(function (data) {
-    let ul = document.querySelector('#viewTopics')
+    const ul = document.querySelector('#viewTopics')
     removeChildren(ul)
     if (inSingleRowMode) ul.classList.add('singleRow')
 
-    if (data['keywords'] === undefined || data['keywords']['urls'] === undefined || Object.keys(data['keywords']['urls']).length === 0) {
-      let li = document.createElement('li')
+    if (data.keywords === undefined || data.keywords.urls === undefined || Object.keys(data.keywords.urls).length === 0) {
+      const li = document.createElement('li')
       li.className = 'newsEntry'
 
-      let subLine = document.createElement('p')
+      const subLine = document.createElement('p')
       subLine.className = 'subTitle'
-      if (data['feeds'] === undefined || Object.keys(data['feeds']).length === 0) {
+      if (data.feeds === undefined || Object.keys(data.feeds).length === 0) {
         subLine.appendChild(document.createTextNode(getMsg('noTopics')))
       } else {
         subLine.appendChild(document.createTextNode(getMsg('noKeywords')))
@@ -702,7 +725,7 @@ function fillTopics () {
       li.appendChild(subLine)
       ul.appendChild(li)
 
-      let clone = document.querySelector('.controlButton[data-cmd="manageKeywords"]').cloneNode(true)
+      const clone = document.querySelector('.controlButton[data-cmd="manageKeywords"]').cloneNode(true)
       clone.classList.add('marginTop')
       clone.addEventListener('click', handleButtons)
 
@@ -710,15 +733,15 @@ function fillTopics () {
       return
     }
 
-    for (let item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
+    for (const item of document.querySelectorAll('.inititalHidden')) item.classList.remove('hidden')
 
-    let sortedTopics = Object.keys(data['keywords']['cnt']).sort()
-    let now = Date.now()
-    let imagesAllowed = data['addon']['images'] === 'enabled'
+    const sortedTopics = Object.keys(data.keywords.cnt).sort()
+    const now = Date.now()
+    const imagesAllowed = data.addon.images === 'enabled'
 
-    for (let keyword of sortedTopics) {
-      let fold = document.createElement('button')
-      let li = document.createElement('li')
+    for (const keyword of sortedTopics) {
+      const fold = document.createElement('button')
+      const li = document.createElement('li')
 
       if (inSingleRowMode) li.className = 'newsEntry singleRow'
       else li.className = 'newsEntry'
@@ -734,10 +757,10 @@ function fillTopics () {
           evt.target.parentNode.classList.remove('folded')
           evt.target.innerHTML = '&raquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&raquo;'
-          evt.target.parentNode.lastElementChild.style['opacity'] = 1
+          evt.target.parentNode.lastElementChild.style.opacity = 1
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '12px'
           setTimeout(function () {
-            let currentPage = document.querySelector('.page.active')
+            const currentPage = document.querySelector('.page.active')
             currentPage.scrollTo(0, evt.target.parentNode.children[2].offsetTop - (window.innerHeight * 0.425))
 
             evt.target.parentNode.children[2].children[0].focus()
@@ -748,12 +771,12 @@ function fillTopics () {
           evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
           evt.target.innerHTML = '&laquo;'
           evt.target.parentNode.lastElementChild.innerHTML = '&laquo'
-          evt.target.parentNode.lastElementChild.style['opacity'] = 0
+          evt.target.parentNode.lastElementChild.style.opacity = 0
           evt.target.parentNode.lastElementChild.style['margin-bottom'] = '-24px'
         }
       })
 
-      let foldBottom = document.createElement('button')
+      const foldBottom = document.createElement('button')
       foldBottom.className = 'folding bottom'
       foldBottom.innerHTML = fold.innerHTML
 
@@ -762,66 +785,66 @@ function fillTopics () {
         evt.target.parentNode.children[2].style['margin-bottom'] = (-evt.target.parentNode.children[2].clientHeight).toString() + 'px'
         evt.target.innerHTML = '&laquo;'
         evt.target.parentNode.firstElementChild.innerHTML = '&laquo;'
-        evt.target.style['opacity'] = 0
+        evt.target.style.opacity = 0
         evt.target.style['margin-bottom'] = '-24px'
       })
 
       li.appendChild(fold)
 
-      let subLine = document.createElement('h2')
+      const subLine = document.createElement('h2')
       subLine.className = 'subTitle'
       subLine.appendChild(document.createTextNode(keyword))
 
-      let subLineCount = document.createElement('span')
+      const subLineCount = document.createElement('span')
       subLineCount.className = 'subCount'
-      subLineCount.appendChild(document.createTextNode(data['keywords']['cnt'][keyword] === 1 ? getMsg('itemSingular', data['keywords']['cnt'][keyword]) : getMsg('itemPlural', data['keywords']['cnt'][keyword])))
+      subLineCount.appendChild(document.createTextNode(data.keywords.cnt[keyword] === 1 ? getMsg('itemSingular', data.keywords.cnt[keyword]) : getMsg('itemPlural', data.keywords.cnt[keyword])))
       subLine.appendChild(subLineCount)
       li.appendChild(subLine)
 
       let hasDataChange = false
-      for (let key of Object.keys(data['keywords']['urls'][keyword])) {
-        let feedURI = data['keywords']['urls'][keyword][key][4]
-        let feedMaxAge = data['feeds'][feedURI][2]
+      for (const key of Object.keys(data.keywords.urls[keyword])) {
+        const feedURI = data.keywords.urls[keyword][key][4]
+        const feedMaxAge = data.feeds[feedURI][2]
         if (feedMaxAge === 0) continue
 
-        let age = Math.floor((now - data['keywords']['urls'][keyword][key][2]) / dayLength)
+        const age = Math.floor((now - data.keywords.urls[keyword][key][2]) / dayLength)
         if (age >= feedMaxAge) {
-          delete data['keywords']['urls'][keyword][key]
-          --data['keywords']['cnt'][keyword]
+          delete data.keywords.urls[keyword][key]
+          --data.keywords.cnt[keyword]
           hasDataChange = true
         }
       }
 
       if (hasDataChange) browser.storage.local.set(data)
 
-      if (Object.keys(data['keywords']['urls'][keyword]).length === 0) {
-        let subList = document.createElement('ul')
+      if (Object.keys(data.keywords.urls[keyword]).length === 0) {
+        const subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
 
-        let entryTitle = document.createElement('li')
+        const entryTitle = document.createElement('li')
         entryTitle.className = 'entryContent inactive'
         entryTitle.appendChild(document.createTextNode(getMsg('noTopics')))
         subList.appendChild(entryTitle)
       } else {
-        let subList = document.createElement('ul')
+        const subList = document.createElement('ul')
         subList.className = 'subList'
         li.appendChild(subList)
 
-        let sortedNews = Object.values(data['keywords']['urls'][keyword]).sort(sortByTime)
-        let keys = Object.keys(data['keywords']['urls'][keyword])
-        for (let item of sortedNews) {
-          let liSub = document.createElement('li')
+        const sortedNews = Object.values(data.keywords.urls[keyword]).sort(sortByTime)
+        const keys = Object.keys(data.keywords.urls[keyword])
+        for (const item of sortedNews) {
+          const liSub = document.createElement('li')
 
-          for (let key of keys) {
-            if (item[2] === data['keywords']['urls'][keyword][key][2] && item[4] === data['keywords']['urls'][keyword][key][4]) {
-              let dateObj = new Date(item[2])
+          for (const key of keys) {
+            if (item[2] === data.keywords.urls[keyword][key][2] && item[4] === data.keywords.urls[keyword][key][4]) {
+              const dateObj = new Date(item[2])
 
-              let entryDate = document.createElement('span')
+              const entryDate = document.createElement('span')
               entryDate.className = 'entryDate'
               entryDate.appendChild(document.createTextNode(dateObj.toLocaleString()))
 
-              let entryTitle = document.createElement('a')
+              const entryTitle = document.createElement('a')
               entryTitle.href = key
               entryTitle.title = key
               entryTitle.className = 'entryTitle'
@@ -835,19 +858,19 @@ function fillTopics () {
                 }, 1200)
               })
 
-              let entryContent = document.createElement('div')
+              const entryContent = document.createElement('div')
               entryContent.className = 'entryContent'
               entryContent.classList.add('noImg')
               if (imagesAllowed) {
                 if (item[5] !== undefined) {
-                  let entryImg = document.createElement('img')
+                  const entryImg = document.createElement('img')
                   entryImg.src = item[5]
                   entryContent.appendChild(entryImg)
                   entryContent.classList.remove('noImg')
                 }
               }
 
-              let pContent = document.createElement('p')
+              const pContent = document.createElement('p')
               pContent.textContent += filterHTML(item[3])
               entryContent.appendChild(pContent)
 
@@ -864,16 +887,16 @@ function fillTopics () {
         li.appendChild(subList)
 
         if (inSingleRowMode) {
-          let buttonBackwards = document.createElement('button')
+          const buttonBackwards = document.createElement('button')
           buttonBackwards.className = 'slideButton clearfix button left'
           buttonBackwards.textContent = '<'
-          buttonBackwards.dataset['cmd'] = 'left'
+          buttonBackwards.dataset.cmd = 'left'
           buttonBackwards.addEventListener('click', navigateFeed)
 
-          let buttonForward = document.createElement('button')
+          const buttonForward = document.createElement('button')
           buttonForward.className = 'slideButton button right'
           buttonForward.textContent = '>'
-          buttonForward.dataset['cmd'] = 'right'
+          buttonForward.dataset.cmd = 'right'
           buttonForward.addEventListener('click', navigateFeed)
 
           li.appendChild(buttonBackwards)
@@ -881,10 +904,10 @@ function fillTopics () {
         }
       }
 
-      let currentDisplay = document.createElement('span')
+      const currentDisplay = document.createElement('span')
       if (inSingleRowMode) {
         currentDisplay.className = 'singleNewsIndex'
-        currentDisplay.dataset['src'] = keyword
+        currentDisplay.dataset.src = keyword
         li.children[2].children.length === 1 ? currentDisplay.textContent = getMsg('itemCountSingular', [1, 1]) : currentDisplay.textContent = getMsg('itemCountPlural', [1, li.children[2].children.length])
         subLine.appendChild(currentDisplay)
       }
@@ -902,21 +925,21 @@ function fillTopics () {
 
 function queryResize (evt) {
   if (inSingleRowMode) {
-    let inititialWidth = parseInt(document.querySelector('body').clientWidth * 0.925) - 1
-    for (let subList of document.querySelectorAll('.page.active .subList')) {
-      subList.style['width'] = inititialWidth * (subList.children.length) + 'px'
-      subList.style['overflow'] = 'hidden'
-      subList.style['opacity'] = '1'
-      subList.style['transform'] = 'translateX(0px)'
+    const inititialWidth = parseInt(document.querySelector('body').clientWidth * 0.925) - 1
+    for (const subList of document.querySelectorAll('.page.active .subList')) {
+      subList.style.width = inititialWidth * (subList.children.length) + 'px'
+      subList.style.overflow = 'hidden'
+      subList.style.opacity = '1'
+      subList.style.transform = 'translateX(0px)'
 
-      for (let element of subList.children) {
-        element.style['width'] = inititialWidth + 'px'
-        element.style['float'] = 'left'
+      for (const element of subList.children) {
+        element.style.width = inititialWidth + 'px'
+        element.style.float = 'left'
       }
 
-      let currentPage = document.querySelector('.page.active')
-      if (currentPage.dataset['src'] === 'viewTopics') subList.style['transform'] = 'translateX(-' + (activeNews * inititialWidth).toString() + 'px)'
-      else if (currentPage.dataset['src'] === 'viewFeeds') subList.style['transform'] = 'translateX(-' + (activeFeedItem * inititialWidth).toString() + 'px)'
+      const currentPage = document.querySelector('.page.active')
+      if (currentPage.dataset.src === 'viewTopics') subList.style.transform = 'translateX(-' + (activeNews * inititialWidth).toString() + 'px)'
+      else if (currentPage.dataset.src === 'viewFeeds') subList.style.transform = 'translateX(-' + (activeFeedItem * inititialWidth).toString() + 'px)'
     }
   }
 }
@@ -924,7 +947,7 @@ function queryResize (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function removeNodes (child) {
-  for (let childNode of child.children) removeNodes(childNode)
+  for (const childNode of child.children) removeNodes(childNode)
 
   if (child.nodeName !== 'A' && child.nodeName !== 'P') {
     child.parentNode.appendChild(document.createTextNode(child.textContent))
@@ -935,7 +958,7 @@ function removeNodes (child) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function filterHTML (item) {
-  let p = document.createElement('p')
+  const p = document.createElement('p')
   p.innerHTML = item
   removeNodes(p)
   return p.innerHTML
@@ -943,19 +966,19 @@ function filterHTML (item) {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 function handleMessage (message) {
-  if (message['addKeyword'] !== undefined) {
+  if (message.addKeyword !== undefined) {
     browser.storage.local.get().then(function (data) {
-      if (data['keywords'] === undefined) data['keywords'] = { 'cnt': {}, 'urls': {} }
-      if (data['keywords']['cnt'][data] !== undefined) return
+      if (data.keywords === undefined) data.keywords = { cnt: {}, urls: {} }
+      if (data.keywords.cnt[data] !== undefined) return
 
-      data['keywords']['cnt'][message['addKeyword']] = 0
-      data['keywords']['urls'][message['addKeyword']] = {}
+      data.keywords.cnt[message.addKeyword] = 0
+      data.keywords.urls[message.addKeyword] = {}
       browser.storage.local.set(data)
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('addKeywordTitle'), message: getMsg('addKeywordBody', message.addKeyword) })
     }, errorHandle)
 
     browser.storage.local.get('addon').then(function (data) {
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', message['addKeyword']) })
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('addKeywordTitle'), message: getMsg('addKeywordBody', message.addKeyword) })
     })
 
     fillKeywords()
@@ -967,19 +990,19 @@ function handleMessage (message) {
 function addInputKeyword (evt) {
   if (evt.keyCode !== 13) { return }
 
-  let keywordText = evt.target.value.trim()
+  const keywordText = evt.target.value.trim()
   if (keywordText.length === 0) return
 
   browser.storage.local.get().then(function (data) {
-    if (data['keywords'] === undefined) data['keywords'] = { 'cnt': {}, 'urls': {} }
-    if (data['keywords']['cnt'][data] !== undefined) return
+    if (data.keywords === undefined) data.keywords = { cnt: {}, urls: {} }
+    if (data.keywords.cnt[data] !== undefined) return
 
-    data['keywords']['cnt'][keywordText] = 0
-    data['keywords']['urls'][keywordText] = {}
+    data.keywords.cnt[keywordText] = 0
+    data.keywords.urls[keywordText] = {}
     browser.storage.local.set(data)
 
     fillKeywords()
-    if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('addKeywordTitle'), 'message': getMsg('addKeywordBody', keywordText) })
+    if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('addKeywordTitle'), message: getMsg('addKeywordBody', keywordText) })
     evt.target.value = ''
     evt.target.focus()
   }, errorHandle)
@@ -989,22 +1012,22 @@ function addInputKeyword (evt) {
 
 function toggleThunderNodeState (evt) {
   browser.storage.local.get().then(function (data) {
-    data['addon']['status'] = evt.target.value
+    data.addon.status = evt.target.value
     browser.storage.local.set(data)
 
     if (!isEnabled()) {
       browser.alarms.clearAll()
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteDisabled') })
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('thunderNoteStatusTitle'), message: getMsg('thunderNoteDisabled') })
     } else {
-      if (data['feeds'] !== undefined) {
+      if (data.feeds !== undefined) {
         let updateSchedule = 0
-        for (let url of Object.keys(data['feeds'])) {
-          browser.alarms.create(url, { 'when': Date.now() + (updateSchedule * 1000), 'periodInMinutes': data['feeds'][url][1] })
+        for (const url of Object.keys(data.feeds)) {
+          browser.alarms.create(url, { when: Date.now() + (updateSchedule * 1000), periodInMinutes: data.feeds[url][1] })
           ++updateSchedule
         }
       }
 
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('thunderNoteStatusTitle'), 'message': getMsg('thunderNoteEnabled') })
+      if (data.addon !== undefined && data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('thunderNoteStatusTitle'), message: getMsg('thunderNoteEnabled') })
     }
   }, errorHandle)
 }
@@ -1017,24 +1040,24 @@ function navigateFeed (evt) {
   if (!inSingleRowMode) return
 
   let current = evt.target.parentNode.querySelector('.highlight')
-  for (let highlightedItem of evt.target.parentNode.parentNode.querySelectorAll('.highlight')) {
+  for (const highlightedItem of evt.target.parentNode.parentNode.querySelectorAll('.highlight')) {
     if (highlightedItem !== current) highlightedItem.classList.remove('highlight')
   }
 
-  let childLists = evt.target.parentNode.querySelectorAll('li')
-  let width = parseInt(childLists[0].style['width'])
+  const childLists = evt.target.parentNode.querySelectorAll('li')
+  const width = parseInt(childLists[0].style.width)
   let currentX = 0
-  let hidden = evt.target.parentNode.querySelectorAll('.tempHidden')
-  let hasHidden = hidden.length !== 0
+  const hidden = evt.target.parentNode.querySelectorAll('.tempHidden')
+  const hasHidden = hidden.length !== 0
   let next = null
   let isSameRoot = true
 
   if (current === null || current.parentNode.parentNode !== evt.target.parentNode) {
     current = evt.target.parentNode.querySelector('li')
-    currentX = parseInt(current.parentNode.style['transform'].match(/[\d]+/))
+    currentX = parseInt(current.parentNode.style.transform.match(/[\d]+/))
     let targetX = 0
 
-    if (evt.target.dataset['cmd'] === 'right') targetX = currentX + width
+    if (evt.target.dataset.cmd === 'right') targetX = currentX + width
     else targetX = currentX
 
     if (targetX < 0) targetX = 0
@@ -1049,12 +1072,12 @@ function navigateFeed (evt) {
 
     isSameRoot = false
   } else {
-    currentX = parseInt(current.parentNode.style['transform'].match(/[\d]+/))
+    currentX = parseInt(current.parentNode.style.transform.match(/[\d]+/))
     current.classList.remove('highlight')
   }
 
   if (isSameRoot) {
-    if (evt.target.dataset['cmd'] === 'right') {
+    if (evt.target.dataset.cmd === 'right') {
       next = current.nextSibling
 
       if (hasHidden) while (next !== null && next.classList.contains('tempHidden')) next = next.nextSibling
@@ -1076,26 +1099,26 @@ function navigateFeed (evt) {
       }
     }
 
-    if (evt.target.dataset['cmd'] === 'right') currentX += width
+    if (evt.target.dataset.cmd === 'right') currentX += width
     else currentX -= width
-    next.parentNode.style['transform'] = 'translateX(-' + currentX.toString() + 'px)'
+    next.parentNode.style.transform = 'translateX(-' + currentX.toString() + 'px)'
 
-    current.style['opacity'] = '0'
+    current.style.opacity = '0'
     current.classList.remove('highlight')
-    next.style['opacity'] = '1'
+    next.style.opacity = '1'
     next.classList.add('highlight')
     next.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = childLists.length === 1 ? getMsg('itemCountSingular', [1, 1]) : getMsg('itemCountPlural', [Math.floor(currentX / width) + 1, childLists.length - hidden.length])
   } else {
-    current.style['opacity'] = '1'
+    current.style.opacity = '1'
     current.classList.add('highlight')
     current.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = childLists.length === 1 ? getMsg('itemCountSingular', [1, 1]) : getMsg('itemCountPlural', [Math.floor(currentX / width) + 1, childLists.length - hidden.length])
-    current.parentNode.style['transform'] = 'translateX(-' + (currentX).toString() + 'px)'
+    current.parentNode.style.transform = 'translateX(-' + (currentX).toString() + 'px)'
   }
 
-  let currentPage = document.querySelector('.page.active')
-  if (currentPage.dataset['src'] === 'viewTopics') {
+  const currentPage = document.querySelector('.page.active')
+  if (currentPage.dataset.src === 'viewTopics') {
     activeNews = Math.floor(currentX / width)
-  } else if (currentPage.dataset['src'] === 'viewFeeds') {
+  } else if (currentPage.dataset.src === 'viewFeeds') {
     activeFeedItem = Math.floor(currentX / width)
   }
 }
@@ -1106,13 +1129,13 @@ function handleKeyUp (evt) {
   }
 
   if (evt.altKey) {
-    let currentPage = document.querySelector('.page.active')
+    const currentPage = document.querySelector('.page.active')
     let current = currentPage.querySelector('.highlight a.entryTitle')
     if (current === null) current = currentPage.querySelector('a.entryTitle')
 
     if (evt.keyCode === 33) {
       // Page up
-      let prevNews = current.parentNode.parentNode.parentNode.previousSibling
+      const prevNews = current.parentNode.parentNode.parentNode.previousSibling
       if (prevNews !== null) {
         current.parentNode.classList.remove('highlight')
         current = prevNews.querySelector('a.entryTitle')
@@ -1123,10 +1146,9 @@ function handleKeyUp (evt) {
       }
 
       return
-
     } else if (evt.keyCode === 34) {
       // Page down
-      let nextNews = current.parentNode.parentNode.parentNode.nextSibling
+      const nextNews = current.parentNode.parentNode.parentNode.nextSibling
       if (nextNews !== null) {
         current.parentNode.classList.remove('highlight')
         current = nextNews.querySelector('a.entryTitle')
@@ -1156,13 +1178,13 @@ function handleKeyUp (evt) {
 
   if (!inSingleRowMode && evt.altKey) {
     // Alt key pressed
-    let currentPage = document.querySelector('.page.active')
-    let titleElements = currentPage.querySelectorAll('a.entryTitle')
+    const currentPage = document.querySelector('.page.active')
+    const titleElements = currentPage.querySelectorAll('a.entryTitle')
 
     let indexStart = 0
     let current = currentPage.querySelector('.highlight a.entryTitle')
-    let hidden = currentPage.parentNode.querySelectorAll('.tempHidden')
-    let hasHidden = hidden !== null
+    const hidden = currentPage.parentNode.querySelectorAll('.tempHidden')
+    const hasHidden = hidden !== null
 
     if (current === null) {
       indexStart = 0
@@ -1170,7 +1192,7 @@ function handleKeyUp (evt) {
       current = titleElements[indexStart]
     } else {
       current.parentNode.classList.remove('highlight')
-      for (let element of titleElements) {
+      for (const element of titleElements) {
         if (current === element) break
         ++indexStart
       }
@@ -1220,7 +1242,7 @@ function handleKeyUp (evt) {
       }
     }
 
-    if (currentPage.dataset['src'] === 'viewTopics') activeNews = indexStart
+    if (currentPage.dataset.src === 'viewTopics') activeNews = indexStart
     else activeFeedItem = indexStart
   }
 }
@@ -1230,11 +1252,11 @@ function handleKeyUp (evt) {
 function toggleImages (evt) {
   browser.storage.local.get('addon').then(function (data) {
     if (evt.target.value === 'enabled') {
-      data['addon']['images'] = 'enabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesEnabled') })
+      data.addon.images = 'enabled'
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('optionsNotificationTitle'), message: getMsg('optionsBodyImagesEnabled') })
     } else {
-      data['addon']['images'] = 'disabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyImagesDisabled') })
+      data.addon.images = 'disabled'
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('optionsNotificationTitle'), message: getMsg('optionsBodyImagesDisabled') })
     }
 
     browser.storage.local.set(data)
@@ -1246,10 +1268,10 @@ function toggleImages (evt) {
 function toggleNotifications (evt) {
   browser.storage.local.get('addon').then(function (data) {
     if (evt.target.value === 'enabled') {
-      data['addon']['notifications'] = 'enabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsEnabled') })
+      data.addon.notifications = 'enabled'
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('optionsNotificationTitle'), message: getMsg('optionsBodyNotificationsEnabled') })
     } else {
-      data['addon']['notifications'] = 'disabled'
+      data.addon.notifications = 'disabled'
       // browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsNotificationTitle'), 'message': getMsg('optionsBodyNotificationsDisabled') })
     }
 
@@ -1262,13 +1284,13 @@ function toggleNotifications (evt) {
 function toggleAnimations (evt) {
   browser.storage.local.get('addon').then(function (data) {
     if (evt.target.value === 'enabled') {
-      data['addon']['animations'] = 'enabled'
+      data.addon.animations = 'enabled'
       document.body.classList.remove('noAnim')
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsEnabled') })
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('optionsAnimationsTitle'), message: getMsg('optionsBodyAnimationsEnabled') })
     } else {
       document.body.classList.add('noAnim')
-      data['addon']['animations'] = 'disabled'
-      if (data['addon']['notifications'] === 'enabled') browser.notifications.create(null, { 'type': 'basic', 'iconUrl': 'icons/thunderNote.svg', 'title': getMsg('optionsAnimationsTitle'), 'message': getMsg('optionsBodyAnimationsDisabled') })
+      data.addon.animations = 'disabled'
+      if (data.addon.notifications === 'enabled') browser.notifications.create(null, { type: 'basic', iconUrl: 'icons/thunderNote.svg', title: getMsg('optionsAnimationsTitle'), message: getMsg('optionsBodyAnimationsDisabled') })
     }
 
     browser.storage.local.set(data)
@@ -1278,18 +1300,23 @@ function toggleAnimations (evt) {
 // --------------------------------------------------------------------------------------------------------------------------------
 
 function handleInput (evt) {
-  switch (evt.target.dataset['cmd']) {
-    case 'searchFeedData':
-      let searchValue = evt.target.value.trim().toLowerCase()
+  let searchValue = ''
+  let newsEntries
+  let titleElements
+  let hasRemovedHighlight = false
 
-      for (let hiddenElements of document.querySelectorAll('.page.active .tempHidden')) {
+  switch (evt.target.dataset.cmd) {
+    case 'searchFeedData':
+      searchValue = evt.target.value.trim().toLowerCase()
+
+      for (const hiddenElements of document.querySelectorAll('.page.active .tempHidden')) {
         hiddenElements.classList.remove('tempHidden')
-        hiddenElements.style['opacity'] = '1'
+        hiddenElements.style.opacity = '1'
       }
 
       if (inSingleRowMode) {
-        for (let subList of document.querySelectorAll('.page.active .subList')) {
-          subList.style['transform'] = 'translateX(0px)'
+        for (const subList of document.querySelectorAll('.page.active .subList')) {
+          subList.style.transform = 'translateX(0px)'
           subList.parentNode.querySelector('.singleNewsIndex').textContent = getMsg('itemCountPlural', [1, subList.children.length])
         }
       }
@@ -1299,12 +1326,12 @@ function handleInput (evt) {
 
       if (searchValue.length === 0) return
 
-      let newsEntries = document.querySelectorAll('.page.active .newsEntry')
+      newsEntries = document.querySelectorAll('.page.active .newsEntry')
 
-      for (let entry of newsEntries) {
+      for (const entry of newsEntries) {
         let hasVisibleEntries = false
         let hasHighlight = false
-        for (let child of entry.children[2].children) {
+        for (const child of entry.children[2].children) {
           if (child.lastChild.textContent.toLowerCase().indexOf(searchValue) === -1) {
             child.classList.add('tempHidden')
             child.classList.remove('highlight')
@@ -1312,7 +1339,7 @@ function handleInput (evt) {
             hasVisibleEntries = true
             child.classList.remove('tempHidden')
             child.classList.remove('highlight')
-            child.style['opacity'] = '1'
+            child.style.opacity = '1'
             if (!hasHighlight) {
               child.classList.add('highlight')
               hasHighlight = true
@@ -1324,20 +1351,20 @@ function handleInput (evt) {
         else entry.classList.remove('tempHidden')
       }
 
-      let titleElements = document.querySelectorAll('.page.active .highlight a.entryTitle')
-      let hasRemovedHighlight = false
-      for (let element of titleElements) {
-        let offset = element.parentNode.parentNode.querySelectorAll('.tempHidden').length
+      titleElements = document.querySelectorAll('.page.active .highlight a.entryTitle')
+      hasRemovedHighlight = false
+      for (const element of titleElements) {
+        const offset = element.parentNode.parentNode.querySelectorAll('.tempHidden').length
         if (inSingleRowMode) {
           element.parentNode.parentNode.parentNode.querySelector('.singleNewsIndex').textContent = getMsg('itemCountPlural', [1, element.parentNode.parentNode.children.length - offset])
-          element.parentNode.parentNode.style['transform'] = 'translateX(0px)'
+          element.parentNode.parentNode.style.transform = 'translateX(0px)'
         }
 
         if (hasRemovedHighlight) element.parentNode.classList.remove('highlight')
         else {
           let startIndex = 0
 
-          for (let entry of document.querySelectorAll('.page.active a.entryTitle')) {
+          for (const entry of document.querySelectorAll('.page.active a.entryTitle')) {
             if (entry === element) break
             ++startIndex
           }
@@ -1358,9 +1385,9 @@ function handleInput (evt) {
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
-for (let controlButton of document.querySelectorAll('.controlButton')) controlButton.addEventListener('click', handleButtons)
-for (let controlInput of document.querySelectorAll('.controlInput')) controlInput.addEventListener('keyup', handleInput)
-for (let backButton of document.querySelectorAll('.backButton')) backButton.addEventListener('click', handleButtons)
+for (const controlButton of document.querySelectorAll('.controlButton')) controlButton.addEventListener('click', handleButtons)
+for (const controlInput of document.querySelectorAll('.controlInput')) controlInput.addEventListener('keyup', handleInput)
+for (const backButton of document.querySelectorAll('.backButton')) backButton.addEventListener('click', handleButtons)
 
 document.querySelector('.controlButton[data-cmd="removeFeed"]').addEventListener('click', removeFeed)
 document.querySelector('.controlButton[data-cmd="forceUpdate"]').addEventListener('click', forceUpdate)
@@ -1383,24 +1410,24 @@ let highlightKey = null
 
 const dayLength = 24 * 3600 * 1000.0
 
-let domNodes = document.querySelectorAll('*')
-for (let item of domNodes) item.setAttribute('tabindex', -1)
+const domNodes = document.querySelectorAll('*')
+for (const item of domNodes) item.setAttribute('tabindex', -1)
 
 // --------------------------------------------------------------------------------------------------------------------------------
 
 browser.storage.local.get().then(function (data) {
-  if (data['addon'] === undefined) data['addon'] = {}
-  if (data['addon']['images'] === undefined) data['addon']['images'] = 'enabled'
-  if (data['addon']['notifications'] === undefined) data['addon']['notifications'] = 'enabled'
-  if (data['addon']['animations'] === undefined) data['addon']['animations'] = 'enabled'
-  if (data['addon']['status'] === undefined) data['addon']['status'] = 'enabled'
+  if (data.addon === undefined) data.addon = {}
+  if (data.addon.images === undefined) data.addon.images = 'enabled'
+  if (data.addon.notifications === undefined) data.addon.notifications = 'enabled'
+  if (data.addon.animations === undefined) data.addon.animations = 'enabled'
+  if (data.addon.status === undefined) data.addon.status = 'enabled'
 
-  if (data['addon']['images'] === 'enabled') document.querySelector('#switchImages').value = 'enabled'
-  if (data['addon']['animations'] === 'enabled') document.querySelector('#switchAnimations').value = 'enabled'
-  if (data['addon']['notifications'] === 'enabled') document.querySelector('#switchNotifications').value = 'enabled'
-  if (data['addon']['status'] === 'enabled') document.querySelector('#setThunderNoteState').value = 'enabled'
+  if (data.addon.images === 'enabled') document.querySelector('#switchImages').value = 'enabled'
+  if (data.addon.animations === 'enabled') document.querySelector('#switchAnimations').value = 'enabled'
+  if (data.addon.notifications === 'enabled') document.querySelector('#switchNotifications').value = 'enabled'
+  if (data.addon.status === 'enabled') document.querySelector('#setThunderNoteState').value = 'enabled'
 
-  if (data['addon']['animations'] !== 'enabled') document.body.classList.add('noAnim')
+  if (data.addon.animations !== 'enabled') document.body.classList.add('noAnim')
 
   browser.storage.local.set(data)
 })
