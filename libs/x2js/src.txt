@@ -1,0 +1,1 @@
+https://github.com/abdolence/x2js/releases/tag/v1.2.0
