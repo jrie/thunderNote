@@ -1,105 +1,118 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>thunderNote</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="thunderNote.css"/>
-  </head>
-  <body>
-    <div class="headerControl">
-      <h2 class="headline"><a href="https://github.com/jrie/thundernote">thunderNote</a></h2>
-      <label for="thunderNoteStatus">__MSG_labelStatus__</label>
-      <select id="setThunderNoteState" name="thunderNoteStatus">
-        <option value="enabled">__MSG_thunderNoteEnable__</option>
-        <option value="disabled" selected="selected">__MSG_thunderNoteDisable__</option>
-      </select>
-      <label>__MSG_labelNews__</label>
-      <button class="controlButton" data-cmd="viewTopics">__MSG_buttonViewTopics__</button>
-      <button class="controlButton" data-cmd="viewFeeds">__MSG_buttonViewFeeds__</button>
-      <label>__MSG_labelManage__</label>
-      <button class="controlButton" data-cmd="manageKeywords">__MSG_buttonManageKeywords__</button>
-      <button class="controlButton" data-cmd="manageURIs">__MSG_buttonManageURIs__</button>
-      <label>__MSG_labelSettings__</label>
-      <button class="controlButton" data-cmd="displayOptions">__MSG_buttonOptions__</button>
-    </div>
 
-    <div class="page" data-src="addItem">
-      <button class="backButton" data-src="back">&laquo;</button>
-      <h2 class="headline">__MSG_titleAddRSS__</h2>
-      <span class="clearfix"></span>
-      <button class="controlButton hidden" data-cmd="forceUpdate">__MSG_buttonForceURIUpdate__</button>
-      <hr class="inititalHidden hidden" />
-      <input id="feedURI" type="text" title="__MSG_addURIinfo__" placeholder="__MSG_addURIinfo__" value="" autocomplete="false" />
-      <select id="feedType" autocomplete="false">
-        <option selected="selected" value="rss">__MSG_addURItypeRSS__</option>
-        <!--<option value="page">__MSG_addURItypeHTML__</option>-->
-      </select>
-      <input id="feedInterval" type="number" min="1" max="360" step="5" title="__MSG_addURIintervalPlaceholder__" placeholder="__MSG_addURIinterval__" autocomplete="false"/>
-      <input id="feedMaxAge" type="number" vmin="0" max="120" step="7" title="__MSG_maxAgeURIPlaceholder__" placeholder="__MSG_maxAgeURI__" value="" autocomplete="false"/ >
-      <hr/>
-      <button class="controlButton" data-cmd="add">__MSG_buttonAddURI__</button>
-      <hr class="inititalHidden hidden" />
-      <button class="controlButton hidden" data-cmd="removeFeed">__MSG_buttonRemoveURI__</button>
-    </div>
+<head>
+  <title>thunderNote</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="thunderNote.css" />
+</head>
 
-    <div class="page" data-src="manageURIs">
-      <button class="backButton" data-src="back">&laquo;</button>
-      <h2 class="headline">__MSG_titleFeeds__</h2>
-      <button class="controlButton" data-cmd="addItem">__MSG_buttonAddUri__</button>
-      <button class="controlButton inititalHidden hidden" data-cmd="forceUpdateAll">__MSG_buttonUpdateAllUri__</button>
-      <hr/>
-      <ul id="manageURIs" class="clearfix"></ul>
-    </div>
+<body>
+  <div class="headerControl">
+    <h2 class="headline"><a href="https://github.com/jrie/thundernote">thunderNote</a></h2>
+    <label for="thunderNoteStatus">__MSG_labelStatus__</label>
+    <select id="setThunderNoteState" name="thunderNoteStatus">
+      <option value="enabled">__MSG_thunderNoteEnable__</option>
+      <option value="disabled" selected="selected">__MSG_thunderNoteDisable__</option>
+    </select>
+    <label>__MSG_labelNews__</label>
+    <button class="controlButton" data-cmd="viewTopics">__MSG_buttonViewTopics__</button>
+    <button class="controlButton" data-cmd="viewFeeds">__MSG_buttonViewFeeds__</button>
+    <label>__MSG_labelManage__</label>
+    <button class="controlButton" data-cmd="manageKeywords">__MSG_buttonManageKeywords__</button>
+    <button class="controlButton" data-cmd="manageURIs">__MSG_buttonManageURIs__</button>
+    <label>__MSG_labelSettings__</label>
+    <button class="controlButton" data-cmd="displayOptions">__MSG_buttonOptions__</button>
+  </div>
 
-    <div class="page" data-src="manageKeywords">
-        <button class="backButton" data-src="back">&laquo;</button>
-        <h2 class="headline">__MSG_titleKeywords__</h2>
-        <input type="text" placeholder="__MSG_addKeyword__" id="addKeywordInput" value="" />
-        <ul id="manageKeywords" class="clearfix"></ul>
-    </div>
+  <div class="page" data-src="addItem">
+    <button class="backButton" data-src="back">&laquo;</button>
+    <h2 class="headline">__MSG_titleAddRSS__</h2>
+    <span class="clearfix"></span>
+    <button class="controlButton hidden" data-cmd="forceUpdate">__MSG_buttonForceURIUpdate__</button>
+    <hr class="inititalHidden hidden" />
+    <input id="feedURI" type="text" title="__MSG_addURIinfo__" placeholder="__MSG_addURIinfo__" value=""
+      autocomplete="false" />
+    <select id="feedType" autocomplete="false">
+      <option selected="selected" value="rss">__MSG_addURItypeRSS__</option>
+      <!--<option value="page">__MSG_addURItypeHTML__</option>-->
+    </select>
+    <input id="feedInterval" type="number" min="1" max="360" title="__MSG_addURIintervalPlaceholder__"
+      placeholder="__MSG_addURIinterval__" autocomplete="false" />
+    <input id="feedMaxAge" type="number" vmin="0" max="120" title="__MSG_maxAgeURIPlaceholder__"
+      placeholder="__MSG_maxAgeURI__" value="" autocomplete="false" />
+    <hr />
+    <button class="controlButton" data-cmd="add">__MSG_buttonAddURI__</button>
+    <hr class="inititalHidden hidden" />
+    <button class="controlButton hidden" data-cmd="removeFeed">__MSG_buttonRemoveURI__</button>
+  </div>
 
-    <div class="page" data-src="viewTopics">
-        <button class="backButton" data-src="back">&laquo;</button>
-        <h2 class="headline">__MSG_titleTopics__</h2>
-        <button class="controlButton inititalHidden hidden" data-cmd="switchSingleRow" title="__MSG_howToSingleRow__">__MSG_switchReaderMode__</button>
-        <button class="controlButton inititalHidden hidden" data-cmd="switchHeaderViewMode">__MSG_switchHeaderOnlyViewMode__</button>
-        <input type="text" class="controlInput inititalHidden hidden" data-cmd="searchFeedData" placeholder="__MSG_searchTopicsArticles__" />
-        <ul id="viewTopics" class="clearfix"></ul>
-    </div>
+  <div class="page" data-src="manageURIs">
+    <button class="backButton" data-src="back">&laquo;</button>
+    <h2 class="headline">__MSG_titleFeeds__</h2>
+    <button class="controlButton" data-cmd="addItem">__MSG_buttonAddUri__</button>
+    <button class="controlButton inititalHidden hidden" data-cmd="forceUpdateAll">__MSG_buttonUpdateAllUri__</button>
+    <hr />
+    <ul id="manageURIs" class="clearfix"></ul>
+  </div>
 
-    <div class="page" data-src="viewFeeds">
-      <button class="backButton" data-src="back">&laquo;</button>
-        <h2 class="headline">__MSG_titleViewFeeds__</h2>
-        <button class="controlButton inititalHidden hidden" data-cmd="switchSingleRow" title="__MSG_howToSingleRow__">__MSG_switchReaderMode__</button>
-        <button class="controlButton inititalHidden hidden" data-cmd="switchHeaderViewMode">__MSG_switchHeaderOnlyViewMode__</button>
-        <input type="text" class="controlInput inititalHidden hidden" data-cmd="searchFeedData" placeholder="__MSG_searchTopicsArticles__" />
-        <hr class="inititalHidden hidden"/>
-        <ul id="viewFeeds" class="clearfix"></ul>
-    </div>
+  <div class="page" data-src="manageKeywords">
+    <button class="backButton" data-src="back">&laquo;</button>
+    <h2 class="headline">__MSG_titleKeywords__</h2>
+    <input type="text" placeholder="__MSG_addKeyword__" id="addKeywordInput" value="" />
+    <ul id="manageKeywords" class="clearfix"></ul>
+  </div>
 
-    <div class="page" data-src="displayOptions">
-      <button class="backButton" data-src="back">&laquo;</button>
-      <h2 class="headline">__MSG_titleOptions__</h2>
+  <div class="page" data-src="viewTopics">
+    <button class="backButton" data-src="back">&laquo;</button>
+    <h2 class="headline">__MSG_titleTopics__</h2>
+    <button class="controlButton inititalHidden hidden" data-cmd="switchSingleRow"
+      title="__MSG_howToSingleRow__">__MSG_switchReaderMode__</button>
+    <button class="controlButton inititalHidden hidden"
+      data-cmd="switchHeaderViewMode">__MSG_switchHeaderOnlyViewMode__</button>
+    <input type="text" class="controlInput inititalHidden hidden" data-cmd="searchFeedData"
+      placeholder="__MSG_searchTopicsArticles__" />
+    <ul id="viewTopics" class="clearfix"></ul>
+  </div>
 
-      <select id="switchImages">
-        <option value="enabled">__MSG_imagesEnable__</option>
-        <option value="disabled" selected="selected">__MSG_imagesDisable__</option>
-      </select>
-      <select id="switchAnimations">
-        <option value="enabled">__MSG_animationEnable__</option>
-        <option value="disabled" selected="selected">__MSG_animationDisable__</option>
-      </select>
-      <select id="switchNotifications">
-        <option value="enabled">__MSG_notificationsEnable__</option>
-        <option value="disabled" selected="selected">__MSG_notificationsDisable__</option>
-      </select>
-      <hr/>
-      <button class="controlButton" data-cmd="exportAddonData">__MSG_exportAddonData__</button>
-      <label for="importFile" class="controlButton" data-cmd="importAddonData">__MSG_importAddonData__ <input type="file" accept=".zip" name="importFile" id="importFile" hidden="true" /></label>
-    </div>
+  <div class="page" data-src="viewFeeds">
+    <button class="backButton" data-src="back">&laquo;</button>
+    <h2 class="headline">__MSG_titleViewFeeds__</h2>
+    <button class="controlButton inititalHidden hidden" data-cmd="switchSingleRow"
+      title="__MSG_howToSingleRow__">__MSG_switchReaderMode__</button>
+    <button class="controlButton inititalHidden hidden"
+      data-cmd="switchHeaderViewMode">__MSG_switchHeaderOnlyViewMode__</button>
+    <input type="text" class="controlInput inititalHidden hidden" data-cmd="searchFeedData"
+      placeholder="__MSG_searchTopicsArticles__" />
+    <hr class="inititalHidden hidden" />
+    <ul id="viewFeeds" class="clearfix"></ul>
+  </div>
 
-    <script type="text/javascript" src="libs/l10n/l10n.js"></script>
-    <script type="text/javascript" src="libs/jszip/jszip.min.js"></script>
-    <script type="text/javascript" src="thunderNote.js"></script>
-  </body>
+  <div class="page" data-src="displayOptions">
+    <button class="backButton" data-src="back">&laquo;</button>
+    <h2 class="headline">__MSG_titleOptions__</h2>
+
+    <select id="switchImages">
+      <option value="enabled">__MSG_imagesEnable__</option>
+      <option value="disabled" selected="selected">__MSG_imagesDisable__</option>
+    </select>
+    <select id="switchAnimations">
+      <option value="enabled">__MSG_animationEnable__</option>
+      <option value="disabled" selected="selected">__MSG_animationDisable__</option>
+    </select>
+    <select id="switchNotifications">
+      <option value="enabled">__MSG_notificationsEnable__</option>
+      <option value="disabled" selected="selected">__MSG_notificationsDisable__</option>
+    </select>
+    <hr />
+    <button class="controlButton" data-cmd="exportAddonData">__MSG_exportAddonData__</button>
+    <label for="importFile" class="controlButton" data-cmd="importAddonData">__MSG_importAddonData__ <input type="file"
+        accept=".zip" name="importFile" id="importFile" hidden="true" /></label>
+  </div>
+
+  <script type="text/javascript" src="libs/l10n/l10n.js"></script>
+  <script type="text/javascript" src="libs/jszip/jszip.min.js"></script>
+  <script type="text/javascript" src="thunderNote.js"></script>
+</body>
+
 </html>
